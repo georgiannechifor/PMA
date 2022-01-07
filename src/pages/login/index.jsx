@@ -43,10 +43,10 @@ const Login = ({
             </div>
 
             <div className="flex flex-col mb-5">
-              <label className="text-sm mb-1 px-1" htmlFor="username">Password</label>
+              <label className="text-sm mb-1 px-1" htmlFor="password">Password</label>
               <input
                 className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
-                id="username"
+                id="password"
                 placeholder="*********"
                 type="password"
               />
