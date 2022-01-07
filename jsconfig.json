@@ -2,13 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "components/*": "./src/components/*",
-      "components": "./src/components/index.js",
-      "pages/*": "./src/pages/*",
-      "pages": "./src/pages/index.js",
-      "styles/*": "./src/styles/*",
-      "constants/*": "./src/constants/*",
-      "constants": "./src/constants/index.js"
+      "components/*": ["./src/components/*"],
+      "components": ["./src/components/index.js"],
+      "pages/*": ["./src/pages/*"],
+      "pages": ["./src/pages/index.js"],
+      "styles/*": ["./src/styles/*"],
+      "constants/*": ["./src/constants/*"],
+      "constants": ["./src/constants/index.js"],
+      "utils/*": ["./src/utils/*"]
     }
   }
 }
