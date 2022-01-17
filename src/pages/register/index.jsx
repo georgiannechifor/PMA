@@ -5,7 +5,6 @@ import {Loader} from 'components';
 const Register = () => {
   const router = useRouter();
 
-
   return (
     <Loader isLoading={false}>
       <div className="relative min-h-screen flex flex-col items-center justify-center">

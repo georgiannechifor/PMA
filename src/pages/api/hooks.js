@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react';
-const URL = 'https://gorest.co.in/public/v1';
 
 export const useFetch = (
   endpoint,
@@ -13,7 +12,7 @@ export const useFetch = (
     ( async () => {
       setLoading(true);
       await fetch(
-        `${URL}/${endpoint}`,
+        `${endpoint}`,
         options
       )
         .then(res => res.json())

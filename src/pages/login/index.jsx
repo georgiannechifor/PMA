@@ -12,13 +12,16 @@ const Login = ({
   const router = useRouter();
   const {register, handleSubmit, formState: {errors}} = useForm();
 
-  const onSubmit = data => console.log(data); //eslint-disable-line
-
   useEffect(() => {
     if (isFromPrivatePage) {
+      // Change url when a private route is accessed without privileges
       router.replace('login');
     }
   }, [isFromPrivatePage]);
+
+  // eslint-disable-next-line no-warning-comments
+  // TODO: SEND REQUEST AND SAVE DATA IN GLOBAL STATE
+  const onSubmit = data => console.log(data); //eslint-disable-line
 
   return (
     <Loader isLoading={false}>
