@@ -1,6 +1,5 @@
 module.exports = {
   important : true,
-  darkMode  : false,
   content   : [
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/components/**/*.{js,ts,jsx,tsx}'
