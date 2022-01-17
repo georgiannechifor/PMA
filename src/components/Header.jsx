@@ -27,23 +27,15 @@ const Header = () => {
         <Link href="/">
           <p
             className={cx(
-              'text-md p-4 cursor-pointer text-gray-400 hover:text-gray-800',
+              'text-md font-medium p-4 cursor-pointer text-gray-400 hover:text-gray-800',
               {'text-black' : getActiveHeaderTab('/')}
             )}
           > Home </p>
         </Link>
-        <Link href="/announcements">
-          <p
-            className={cx(
-              'text-md p-4 cursor-pointer text-gray-400 hover:text-gray-800',
-              {'text-black' : getActiveHeaderTab('/announcements')}
-            )}
-          > Announcements </p>
-        </Link>
         <Link href="/knowledge-sharing">
           <p
             className={cx(
-              'text-md p-4 cursor-pointer text-gray-400 hover:text-gray-800',
+              'text-md font-medium p-4 cursor-pointer text-gray-400 hover:text-gray-800',
               {'text-black' : getActiveHeaderTab('/knowledge-sharing')}
             )}
           > Knowledge sharing  </p>
@@ -51,7 +43,7 @@ const Header = () => {
         <Link href="/deploy-tracker">
           <p
             className={cx(
-              'text-md p-4 cursor-pointer text-gray-400 hover:text-gray-800',
+              'text-md font-medium p-4 cursor-pointer text-gray-400 hover:text-gray-800',
               {'text-black' : getActiveHeaderTab('/deploy-tracker')}
             )}
           > Deploy Tracker </p>
