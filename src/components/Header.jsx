@@ -69,11 +69,11 @@ const Header = () => {
         modalActions={(
           <div className="flex w-full items-center justify-end gap-2">
             <button
-              className="px-4 py-2 text-sm font-medium"
+              className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
               onClick={() => setIsSignOutModalOpen(false)}
             > Cancel </button>
             <button
-              className="px-4 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg "
+              className="px-4 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg"
               onClick={() => {
                 setIsSignOutModalOpen(false);
                 router.push('/login');
