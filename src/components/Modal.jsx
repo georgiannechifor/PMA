@@ -1,6 +1,7 @@
 import {Fragment} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
-import {bool, string, elementType} from 'prop-types';
+import {bool, string, oneOfType, object, elementType, func} from 'prop-types';
+
 const Modal = ({
   isModalOpen,
   setIsModalOpen,
@@ -74,8 +75,8 @@ Modal.displayName = 'CustomModal';
 Modal.propTypes = {
   isModalOpen    : bool.isRequired,
   modalTitle     : string.isRequired,
-  modalContent   : elementType.isRequired,
-  modalActions   : elementType.isRequired,
-  setIsModalOpen : Function.isRequired
+  modalContent   : oneOfType([object, elementType]).isRequired,
+  modalActions   : oneOfType([object, elementType]).isRequired,
+  setIsModalOpen : func.isRequired
 };
 export default Modal;

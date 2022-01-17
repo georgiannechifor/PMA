@@ -9,7 +9,6 @@ const MyApp = ({Component, pageProps}) => {
   // Use this until public / private route implementation
   const isRouterPublic = () => router.route === '/login' || router.route === '/register';
 
-
   return (
     <Layout isPublic={isRouterPublic()}>
       <Component {...pageProps} />
