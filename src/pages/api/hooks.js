@@ -12,11 +12,11 @@ export const useFetch = (
     ( async () => {
       setLoading(true);
       await fetch(
-        `${endpoint}`,
+        `api/${endpoint}`,
         options
       )
         .then(res => res.json())
-        .then(jsonResponse => setData(jsonResponse.data))
+        .then(jsonResponse => setData(jsonResponse))
         .catch(err => {
           setError(err);
           setLoading(false);

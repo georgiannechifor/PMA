@@ -9,7 +9,11 @@ const users = [
 ];
 
 const usersHandler = (req, res) => {
-  res.status(200).json(users);
+  res.status(200).json({
+    data       : users,
+    status     : 'SUCCESS',
+    statusCode : 201
+  });
 };
 
 export default usersHandler;

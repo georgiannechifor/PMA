@@ -9,7 +9,8 @@
       "styles/*": ["./src/styles/*"],
       "constants/*": ["./src/constants/*"],
       "constants": ["./src/constants/index.js"],
-      "utils/*": ["./src/utils/*"]
+      "utils/*": ["./src/utils/*"],
+      "api/*": ["./src/api/*"]
     }
   }
 }
