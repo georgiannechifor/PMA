@@ -57,14 +57,14 @@ const Calendar = () => {
     <div
       className={
         cx(
+          {'text-white bg-blue-500' : moment(day).isSame(new Date(), 'days')},
+          {'text-white bg-primary-green-100' : moment(day).isSame(selectedDate, 'days')},
+          {'text-gray-300' : !moment(day).isSame(monthStart, 'month')},
           `relative
           w-8 h-8 flex
           items-center justify-center
           cursor-pointer
-          rounded-full text-center text-primary-gray-50
-          hover:bg-gray-100 hover:text-green-600`,
-          {'text-white bg-primary-green-100 hover:bg-primary-green-100 hover:text-white' : moment(day).isSame(selectedDate, 'days')},
-          {'text-gray-300' : !moment(day).isSame(monthStart, 'month')}
+          rounded-full text-center text-primary-gray-50`
         )}
       key={day}
       onClick={() => {
@@ -120,7 +120,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="flex flex-col w-1/2 max-w-xl items-center justify-center">
+    <div className="flex flex-col w-full items-center justify-center">
       <div className="w-full pb-3">
         { renderHeaderSection() }
       </div>

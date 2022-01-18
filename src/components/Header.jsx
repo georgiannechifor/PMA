@@ -16,18 +16,19 @@ const Header = () => {
   return (
     <div className="
       self-start bg-white w-full h-24 shadow-md
-      flex justify-end items-center
+      flex justify-center items-center
       px-10
+      sm:justify-end
       "
     >
-      <div className="relative justify-self-start mr-auto w-28 h-20 cursor-pointer" onClick={() => router.push('/')}>
+      <div className="relative justify-self-start mr-auto w-28 h-20 cursor-pointer hidden sm:block" onClick={() => router.push('/')}>
         <Image layout="fill" src={'/images/logo.png'} />
       </div>
       <div className="flex gap-x-5">
         <Link href="/">
           <p
             className={cx(
-              'text-md font-medium p-4 cursor-pointer text-gray-400 hover:text-gray-800',
+              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
               {'text-black' : getActiveHeaderTab('/')}
             )}
           > Home </p>
@@ -35,7 +36,7 @@ const Header = () => {
         <Link href="/knowledge-sharing">
           <p
             className={cx(
-              'text-md font-medium p-4 cursor-pointer text-gray-400 hover:text-gray-800',
+              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
               {'text-black' : getActiveHeaderTab('/knowledge-sharing')}
             )}
           > Knowledge sharing  </p>
@@ -43,7 +44,7 @@ const Header = () => {
         <Link href="/deploy-tracker">
           <p
             className={cx(
-              'text-md font-medium p-4 cursor-pointer text-gray-400 hover:text-gray-800',
+              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
               {'text-black' : getActiveHeaderTab('/deploy-tracker')}
             )}
           > Deploy Tracker </p>
@@ -51,7 +52,7 @@ const Header = () => {
 
 
         <LogoutIcon
-          className="w-5 self-center cursor-pointer text-gray-800 hover:text-gray-600"
+          className="w-7 self-center cursor-pointer text-gray-800 hover:text-gray-600 sm:w-6 md:w-5"
           onClick={() => setIsSignOutModalOpen(true)}
         />
       </div>
