@@ -1,5 +1,7 @@
 import {dbConnect} from 'utils/dbConnect';
 import User from 'models/user';
+import { authenticated } from 'service/index';
+
 import {
   STATUS_METHOD_NOT_ALLOWED,
   STATUS_BAD_REQUEST,
@@ -10,7 +12,7 @@ import {
 
 dbConnect();
 
-const usersHandler = async (req, res) => {
+const usersHandler = authenticated(async (req, res) => {
   const { method } = req;
   switch(method) {
     case 'GET': {
@@ -31,6 +33,6 @@ const usersHandler = async (req, res) => {
       })
     }
   }
-};
+});
 
 export default usersHandler;
