@@ -17,7 +17,7 @@ const registerHandler = async (req, res) => {
       try {
         const user = await User.create(req.body);
         const token = user.getJwtToken();
-        
+        user.password = undefined;
         return res.status(STATUS_CREATED).json({
           data: user,
           accessToken : token

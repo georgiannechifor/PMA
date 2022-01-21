@@ -5,11 +5,15 @@ import {LogoutIcon} from '@heroicons/react/solid';
 import {useRouter} from 'next/router';
 import * as cx from 'classnames';
 
+import useLocalStorage from 'utils/useLocalStorage';
+import {LOCAL_STORAGE_USER_KEY} from 'constants/index';
+
 import {Modal} from './';
 
 const Header = () => {
   const router = useRouter();
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
+  const [, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
 
   const getActiveHeaderTab = tab => router.route === tab;
 
@@ -68,6 +72,7 @@ const Header = () => {
             <button
               className="px-4 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg"
               onClick={() => {
+                setValue({});
                 setIsSignOutModalOpen(false);
                 router.push('/login');
               }}

@@ -1,12 +1,46 @@
+import { useEffect } from 'react';
 import {useRouter} from 'next/router';
 import {ArrowCircleLeftIcon} from '@heroicons/react/outline';
+import {useForm} from 'react-hook-form';
+
+import {useFetch} from 'utils/useFetch';
+import useLocalStorage from 'utils/useLocalStorage';
+import {USER_ROLES, LOCAL_STORAGE_USER_KEY} from 'constants/index';
 import {Loader} from 'components';
 
 const Register = () => {
   const router = useRouter();
+  const {register, handleSubmit, formState: {errors}} = useForm();
+  const {result: {data, loading, error}, fetchData} = useFetch('/auth/register');
+  const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {}); // eslint-disable-line no-unused-vars
+
+  const onSubmit = formData => {
+    fetchData({
+      method : 'POST',
+      data   : {
+        ...formData,
+        jobTitle : USER_ROLES.USER,
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (data?.accessToken) {
+      setValue({
+        accessToken : data.accessToken,
+        user        : data.data
+      });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if(storedValue && storedValue.accessToken) {
+      router.push('/');
+    }
+  }, [storedValue])
 
   return (
-    <Loader isLoading={false}>
+    <Loader isLoading={loading}>
       <div className="relative min-h-screen flex flex-col items-center justify-center">
         <div className="
       flex flex-col
@@ -28,6 +62,7 @@ const Register = () => {
               <div className="flex gap-3 items-center justify-center">
                 <div className="flex flex-col mb-5">
                   <input
+                    {...register('firstName', {required : true})}
                     className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
                     id="fullname"
                     placeholder="First Name"
@@ -37,6 +72,7 @@ const Register = () => {
 
                 <div className="flex flex-col mb-5">
                   <input
+                    {...register('lastName', {required : true})}
                     className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
                     id="fullname"
                     placeholder="Last Name"
@@ -47,7 +83,8 @@ const Register = () => {
 
               <div className="flex flex-col mb-5">
                 <input
-                  autoComplete="email"
+                  {...register('email', {required : true})}
+                  autoComplete="off"
                   className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
                   id="username"
                   placeholder="email@example.com"
@@ -57,6 +94,7 @@ const Register = () => {
 
               <div className="flex flex-col mb-5">
                 <input
+                  {...register('password', {required : true})}
                   autoComplete="new-password"
                   className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
                   id="password"
@@ -68,6 +106,7 @@ const Register = () => {
               <div className="flex flex-col mb-5">
                 <label className="text-sm mb-1 px-1" htmlFor="password">Confirm password</label>
                 <input
+                  {...register('confirmPassword', {required : true})}
                   autoComplete="new-password"
                   className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
                   id="password"
@@ -83,6 +122,7 @@ const Register = () => {
                 transition duration-150
                 lg:w-1/2
               "
+                onClick={handleSubmit(onSubmit)}
               >
                 Sign Up
               </button>

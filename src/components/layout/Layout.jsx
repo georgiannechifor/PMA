@@ -1,5 +1,5 @@
-import {Header, Footer} from './';
-import {elementType, object, oneOfType, bool} from 'prop-types';
+import {Header, Footer} from '../';
+import {any, bool} from 'prop-types';
 
 const Layout = ({children, isPublic}) => (isPublic ? <>
   {children}
@@ -12,7 +12,7 @@ const Layout = ({children, isPublic}) => (isPublic ? <>
 ));
 
 Layout.propTypes = {
-  children : oneOfType([object, elementType]).isRequired,
+  children : any.isRequired,
   isPublic : bool
 };
 

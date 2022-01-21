@@ -2,10 +2,14 @@ import {useState} from 'react';
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import * as cx from 'classnames';
+import {object, func} from 'prop-types';
 
-const Calendar = () => {
+const Calendar = ({
+  events,
+  selectedDate,
+  setSelectedDate
+}) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const HEADER_DATE_FORMAT = 'MMMM YYYY';
   const DAYS_DATE_FORMAT = 'ddd';
@@ -57,6 +61,11 @@ const Calendar = () => {
     <div
       className={
         cx(
+          {'bg-gray-200' :
+              events[moment(day).format('DD/MM/YYYY')] &&
+              !moment(day).isSame(new Date(), 'days') &&
+              !moment(day).isSame(selectedDate, 'days')
+          },
           {'text-white bg-blue-500' : moment(day).isSame(new Date(), 'days')},
           {'text-white bg-primary-green-100' : moment(day).isSame(selectedDate, 'days')},
           {'text-gray-300' : !moment(day).isSame(monthStart, 'month')},
@@ -72,7 +81,16 @@ const Calendar = () => {
         onDateClick(day);
       }}
     >
-      <span>{moment(day).format('D')}</span>
+      <span className="user-select-none">{moment(day).format('D')}</span>
+      {
+        moment(day).isSame(monthStart, 'month') &&
+          events[moment(day).format('DD/MM/YYYY')] && (
+          <span
+            className="w-4 h-4 text-xs flex items-center justify-center bg-red-600 text-white rounded-full absolute -top-2 -right-2"
+          > {events[moment(day).format('DD/MM/YYYY')].length}
+          </span>
+        )
+      }
     </div>
   );
 
@@ -137,7 +155,10 @@ const Calendar = () => {
 };
 
 Calendar.propTypes = {
-
+  events          : object.isRequired,
+  selectedDate    : object.isRequired,
+  setSelectedDate : func.isRequired
 };
+
 Calendar.displayName = 'Calendar';
 export default Calendar;

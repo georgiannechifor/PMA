@@ -25,22 +25,28 @@ const loginHandler = async (req, res) => {
 
             if(matched) {
               const token = user.getJwtToken();
-              
+
               return res.status(STATUS_OK).json({
                 data : user,
                 accessToken : token
               })
             }
             return res.status(STATUS_BAD_REQUEST).json({
-              error : 'Password not matched'
+              error : {
+                message : 'Password not matched'
+              }
             })
           }
           return res.status(STATUS_NOT_FOUND).json({
-            error: 'User not found'
+            error : {
+              message: 'User not found'
+            }
           })
         }
         return res.status(STATUS_BAD_REQUEST).json({
-          error: 'Please enter email and password'
+          error : {
+            message: 'Please enter email and password'
+          }
         });
     }
     default : {
