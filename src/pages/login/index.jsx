@@ -1,28 +1,18 @@
 import {useEffect} from 'react';
 import {useRouter} from 'next/router';
-import {bool} from 'prop-types';
 import {useForm} from 'react-hook-form';
 import * as cx from 'classnames';
 
 import {useFetch} from 'utils/useFetch';
 import useLocalStorage from 'utils/useLocalStorage';
 import {Loader} from 'components';
-import {PUBLIC_PATHS, LOCAL_STORAGE_USER_KEY} from 'constants/index';
+import {LOCAL_STORAGE_USER_KEY} from 'constants/index';
 
-const Login = ({
-  isFromPrivatePage
-}) => {
+const Login = () => {
   const router = useRouter();
   const {register, handleSubmit, formState: {errors}} = useForm();
   const {result: {data, loading, error}, fetchData} = useFetch('/auth/login');
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
-
-  useEffect(() => {
-    if (isFromPrivatePage) {
-      // Change url when a private route is accessed without privileges
-      router.replace(PUBLIC_PATHS.LOGIN);
-    }
-  }, [isFromPrivatePage]);
 
   const onSubmit = formData => {
     fetchData({
@@ -35,15 +25,21 @@ const Login = ({
   };
 
   useEffect(() => {
-    if (data?.accessToken) {
+    if (data && data.accessToken) {
       setValue({
         accessToken : data.accessToken,
         user        : data.data
       });
 
-      router.replace('/');
+      router.push(router.query.returnUrl || '/');
     }
   }, [data]);
+
+  useEffect(() => {
+    if (storedValue && storedValue.accessToken && !error) {
+      router.push(router.query.returnUrl || '/');
+    }
+  }, [storedValue]);
 
   return (
     <Loader isLoading={loading}>
@@ -121,14 +117,6 @@ const Login = ({
       </div>
     </Loader>
   );
-};
-
-Login.propTypes = {
-  isFromPrivatePage : bool
-};
-
-Login.defaultProps = {
-  isFromPrivatePage : false
 };
 
 Login.displayName = 'LoginPage';

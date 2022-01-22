@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Calendar, Loader} from 'components';
 import {CalendarIcon} from '@heroicons/react/outline';
-import {useFetch} from 'utils/useFetch';
-import moment from 'moment';
 import map from 'lodash/map';
+import moment from 'moment';
+
+import {Calendar, Loader} from 'components';
+import {useFetch} from 'utils/useFetch';
 
 const Home = () => {
   const {result: {data, loading}, fetchData} = useFetch('/events');
@@ -43,8 +44,8 @@ const Home = () => {
             {
               events &&
               events[moment(selectedDate).format('DD/MM/YYYY')] &&
-              map(events[moment(selectedDate).format('DD/MM/YYYY')], event => (
-                <div className="cursor-pointer hover:bg-gray-500 p-2 transition rounded flex items-center gap-2 text-md" >
+              map(events[moment(selectedDate).format('DD/MM/YYYY')], (event, index) => (
+                <div className="cursor-pointer hover:bg-gray-500 p-2 transition rounded flex items-center gap-2 text-md" key={index.toString()} >
                   <CalendarIcon className="w-5 h-5 text-white" />
                   <div className="flex flex-col items-start">
                     <p> { event.title} </p>

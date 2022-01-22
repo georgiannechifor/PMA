@@ -7,9 +7,7 @@ const withAuth = Component => {
 
     if (!isLoggedIn) {
       return (
-        <Login
-          isFromPrivatePage
-        />
+        <Login />
       );
     }
 

@@ -1,48 +1,42 @@
-import '../styles/globals.css';
-import {object, elementType} from 'prop-types';
+import {object, elementType, string} from 'prop-types';
 import {useRouter} from 'next/router';
-import {Layout, AdminLayout, RouterGuard} from 'components';
-import {USER_ROLES, PRIVATE_PATHS, PUBLIC_PATHS} from 'constants/index';
 
-const MyApp = ({Component, pageProps}) => {
+import '../styles/globals.css';
+import {Layout, AdminLayout, RouterGuard} from 'components';
+import {PRIVATE_PATHS, PUBLIC_PATHS} from 'constants/index';
+
+const PageLayout = ({children, route}) => {
+  // [TDB] check if user is admin or superdmin
+
+  if (route === PRIVATE_PATHS.ADMIN_CONFIG) {
+    return <AdminLayout> { children }</AdminLayout>;
+  }
+
+  return <Layout isPublic={Object.values(PUBLIC_PATHS).includes(route)}> { children }</Layout>;
+};
+
+const App = ({Component, pageProps}) => {
   const router = useRouter();
 
-  // [TDB]: take user type from API
-  const currentUser = 'user';
-
-  // Use this until public / private route implementation
-  const isRouterPublic = () => Object.values(PUBLIC_PATHS).includes(router.asPath);
-
-  const PageLayout = ({children}) => {
-    if (
-      currentUser === USER_ROLES.ADMIN ||
-      currentUser === USER_ROLES.SUPER_ADMIN
-    ) {
-      if (router.route === PRIVATE_PATHS.ADMIN_CONFIG) {
-        return <AdminLayout> { children }</AdminLayout>;
-      }
-    }
-
-    return <Layout isPublic={isRouterPublic()}> { children }</Layout>;
-  };
-
-  PageLayout.displayName = 'PageLayout';
-  PageLayout.propTypes = {children : object.isRequired};
-
   return (
-    <RouterGuard>
-      <PageLayout>
+    <PageLayout route={router.route}>
+      <RouterGuard>
         <Component {...pageProps} />
-      </PageLayout>
-    </RouterGuard>
+      </RouterGuard>
+    </PageLayout>
   );
 };
 
 
-MyApp.propTypes = {
+PageLayout.displayName = 'PageLayout';
+PageLayout.propTypes = {
+  children : object.isRequired,
+  route    : string.isRequired
+};
+
+App.propTypes = {
   Component : elementType.isRequired,
   pageProps : object.isRequired
 };
-
-MyApp.displayName = 'App';
-export default MyApp;
+App.displayName = 'App';
+export default App;

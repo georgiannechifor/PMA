@@ -1,13 +1,21 @@
 import {useState, useEffect} from 'react';
+import { useRouter } from 'next/router';
 import useLocalStorage from './useLocalStorage';
-import { LOCAL_STORAGE_USER_KEY } from 'constants/index';
+import {
+  PUBLIC_PATHS,
+  LOCAL_STORAGE_USER_KEY,
+  STATUS_FORBIDDEN,
+  STATUS_UNAUTHORIZED
+} from 'constants/index';
+
 export const useFetch = (
   endpoint
 ) => {
+  const router = useRouter();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [storedValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
+  const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
 
   const fetchData = ( async (options) => {
     setLoading(true);
@@ -22,7 +30,18 @@ export const useFetch = (
         }
       }
     )
-      .then(res => res.json())
+      .then(res => {
+        if(res.status === Number(STATUS_FORBIDDEN) || res.status === Number(STATUS_UNAUTHORIZED)) {
+          setValue({});
+          router.push({
+            pathname: PUBLIC_PATHS.LOGIN,
+            query : {
+              returnUrl : router.asRoute
+            }
+          })
+        }
+        return res.json();
+      })
       .then(jsonResponse => {
         if(jsonResponse.error) {
           setError(jsonResponse.error);

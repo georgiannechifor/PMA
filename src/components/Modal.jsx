@@ -56,9 +56,9 @@ const Modal = ({
               { modalTitle }
             </Dialog.Title>
             <div className="mt-2">
-              <p className="text-sm text-gray-500">
+              <div className="text-sm">
                 { modalContent }
-              </p>
+              </div>
             </div>
 
             <div className="mt-4">

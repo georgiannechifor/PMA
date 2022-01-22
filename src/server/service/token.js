@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const {STATUS_UNAUTHORIZED} = require('constants/index');
 
 exports.authenticated = fn => async (req, res) => {
   if(req.query && req.query.hasOwnProperty('access_token')) { // eslint-disable-line no-prototype-builtins
@@ -12,7 +13,7 @@ exports.authenticated = fn => async (req, res) => {
       return await fn(req, res);
     }
 
-    res.status(500).json({
+    res.status(STATUS_UNAUTHORIZED).json({
       error : 'You are not authenticated'
     })
   })
