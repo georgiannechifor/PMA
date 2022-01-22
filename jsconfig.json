@@ -10,8 +10,10 @@
       "constants/*": ["./src/constants/*"],
       "constants": ["./src/constants/index.js"],
       "utils/*": ["./src/utils/*"],
+      "api/*": ["./src/api/*"],
       "server/*": ["./src/server/*"],
-      "models/*": ["./src/server/models/*"]
+      "models/*": ["./src/server/models/*"],
+      "service/*": ["./src/server/service/*"]
     }
   }
 }

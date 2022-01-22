@@ -1,30 +1,48 @@
 import {useEffect} from 'react';
 import {useRouter} from 'next/router';
-import {bool} from 'prop-types';
 import {useForm} from 'react-hook-form';
 import * as cx from 'classnames';
 
+import {useFetch} from 'utils/useFetch';
+import useLocalStorage from 'utils/useLocalStorage';
 import {Loader} from 'components';
+import {LOCAL_STORAGE_USER_KEY} from 'constants/index';
 
-const Login = ({
-  isFromPrivatePage
-}) => {
+const Login = () => {
   const router = useRouter();
   const {register, handleSubmit, formState: {errors}} = useForm();
+  const {result: {data, loading, error}, fetchData} = useFetch('/auth/login');
+  const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
+
+  const onSubmit = formData => {
+    fetchData({
+      method : 'POST',
+      data   : {
+        email    : formData.username,
+        password : formData.password
+      }
+    });
+  };
 
   useEffect(() => {
-    if (isFromPrivatePage) {
-      // Change url when a private route is accessed without privileges
-      router.replace('login');
-    }
-  }, [isFromPrivatePage]);
+    if (data && data.accessToken) {
+      setValue({
+        accessToken : data.accessToken,
+        user        : data.data
+      });
 
-  // eslint-disable-next-line no-warning-comments
-  // TODO: SEND REQUEST AND SAVE DATA IN GLOBAL STATE
-  const onSubmit = data => console.log(data); //eslint-disable-line
+      router.push(router.query.returnUrl || '/');
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (storedValue && storedValue.accessToken && !error) {
+      router.push(router.query.returnUrl || '/');
+    }
+  }, [storedValue]);
 
   return (
-    <Loader isLoading={false}>
+    <Loader isLoading={loading}>
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="
         flex flex-col
@@ -68,6 +86,7 @@ const Login = ({
                 />
                 { errors.password && <span className="text-xs text-red-500 mx-2"> Password field is required </span> }
               </div>
+              { error ? <span className="text-sm text-red-500 font-medium text-center -mt-3 mb-2"> { error.message }</span> : null}
 
               <button
                 className="
@@ -98,14 +117,6 @@ const Login = ({
       </div>
     </Loader>
   );
-};
-
-Login.propTypes = {
-  isFromPrivatePage : bool
-};
-
-Login.defaultProps = {
-  isFromPrivatePage : false
 };
 
 Login.displayName = 'LoginPage';

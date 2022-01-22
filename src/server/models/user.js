@@ -23,8 +23,8 @@ const UserSchema = new mongoose.Schema({
   team     : String,
   jobTitle : {
     type    : String,
-    enum    : ['User', 'Admin', 'SuperAdmin'],
-    default : 'User'
+    enum    : ['user', 'admin', 'superadmin'],
+    default : 'user'
   },
   image : {
     data        : Buffer,
