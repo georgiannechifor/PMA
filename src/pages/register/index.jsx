@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import {useRouter} from 'next/router';
 import {ArrowCircleLeftIcon} from '@heroicons/react/outline';
 import {useForm} from 'react-hook-form';
+import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as cx from 'classnames';
 
 import {useFetch} from 'utils/useFetch';
 import useLocalStorage from 'utils/useLocalStorage';
@@ -10,7 +13,25 @@ import {Loader} from 'components';
 
 const Register = () => {
   const router = useRouter();
-  const {register, handleSubmit, formState: {errors}} = useForm();
+
+  const formSchema = Yup.object().shape({
+    firstName : Yup.string()
+      .required('First name is required'),
+    lastName : Yup.string()
+      .required('Last name is required'),
+    email : Yup.string().email()
+      .required('Email is required'),
+    password : Yup.string()
+      .required('Password is required')
+      .min(4, 'Password length should be at least 4 characters'),
+    confirmPassword: Yup.string()
+      .required('Confirm password is required')
+      .oneOf([Yup.ref('password')], 'Passwords must match')
+  });
+
+  const validationOptions = { resolver : yupResolver(formSchema)};
+
+  const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
   const {result: {data, loading, error}, fetchData} = useFetch('/auth/register');
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {}); // eslint-disable-line no-unused-vars
 
@@ -62,57 +83,70 @@ const Register = () => {
               <div className="flex gap-3 items-center justify-center">
                 <div className="flex flex-col mb-5">
                   <input
-                    {...register('firstName', {required : true})}
-                    className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
-                    id="fullname"
+                    {...register('firstName')}
+                    className={
+                      cx('text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400',
+                        {'relative border-red-500 focus:border-red-600' : Boolean(errors.firstName)})}
+                    id="firstName"
                     placeholder="First Name"
                     type="text"
                   />
+                { errors.firstName && <span className=" text-xs text-red-500 mx-2"> { errors.firstName.message } </span> }
                 </div>
 
                 <div className="flex flex-col mb-5">
                   <input
-                    {...register('lastName', {required : true})}
-                    className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
-                    id="fullname"
+                    {...register('lastName')}
+                    className={
+                      cx('text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400',
+                        {'relative border-red-500 focus:border-red-600' : Boolean(errors.lastName)})}
+                    id="lastName"
                     placeholder="Last Name"
                     type="text"
                   />
+                 { errors.lastName && <span className=" text-xs text-red-500 mx-2"> { errors.lastName.message } </span> }
                 </div>
               </div>
 
               <div className="flex flex-col mb-5">
                 <input
-                  {...register('email', {required : true})}
+                  {...register('email')}
                   autoComplete="off"
-                  className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
+                  className={
+                    cx('text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400',
+                      {'relative border-red-500 focus:border-red-600' : Boolean(errors.email)})}
                   id="username"
                   placeholder="email@example.com"
                   type="email"
                 />
+              { errors.email && <span className=" text-xs text-red-500 mx-2"> { errors.email.message } </span> }
               </div>
 
               <div className="flex flex-col mb-5">
                 <input
-                  {...register('password', {required : true})}
+                  {...register('password')}
                   autoComplete="new-password"
-                  className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
+                  className={
+                    cx('text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400',
+                      {'relative border-red-500 focus:border-red-600' : Boolean(errors.password)})}
                   id="password"
                   placeholder="*********"
                   type="password"
                 />
+              { errors.password && <span className=" text-xs text-red-500 mx-2"> { errors.password.message } </span> }
               </div>
 
               <div className="flex flex-col mb-5">
                 <label className="text-sm mb-1 px-1" htmlFor="password">Confirm password</label>
                 <input
-                  {...register('confirmPassword', {required : true})}
+                  {...register('confirmPassword')}
                   autoComplete="new-password"
                   className="text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400"
-                  id="password"
+                  id="confirmPassword"
                   placeholder="*********"
                   type="password"
                 />
+              { errors.confirmPassword && <span className=" text-xs text-red-500 mx-2"> { errors.confirmPassword.message } </span> }
               </div>
 
               <button

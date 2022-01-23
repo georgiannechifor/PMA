@@ -1,6 +1,8 @@
 import {useEffect} from 'react';
 import {useRouter} from 'next/router';
 import {useForm} from 'react-hook-form';
+import * as Yup from 'yup';
+import {yupResolver} from '@hookform/resolvers/yup';
 import * as cx from 'classnames';
 
 import {useFetch} from 'utils/useFetch';
@@ -10,7 +12,16 @@ import {LOCAL_STORAGE_USER_KEY} from 'constants/index';
 
 const Login = () => {
   const router = useRouter();
-  const {register, handleSubmit, formState: {errors}} = useForm();
+
+  const formSchema = Yup.object().shape({
+    email : Yup.string().email()
+      .required('Email is required'),
+    password : Yup.string()
+      .required('Password is required')
+  });
+  const validationOptions = {resolver : yupResolver(formSchema)};
+
+  const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
   const {result: {data, loading, error}, fetchData} = useFetch('/auth/login');
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
 
@@ -18,10 +29,17 @@ const Login = () => {
     fetchData({
       method : 'POST',
       data   : {
-        email    : formData.username,
+        email    : formData.email,
         password : formData.password
       }
     });
+  };
+
+  const handlePressEnterButton = event => {
+    if (event.keyCode === 13) { // eslint-disable-line no-magic-numbers
+      event.preventDefault();
+      document.getElementById('loginbutton').click();
+    }
   };
 
   useEffect(() => {
@@ -40,6 +58,14 @@ const Login = () => {
       router.push(router.query.returnUrl || '/');
     }
   }, [storedValue]);
+
+  useEffect(() => {
+    window.addEventListener('keyup', handlePressEnterButton);
+
+    return () => {
+      window.removeEventListener('keyup', handlePressEnterButton);
+    };
+  }, []);
 
   return (
     <Loader isLoading={loading}>
@@ -63,20 +89,20 @@ const Login = () => {
             <div className="flex flex-col w-full">
               <div className="flex flex-col mb-5">
                 <input
-                  {...register('username', {required : true})}
+                  {...register('email')}
                   className={
                     cx('text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400',
-                      {'border-red-500 focus:border-red-600' : Boolean(errors.username)})}
-                  id="username"
+                      {'border-red-500 focus:border-red-600' : Boolean(errors.email)})}
+                  id="email"
                   placeholder="email@example.com"
                   type="email"
                 />
-                { errors.username && <span className="text-xs text-red-500 mx-2"> Username field is required </span> }
+                { errors.email && <span className="text-xs text-red-500 mx-2"> { errors.email.message } </span> }
               </div>
 
               <div className="flex flex-col mb-5">
                 <input
-                  {...register('password', {required : true})}
+                  {...register('password')}
                   className={
                     cx('text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none focus:border-blue-400',
                       {'border-red-500 focus:border-red-600' : Boolean(errors.password)})}
@@ -84,9 +110,9 @@ const Login = () => {
                   placeholder="*********"
                   type="password"
                 />
-                { errors.password && <span className="text-xs text-red-500 mx-2"> Password field is required </span> }
+                { errors.password && <span className="text-xs text-red-500 mx-2"> { errors.password.message} </span> }
               </div>
-              { error ? <span className="text-sm text-red-500 font-medium text-center -mt-3 mb-2"> { error.message }</span> : null}
+              { error ? <span className="text-sm text-red-500 font-medium text-center -mt-3 mb-2"> { error.message } </span> : null}
 
               <button
                 className="
@@ -95,6 +121,7 @@ const Login = () => {
                   transition duration-150
                   lg:w-1/2
                 "
+                id="loginbutton"
                 onClick={handleSubmit(onSubmit)}
                 type="submit"
               >
