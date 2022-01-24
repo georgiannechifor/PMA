@@ -15,7 +15,8 @@ const Header = () => {
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
   const [, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
 
-  const getActiveHeaderTab = tab => router.route === tab;
+  const getActiveHeaderTab = tab => router.asPath === tab;
+
 
   return (
     <div className="
@@ -33,7 +34,7 @@ const Header = () => {
           <p
             className={cx(
               'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-black' : getActiveHeaderTab('/')}
+              {'text-gray-800' : getActiveHeaderTab('/')}
             )}
           > Home </p>
         </Link>
@@ -41,7 +42,7 @@ const Header = () => {
           <p
             className={cx(
               'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-black' : getActiveHeaderTab('/knowledge-sharing')}
+              {'text-gray-800' : getActiveHeaderTab('/knowledge-sharing')}
             )}
           > Knowledge sharing  </p>
         </Link>
@@ -49,7 +50,7 @@ const Header = () => {
           <p
             className={cx(
               'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-black' : getActiveHeaderTab('/deploy-tracker')}
+              {'text-gray-800' : getActiveHeaderTab('/deploy-tracker')}
             )}
           > Deploy Tracker </p>
         </Link>

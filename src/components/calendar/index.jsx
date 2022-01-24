@@ -24,17 +24,35 @@ const Calendar = ({
     setCurrentMonth(moment(currentMonth).subtract(1, 'M'));
   };
 
+  const getDaysClass = (day, monthStart) => ({
+    'text-white bg-gray-300'          : moment(day).isSame(new Date(), 'days') && !moment(day).isSame(selectedDate, 'days'),
+    'text-white bg-primary-green-100' : moment(day).isSame(selectedDate, 'days'),
+    'text-gray-400'                   : !moment(day).isSame(monthStart, 'month')
+  });
+
   const renderHeaderSection = () => (
     <div className="flex items-center justify-between w-full">
-      <ChevronLeftIcon
-        className="self-start cursor-pointer text-gray-500 w-6 h-6"
+      <div
+        className="bg-gray-500 p-1 rounded-md cursor-pointer"
         onClick={() => prevMonth()}
-      />
-      <span className="select-none text-lg font-medium text-gray-600"> { moment(currentMonth).format(HEADER_DATE_FORMAT) }</span>
-      <ChevronRightIcon
-        className="self-end cursor-pointer text-gray-500 w-6 h-6"
+      >
+        <ChevronLeftIcon
+          className="self-start mx-2 text-white w-6 h-6"
+        />
+      </div>
+      <span
+        className="select-none text-xl font-medium text-gray-600"
+        key={moment(currentMonth).format(HEADER_DATE_FORMAT)}
+      >
+        { moment(currentMonth).format(HEADER_DATE_FORMAT) }</span>
+      <div
+        className="bg-gray-500 p-1 rounded-md cursor-pointer"
         onClick={() => nextMonth()}
-      />
+      >
+        <ChevronRightIcon
+          className="self-end mx-2 text-white w-6 h-6"
+        />
+      </div>
     </div>
   );
 
@@ -42,13 +60,13 @@ const Calendar = ({
     let startDate = moment(currentMonth).startOf('week');
     const days = [];
 
-    for (let index = 0; index < 7; index++) { // eslint-disable-line
+    for (let index = 1; index <=7; index++) { // eslint-disable-line
       const temp = moment(startDate)
         .add(index, 'days')
         .format(DAYS_DATE_FORMAT);
 
       days.push(
-        <div className="select-none text-sm text-center font-medium py-4 w-10 h-4 text-gray-500" key={`${temp}-${index}`}>
+        <div className="uppercase select-none text-sm text-center font-medium py-4 w-10 h-4 text-gray-500 select-none" key={`${temp}-${index}`}>
           { temp }
         </div>
       );
@@ -61,42 +79,40 @@ const Calendar = ({
     <div
       className={
         cx(
-          {'bg-gray-200' :
-              events[moment(day).format('DD/MM/YYYY')] &&
-              !moment(day).isSame(new Date(), 'days') &&
-              !moment(day).isSame(selectedDate, 'days')
-          },
-          {'text-white bg-blue-500' : moment(day).isSame(new Date(), 'days')},
-          {'text-white bg-primary-green-100' : moment(day).isSame(selectedDate, 'days')},
-          {'text-gray-300' : !moment(day).isSame(monthStart, 'month')},
+          getDaysClass(day, monthStart),
           `relative
-          w-8 h-8 flex
+          select-none
+          w-8 h-9 m-0.5 flex flex-col
           items-center justify-center
           cursor-pointer
-          rounded-full text-center text-primary-gray-50`
+          rounded
+          text-center`
         )}
-      key={day}
+      key={moment(day).format('DD/MM/YYYY')}
       onClick={() => {
         setCurrentMonth(day);
         onDateClick(day);
       }}
     >
-      <span className="user-select-none">{moment(day).format('D')}</span>
+      <span className="user-select-none mb-auto">{moment(day).format('D')}</span>
+
       {
-        moment(day).isSame(monthStart, 'month') &&
-          events[moment(day).format('DD/MM/YYYY')] && (
-          <span
-            className="w-4 h-4 text-xs flex items-center justify-center bg-red-600 text-white rounded-full absolute -top-2 -right-2"
-          > {events[moment(day).format('DD/MM/YYYY')].length}
-          </span>
+        events[moment(day).format('DD/MM/YYYY')] && (
+          <span className={cx('h-2px w-1/2 mb-1', {
+            'bg-white'   : moment(day).isSame(selectedDate, 'days'),
+            'bg-red-500' : !moment(day).isSame(selectedDate, 'days')
+          })}
+          />
         )
       }
+
     </div>
   );
 
 
   const renderCellsForDays = () => { //eslint-disable-line
-    const monthStart = moment(currentMonth).startOf('month');
+    const monthStart = moment(currentMonth).isoWeekday(1)
+      .startOf('month');
     const monthEnd = moment(monthStart).endOf('month');
     const startDate = moment(monthStart).startOf('week');
     const endDate = moment(monthEnd).endOf('week');
@@ -106,12 +122,12 @@ const Calendar = ({
     let day = startDate;
 
     while (day <= endDate) {
-      for (let i = 0; i < 7; i++) { // eslint-disable-line
+      for (let i = 1; i <= 7; i++) { // eslint-disable-line
         days.push(getDayContainer(day, monthStart));
         day = moment(day).add(1, 'days');
       }
       rows.push(
-        <div className="w-full flex items-center justify-between text-center" key={day}>
+        <div className="w-full flex items-center justify-between text-center" key={`${moment(day).format('DD/MM/YYYY')}-${currentMonth}`}>
           {days}
         </div>
       );
@@ -123,12 +139,14 @@ const Calendar = ({
 
 
     rows.push(
-      <div className="w-full flex items-center justify-between text-center">
+      <div className="w-full flex items-center justify-between text-center" key="supplementary-row">
         <div className="relative
-          w-8 h-8 flex
-          items-center justify-center p-2
-          rounded-full text-center text-primary-gray-50
-          hover:bg-primary-gray-3 hover:text-primary-green-100"
+          w-8 h-9 m-0.5 flex flex-col
+          items-center justify-center
+          cursor-pointer
+          rounded
+          select-none
+          text-center"
         > &nbsp;
         </div>
       </div>
@@ -143,7 +161,7 @@ const Calendar = ({
         { renderHeaderSection() }
       </div>
 
-      <div className="flex items-center justify-between w-full text-center">
+      <div className="flex items-center justify-between w-full mb-3 text-center">
         {renderDaysSection()}
       </div>
 
