@@ -25,10 +25,10 @@ const Home = () => {
 
   return (
     <Loader isLoading={loading}>
-      <div className="flex flex-col p-10">
-        <div className="flex-1 w-1/2 self-center bg-white grid grid-rows-2">
-          <div className="flex-1 w-full p-5">
-            <div className="w-4/6 mx-auto">
+      <div className="flex flex-col p-5 lg:p-10">
+        <div className="flex-1 w-full self-center bg-white grid grid-rows-2 lg:w-1/2">
+          <div className="flex-1 w-full p-3 lg:px-8 lg:py-5">
+            <div className="w-full lg:max-w-md lg:mx-auto">
               <Calendar
                 events={events}
                 selectedDate={selectedDate}
@@ -38,7 +38,7 @@ const Home = () => {
           </div>
 
           <div
-            className="flex-1 flex flex-col p-10 bg-gray-600 text-white text-lg gap-5 overflow-y-auto h-80 max-h-80 box-border rounded-tr rounded-br"
+            className="flex flex-col p-10 bg-gray-600 text-white text-lg gap-5 overflow-y-auto max-h-90 box-border"
             id="scroll-style"
           >
             {
@@ -52,7 +52,7 @@ const Home = () => {
                     <span className="text-xs text-gray-400" > { `${event.startTime} - ${event.endTime}`} </span>
                   </div>
                 </div>
-              )) || <p className="text-md font-medium text-center"> No event for selected date </p>
+              )) || <p className="text-md font-medium text-center select-none"> No event for selected date </p>
             }
           </div>
         </div>
