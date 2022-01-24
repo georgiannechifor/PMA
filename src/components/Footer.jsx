@@ -1,5 +1,5 @@
 const Footer = () => (
-  <div className="mt-auto bg-gray-800 w-full h-24" />
+  <footer className="mt-auto top-24 bg-gray-800 w-full h-24" />
 );
 
 Footer.displayName = 'Footer';

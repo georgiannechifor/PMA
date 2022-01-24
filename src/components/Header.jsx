@@ -2,21 +2,43 @@ import {useState} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {LogoutIcon} from '@heroicons/react/solid';
+import {Menu} from '@headlessui/react';
 import {useRouter} from 'next/router';
 import * as cx from 'classnames';
 
 import useLocalStorage from 'utils/useLocalStorage';
-import {LOCAL_STORAGE_USER_KEY} from 'constants/index';
+import {LOCAL_STORAGE_USER_KEY, USER_ROLES, PRIVATE_PATHS} from 'constants/index';
 
 import {Modal} from './';
 
 const Header = () => {
   const router = useRouter();
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
-  const [, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
+  const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
 
   const getActiveHeaderTab = tab => router.asPath === tab;
 
+  const getIsAdmin = () => storedValue &&
+  storedValue.user &&
+  (storedValue.user.jobTitle === USER_ROLES.ADMIN || storedValue.user.jobTitle === USER_ROLES.SUPER_ADMIN);
+
+
+  const getAdminDropDown = () => (
+    <Menu>
+      <Menu.Button> Admin </Menu.Button>
+      <Menu.Items>
+        <Menu.Item>
+          {({active}) => (
+            <Link
+              className={`${active && 'bg-gray-300'}`}
+              href="/admin-users"
+            > Users </Link>
+          )}
+        </Menu.Item>
+
+      </Menu.Items>
+    </Menu>
+  );
 
   return (
     <div className="
@@ -30,31 +52,44 @@ const Header = () => {
         <Image layout="fill" src={'/images/logo.png'} />
       </div>
       <div className="flex gap-x-5">
-        <Link href="/">
-          <p
-            className={cx(
-              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-gray-800' : getActiveHeaderTab('/')}
-            )}
-          > Home </p>
-        </Link>
-        <Link href="/knowledge-sharing">
-          <p
-            className={cx(
-              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-gray-800' : getActiveHeaderTab('/knowledge-sharing')}
-            )}
-          > Knowledge sharing  </p>
-        </Link>
-        <Link href="/deploy-tracker">
-          <p
-            className={cx(
-              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-gray-800' : getActiveHeaderTab('/deploy-tracker')}
-            )}
-          > Deploy Tracker </p>
-        </Link>
-
+        {
+          router.asPath === PRIVATE_PATHS.ADMIN_CONFIG ? null : (
+            <>
+              <Link href={PRIVATE_PATHS.HOME_PAGE}>
+                <p
+                  className={cx(
+                    'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.HOME_PAGE)}
+                  )}
+                > Home </p>
+              </Link>
+              <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
+                <p
+                  className={cx(
+                    'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
+                  )}
+                > Knowledge sharing  </p>
+              </Link>
+              <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
+                <p
+                  className={cx(
+                    'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.DEPLOY_TRACKER)}
+                  )}
+                > Deploy Tracker </p>
+              </Link>
+              { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
+                <p className={cx(
+                  'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                  {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.ADMIN_CONFIG)}
+                )}
+                > Admin </p>
+              </Link>
+              }
+            </>
+          )
+        }
 
         <LogoutIcon
           className="w-7 self-center cursor-pointer text-gray-800 hover:text-gray-600 sm:w-6 md:w-5"

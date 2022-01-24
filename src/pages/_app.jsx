@@ -6,20 +6,27 @@ import {Layout, AdminLayout, RouterGuard} from 'components';
 import {PRIVATE_PATHS, PUBLIC_PATHS} from 'constants/index';
 
 const PageLayout = ({children, route}) => {
-  // [TDB] check if user is admin or superdmin
-
   if (route === PRIVATE_PATHS.ADMIN_CONFIG) {
-    return <AdminLayout> { children }</AdminLayout>;
+    return (
+      <AdminLayout>
+        { children }
+      </AdminLayout>
+    );
   }
 
-  return <Layout isPublic={Object.values(PUBLIC_PATHS).includes(route)}> { children }</Layout>;
+  return (
+    <Layout
+      isPublic={Object.values(PUBLIC_PATHS).includes(route)}
+    > { children }
+    </Layout>
+  );
 };
 
 const App = ({Component, pageProps}) => {
   const router = useRouter();
 
   return (
-    <PageLayout route={router.route}>
+    <PageLayout route={router.asPath}>
       <RouterGuard>
         <Component {...pageProps} />
       </RouterGuard>
