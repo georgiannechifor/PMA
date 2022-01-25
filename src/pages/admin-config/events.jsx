@@ -6,6 +6,7 @@ const AdminEvents = ({
 }) => (
   <div>
     <h1>AdminEvents Title </h1>
+    <p> { events.length }</p>
   </div>
 );
 

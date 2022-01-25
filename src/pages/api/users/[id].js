@@ -1,4 +1,4 @@
-import { dbConnect } from 'utils/dbConnect';
+import {dbConnect} from 'utils/dbConnect';
 import User from 'models/user';
 import {
   STATUS_OK,
@@ -8,74 +8,76 @@ import {
 
 dbConnect();
 
-export default async (req, res) => {
-  const { query : { id }, method } = req;
+export default async (req, res) => { // eslint-disable-line complexity, max-statements
+  const {query : {id}, method} = req;
 
-  switch(method) {
+  switch (method) {
     case 'GET': {
       try {
         const user = await User.findById(id).select(['-__v', '-password']);
 
-        if(user) {
-            return res.status(STATUS_OK).json({
-              data : user
-            })
+        if (user) {
+          return res.status(STATUS_OK).json({
+            data : user
+          });
         }
+
         return res.status(STATUS_NOT_FOUND).json({
           message : 'User not found'
-        })
-      } catch(error) {
+        });
+      } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
           message : error.message
-        })
+        });
       }
     }
     case 'PUT': {
       try {
         const user = await User
           .findByIdAndUpdate(id, req.body, {
-            new : true,
-            runValidators: true
+            new           : true,
+            runValidators : true
           })
           .select(['-__v', '-password']);
 
-        if(!user) {
+        if (!user) {
           return res.status(STATUS_NOT_FOUND).json({
             message : 'User not found'
-          })
+          });
         }
 
         return res.status(STATUS_OK).json({
           data : user
-        })
-      } catch(error) {
+        });
+      } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
           message : error.message
-        })
+        });
       }
     }
     case 'DELETE': {
       try {
-        const deletedUser = await User.deleteOne({ _id: id });
+        const deletedUser = await User.deleteOne({_id : id});
 
-        if(!deletedNode) {
+        if (!deletedUser) {
           return res.status(STATUS_NOT_FOUND).json({
             message : 'User not deleted'
-          })
+          });
         }
+
         return res.status(STATUS_OK).json({
           data : {}
-        })
-      } catch (e) {
-
-      } finally {
-
+        });
+      } catch (error) {
+        return res.status(STATUS_OK).json({
+          message : error.message
+        });
       }
     }
     default: {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Method not allowed'
-      })
+        message : 'Method not allowed'
+      });
     }
   }
-}
+};

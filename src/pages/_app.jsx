@@ -2,7 +2,7 @@ import {object, elementType, string} from 'prop-types';
 import {useRouter} from 'next/router';
 
 import '../styles/globals.css';
-import {Layout, AdminLayout, RouterGuard} from 'components';
+import {Layout, AdminLayout} from 'components';
 import {PUBLIC_PATHS} from 'constants/index';
 
 const PageLayout = ({children, route}) => {
@@ -27,9 +27,7 @@ const App = ({Component, pageProps}) => {
 
   return (
     <PageLayout route={router.asPath}>
-      <RouterGuard>
-        <Component {...pageProps} />
-      </RouterGuard>
+      <Component {...pageProps} />
     </PageLayout>
   );
 };

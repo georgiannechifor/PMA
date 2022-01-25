@@ -20,7 +20,10 @@ const UserSchema = new mongoose.Schema({
     type     : String,
     required : [true, 'Please enter a password for your account']
   },
-  team     : String,
+  team : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref  : 'Team'
+  },
   jobTitle : {
     type    : String,
     enum    : ['user', 'admin', 'superadmin'],

@@ -5,8 +5,8 @@ import Header from './Header';
 import {Layout, AdminLayout} from './layout';
 import Modal from './Modal';
 import Calendar from './Calendar';
-import RouterGuard from './RouterGuard';
 import AdminMenu from './AdminMenu';
+import Table from './Table';
 
 export {
   Loader,
@@ -16,5 +16,5 @@ export {
   Header,
   Modal,
   Calendar,
-  RouterGuard
+  Table
 };

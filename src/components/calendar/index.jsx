@@ -119,6 +119,7 @@ const Calendar = ({
     const rows = [];
 
     let days = [];
+
     let day = startDate;
 
     while (day <= endDate) {
