@@ -1,30 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {CalendarIcon} from '@heroicons/react/outline';
 import map from 'lodash/map';
 import moment from 'moment';
-
+import Router from 'next/router';
 import {Calendar, Loader} from 'components';
+import { STATUS_UNAUTHORIZED } from 'constants/index';
 import {useFetch} from 'utils/useFetch';
+import { getPropsFromFetch } from 'utils/getPropsFromFetch';
 
-const Home = () => {
-  const {result: {data, loading}, fetchData} = useFetch('/events');
-  const [events, setEvents] = useState({});
 
+const Home = ({events}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (data) {
-      setEvents(data.data || {});
-    }
-  }, [data]);
-
-
   return (
-    <Loader isLoading={loading}>
+    <Loader isLoading={false}>
       <div className="flex flex-col p-5 lg:p-10">
         <div className="flex-1 w-full self-center bg-white grid grid-rows-2 lg:w-1/2">
           <div className="flex-1 w-full p-3 lg:px-8 lg:py-5">
@@ -60,6 +49,13 @@ const Home = () => {
     </Loader>
   );
 };
+
+Home.getInitialProps = async (ctx) => {
+  const { data } = await getPropsFromFetch('http://localhost:3000/api/events', ctx);
+  return {
+    events : data
+  }
+}
 
 Home.displayName = 'Home';
 export default Home;

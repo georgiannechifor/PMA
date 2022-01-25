@@ -1,29 +1,27 @@
 import {useEffect} from 'react';
 import {useRouter} from 'next/router';
 import {useForm} from 'react-hook-form';
-import * as Yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 import * as cx from 'classnames';
 
 import {useFetch} from 'utils/useFetch';
 import useLocalStorage from 'utils/useLocalStorage';
 import {Loader} from 'components';
-import {LOCAL_STORAGE_USER_KEY} from 'constants/index';
+import {USER_LOCAL_STORAGE_KEY} from 'constants/index';
 
 const Login = () => {
-  const router = useRouter();
-
   const formSchema = Yup.object().shape({
     email : Yup.string().email()
       .required('Email is required'),
     password : Yup.string()
       .required('Password is required')
   });
+  const router = useRouter();
   const validationOptions = {resolver : yupResolver(formSchema)};
-
   const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
-  const {result: {data, loading, error}, fetchData} = useFetch('/auth/login');
-  const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
+  const {result: {data, loading, error}, fetchData} = useFetch('auth/login');
+  const [, setStoredValue] = useLocalStorage(USER_LOCAL_STORAGE_KEY, {});
 
   const onSubmit = formData => {
     fetchData({
@@ -35,29 +33,20 @@ const Login = () => {
     });
   };
 
+
+  useEffect(() => {
+    if (data && data.email) { // eslint-disable-line no-underscore-dangle
+      setStoredValue(data);
+      router.push(router.query.returnUrl || '/');
+    }
+  }, [data]);
+
   const handlePressEnterButton = event => {
     if (event.keyCode === 13) { // eslint-disable-line no-magic-numbers
       event.preventDefault();
       document.getElementById('loginbutton').click();
     }
   };
-
-  useEffect(() => {
-    if (data && data.accessToken) {
-      setValue({
-        accessToken : data.accessToken,
-        user        : data.data
-      });
-
-      router.push(router.query.returnUrl || '/');
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (storedValue && storedValue.accessToken && !error) {
-      router.push(router.query.returnUrl || '/');
-    }
-  }, [storedValue]);
 
   useEffect(() => {
     window.addEventListener('keyup', handlePressEnterButton);
