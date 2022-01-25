@@ -3,10 +3,10 @@ import {useRouter} from 'next/router';
 
 import '../styles/globals.css';
 import {Layout, AdminLayout, RouterGuard} from 'components';
-import {PRIVATE_PATHS, PUBLIC_PATHS} from 'constants/index';
+import {PUBLIC_PATHS} from 'constants/index';
 
 const PageLayout = ({children, route}) => {
-  if (route === PRIVATE_PATHS.ADMIN_CONFIG) {
+  if (route && route.includes('/admin-config')) {
     return (
       <AdminLayout>
         { children }

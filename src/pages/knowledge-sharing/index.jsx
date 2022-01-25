@@ -6,12 +6,14 @@ const KnowledgeSharing = () => (
   </div>
 );
 
-KnowledgeSharing.getInitialProps = async (ctx) => {
-  const { data } = await getPropsFromFetch('http://localhost:3000/api/events', ctx);
+KnowledgeSharing.getInitialProps = async ctx => {
+  const {data} = await getPropsFromFetch('/events', ctx);
+
+
   return {
     events : data
-  }
-}
+  };
+};
 
 KnowledgeSharing.displayName = 'KnowledgeSharing';
 KnowledgeSharing.propTypes = {};

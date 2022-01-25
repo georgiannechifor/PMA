@@ -2,7 +2,7 @@ import {useState} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {LogoutIcon} from '@heroicons/react/solid';
-import {Menu} from '@headlessui/react';
+import {string} from 'prop-types';
 import {useRouter} from 'next/router';
 import * as cx from 'classnames';
 
@@ -12,7 +12,9 @@ import {useFetch} from 'utils/useFetch';
 
 import {Modal} from './';
 
-const Header = () => {
+const Header = ({
+  className
+}) => {
   const router = useRouter();
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
@@ -25,37 +27,21 @@ const Header = () => {
   (storedValue.jobTitle === USER_ROLES.ADMIN || storedValue.jobTitle === USER_ROLES.SUPER_ADMIN);
 
 
-  const getAdminDropDown = () => (
-    <Menu>
-      <Menu.Button> Admin </Menu.Button>
-      <Menu.Items>
-        <Menu.Item>
-          {({active}) => (
-            <Link
-              className={`${active && 'bg-gray-300'}`}
-              href="/admin-users"
-            > Users </Link>
-          )}
-        </Menu.Item>
-
-      </Menu.Items>
-    </Menu>
-  );
-
   return (
-    <div className="
+    <div className={`${className}
       self-start bg-white w-full h-24 shadow-md
       flex justify-center items-center
       px-10
       sm:justify-end
-      "
+      `
+    }
     >
       <div className="relative justify-self-start mr-auto w-28 h-20 cursor-pointer hidden sm:block" onClick={() => router.push('/')}>
         <Image layout="fill" src={'/images/logo.png'} />
       </div>
       <div className="flex gap-x-5">
         {
-          router.asPath === PRIVATE_PATHS.ADMIN_CONFIG ? null : (
+          router.asPath.includes('/admin-config') ? null : (
             <>
               <Link href={PRIVATE_PATHS.HOME_PAGE}>
                 <p
@@ -129,4 +115,10 @@ const Header = () => {
 };
 
 Header.displayName = 'Header';
+Header.propTypes = {
+  className : string
+};
+Header.defaultProps = {
+  className : ''
+};
 export default Header;

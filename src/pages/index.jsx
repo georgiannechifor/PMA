@@ -4,9 +4,9 @@ import map from 'lodash/map';
 import moment from 'moment';
 import Router from 'next/router';
 import {Calendar, Loader} from 'components';
-import { STATUS_UNAUTHORIZED } from 'constants/index';
+import {STATUS_UNAUTHORIZED} from 'constants/index';
 import {useFetch} from 'utils/useFetch';
-import { getPropsFromFetch } from 'utils/getPropsFromFetch';
+import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 
 
 const Home = ({events}) => {
@@ -50,12 +50,14 @@ const Home = ({events}) => {
   );
 };
 
-Home.getInitialProps = async (ctx) => {
-  const { data } = await getPropsFromFetch('http://localhost:3000/api/events', ctx);
+Home.getInitialProps = async ctx => {
+  const {data} = await getPropsFromFetch('/events', ctx);
+
+
   return {
     events : data
-  }
-}
+  };
+};
 
 Home.displayName = 'Home';
 export default Home;
