@@ -8,7 +8,7 @@ const AdminLayout = ({children}) => (
       <div className="fixed top-24 h-relative w-60 shadow-xl bg-gray-50">
         <AdminMenu />
       </div>
-      <div className="ml-64 mt-28">
+      <div className="w-full ml-64 mt-28">
         {children}
       </div>
     </div>
