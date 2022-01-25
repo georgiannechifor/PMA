@@ -1,0 +1,15 @@
+#scroll-style::-webkit-scrollbar {
+  @apply w-1.5 ;
+}
+
+#scroll-style::-webkit-scrollbar-track {
+  @apply shadow-inner bg-gray-300 rounded;
+}
+
+#scroll-style::-webkit-scrollbar-thumb {
+  @apply bg-gray-500 rounded;
+}
+
+#scroll-style::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-100;
+}
