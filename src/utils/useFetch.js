@@ -31,7 +31,7 @@ export const useFetch = (
       }
     )
       .then(res => {
-        if(res.status === Number(STATUS_FORBIDDEN) || res.status === Number(STATUS_UNAUTHORIZED)) {
+        if(res.status === STATUS_FORBIDDEN || res.status === STATUS_UNAUTHORIZED) {
           setValue({});
           router.push({
             pathname: PUBLIC_PATHS.LOGIN,
@@ -47,7 +47,7 @@ export const useFetch = (
           setError(jsonResponse.error);
           setData({});
         } else {
-          setData(jsonResponse)
+          setData(jsonResponse.data)
         }
       })
       .catch(err => {

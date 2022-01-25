@@ -1,4 +1,4 @@
-import {Header, Footer} from '../';
+import {Header} from '../';
 import {any, bool} from 'prop-types';
 
 const Layout = ({children, isPublic}) => (isPublic ? <>
@@ -7,7 +7,6 @@ const Layout = ({children, isPublic}) => (isPublic ? <>
   <div className="flex flex-col min-h-screen">
     <Header />
     {children}
-    <Footer />
   </div>
 ));
 

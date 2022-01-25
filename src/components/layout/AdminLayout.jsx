@@ -1,4 +1,4 @@
-import {AdminMenu, Header, Footer} from '../';
+import {AdminMenu, Header} from '../';
 import {elementType, object, oneOfType} from 'prop-types';
 
 const AdminLayout = ({children}) => (
@@ -8,7 +8,6 @@ const AdminLayout = ({children}) => (
       <AdminMenu />
       {children}
     </div>
-    <Footer />
   </div>
 );
 
