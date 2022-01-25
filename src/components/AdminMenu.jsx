@@ -58,9 +58,6 @@ const AdminMenu = () => {
 };
 
 AdminMenu.displayName = 'AdminMenu';
-AdminMenu.propTypes = {
-  activeTab    : string.isRequired,
-  setActiveTab : func.isRequired
-};
+AdminMenu.propTypes = {};
 
 export default AdminMenu;

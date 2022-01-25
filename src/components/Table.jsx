@@ -25,7 +25,7 @@ const Table = ({
           <tr className="bg-gradient-to-r from-indigo-600 to-purple-600">
             {
               map(columns, column => (
-                <th className="px-16 py-2 text-left">
+                <th className="px-16 py-2 text-left" key={column.key}>
                   <span className="text-gray-100 font-medium"> { column.title } </span>
                 </th>
               ))
@@ -44,7 +44,8 @@ const Table = ({
               >
                 {
                   map(columns, rowColumn => (
-                    <td className="px-16 py-2 text-left">
+                    // eslint-disable-next-line no-underscore-dangle
+                    <td className="px-16 py-2 text-left" key={`${item._id}-${rowColumn.key}`}>
                       <span>{ getRowColumnValue(item, rowColumn.key) || <span className="italic"> No value </span>}</span>
                     </td>
                   ))
