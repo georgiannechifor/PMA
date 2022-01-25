@@ -21,7 +21,7 @@ const Login = () => {
   const validationOptions = {resolver : yupResolver(formSchema)};
   const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
   const {result: {data, loading, error}, fetchData} = useFetch('auth/login');
-  const [, setStoredValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
+  const [, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
 
   const onSubmit = formData => {
     fetchData({
@@ -35,7 +35,7 @@ const Login = () => {
 
   useEffect(() => {
     if (data && data.email) { // eslint-disable-line no-underscore-dangle
-      setStoredValue(data);
+      setValue(data);
       router.push('/');
     }
   }, [data]);

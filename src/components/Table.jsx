@@ -20,12 +20,12 @@ const Table = ({
 
   return (
     <>
-      <table className="mx-auto table-auto">
+      <table className="w-5/6 mx-auto table-auto">
         <thead>
           <tr className="bg-gradient-to-r from-indigo-600 to-purple-600">
             {
               map(columns, column => (
-                <th className="px-16 py-2">
+                <th className="px-16 py-2 text-left">
                   <span className="text-gray-100 font-medium"> { column.title } </span>
                 </th>
               ))
@@ -35,6 +35,7 @@ const Table = ({
         <tbody className="bg-gray-200">
           {
             data &&
+            data.length &&
             map(data, item => (
               <tr
                 className="bg-white cursor-pointer hover:bg-gray-50"
@@ -43,13 +44,17 @@ const Table = ({
               >
                 {
                   map(columns, rowColumn => (
-                    <td className="px-16 py-2">
+                    <td className="px-16 py-2 text-left">
                       <span>{ getRowColumnValue(item, rowColumn.key) || <span className="italic"> No value </span>}</span>
                     </td>
                   ))
                 }
               </tr>
-            )) || <p> No items to be displayed </p>
+            )) || (
+              <tr className="bg-white cursor-pointer hover:bg-gray-50 col-span-auto">
+                <td className="text-center text-gray-400 italic" colSpan={columns.length}> <p> No items to be displayed </p> </td>
+              </tr>
+            )
           }
         </tbody>
 

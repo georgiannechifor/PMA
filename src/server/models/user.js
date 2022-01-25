@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const BCRYPT_SALT = 10;
+const DEFAULT_EXPIRE_TIME = 640800;
+
 const UserSchema = new mongoose.Schema({
   firstName : {
     type     : String,
@@ -41,7 +44,7 @@ UserSchema.pre('save', async function save (next) {
   }
 
   try {
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(BCRYPT_SALT);
 
     this.password = await bcrypt.hash(this.password, salt);
 
@@ -52,14 +55,16 @@ UserSchema.pre('save', async function save (next) {
 });
 
 UserSchema.methods.validatePassword = async function validatePassword (data) {
-  await bcrypt.compare(data, this.password);
+  // eslint-disable-next-line no-return-await
+  return await bcrypt.compare(data, this.password);
 };
 
 UserSchema.methods.getJwtToken = function getJwtToken () {
   return jwt.sign({
+    // eslint-disable-next-line no-underscore-dangle
     id : this._id
   }, process.env.JWT_SECRET, {
-    expiresIn : process.env.JWT_EXPIRES_TIME || 604800
+    expiresIn : process.env.JWT_EXPIRES_TIME || DEFAULT_EXPIRE_TIME
   });
 };
 

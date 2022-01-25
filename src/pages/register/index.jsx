@@ -32,7 +32,7 @@ const Register = () => {
   const validationOptions = {resolver : yupResolver(formSchema)};
 
   const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
-  const {result: {data, loading}, fetchData} = useFetch('/auth/register');
+  const {result: {data, loading}, fetchData} = useFetch('auth/register');
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {}); // eslint-disable-line no-unused-vars
 
   const onSubmit = formData => {
@@ -46,19 +46,11 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (data?.accessToken) {
-      setValue({
-        accessToken : data.accessToken,
-        user        : data.data
-      });
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (storedValue && storedValue.accessToken) {
+    if (data && data.email) {
+      setValue(data);
       router.push('/');
     }
-  }, [storedValue]);
+  }, [data]);
 
   return (
     <Loader isLoading={loading}>
