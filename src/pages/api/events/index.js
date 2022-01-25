@@ -1,12 +1,11 @@
 import {dbConnect} from 'utils/dbConnect';
 import Event from 'models/event';
-import { authenticated } from 'service/index';
+import {authenticated} from 'service/index';
 import groupBy from 'lodash/groupBy';
 
 import {
   STATUS_METHOD_NOT_ALLOWED,
   STATUS_BAD_REQUEST,
-  STATUS_NOT_FOUND,
   STATUS_OK,
   STATUS_CREATED
 } from 'constants/responseStatus';
@@ -14,19 +13,22 @@ import {
 dbConnect();
 
 const eventsHandler = authenticated(async (req, res) => {
-  const { method } = req;
-  switch(method) {
+  const {method} = req;
+
+  switch (method) {
     case 'GET': {
       try {
         const events = await Event.find({});
         const groupedEvents = groupBy(events, event => event.date);
+
+
         return res.status(STATUS_OK).json({
           data : groupedEvents
-        })
-      } catch(error) {
+        });
+      } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
           message : error.message
-        })
+        });
       }
     }
     case 'POST': {
@@ -37,18 +39,18 @@ const eventsHandler = authenticated(async (req, res) => {
         });
 
         return res.status(STATUS_CREATED).json({
-          data: event,
-        })
-      } catch(error) {
+          data : event
+        });
+      } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
-          error: error.message
-        })
+          error : error.message
+        });
       }
     }
     default: {
       return res.status(STATUS_METHOD_NOT_ALLOWED).json({
-        error: 'Method not allowed'
-      })
+        error : 'Method not allowed'
+      });
     }
   }
 });

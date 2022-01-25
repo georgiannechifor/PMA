@@ -25,6 +25,8 @@ import {
   PUBLIC_PATHS
 } from './routes';
 
+import {TABS} from './adminTabs';
+
 export {
   STATUS_OK,
   STATUS_CREATED,
@@ -41,7 +43,8 @@ export {
 
   USER_ROLES,
   PRIVATE_PATHS,
-  PUBLIC_PATHS
+  PUBLIC_PATHS,
+  TABS
 };
 
 export {

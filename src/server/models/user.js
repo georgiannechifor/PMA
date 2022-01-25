@@ -20,7 +20,10 @@ const UserSchema = new mongoose.Schema({
     type     : String,
     required : [true, 'Please enter a password for your account']
   },
-  team     : String,
+  team : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref  : 'Team'
+  },
   jobTitle : {
     type    : String,
     enum    : ['user', 'admin', 'superadmin'],
@@ -32,28 +35,32 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+UserSchema.pre('save', async function save (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
 
   try {
     const salt = await bcrypt.genSalt(10);
+
     this.password = await bcrypt.hash(this.password, salt);
+
     return next();
   } catch (err) {
     return next(err);
   }
 });
 
-UserSchema.methods.validatePassword = async function(data) {
-  return await bcrypt.compare(data, this.password)
+UserSchema.methods.validatePassword = async function validatePassword (data) {
+  await bcrypt.compare(data, this.password);
 };
 
-UserSchema.methods.getJwtToken = function () {
+UserSchema.methods.getJwtToken = function getJwtToken () {
   return jwt.sign({
     id : this._id
   }, process.env.JWT_SECRET, {
     expiresIn : process.env.JWT_EXPIRES_TIME || 604800
   });
-}
+};
 
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

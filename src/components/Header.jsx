@@ -2,56 +2,82 @@ import {useState} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {LogoutIcon} from '@heroicons/react/solid';
+import {string} from 'prop-types';
 import {useRouter} from 'next/router';
 import * as cx from 'classnames';
+
+import useLocalStorage from 'utils/useLocalStorage';
+import {LOCAL_STORAGE_USER_KEY, USER_ROLES, PRIVATE_PATHS} from 'constants/index';
 import {useFetch} from 'utils/useFetch';
 
 import {Modal} from './';
 
-const Header = () => {
+const Header = ({
+  className
+}) => {
   const router = useRouter();
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
+  const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
   const {fetchData} = useFetch('auth/logout');
+
   const getActiveHeaderTab = tab => router.asPath === tab;
+
+  const getIsAdmin = () =>
+    storedValue &&
+  (storedValue.jobTitle === USER_ROLES.ADMIN || storedValue.jobTitle === USER_ROLES.SUPER_ADMIN);
 
 
   return (
-    <div className="
+    <div className={`${className}
       self-start bg-white w-full h-24 shadow-md
       flex justify-center items-center
       px-10
       sm:justify-end
-      "
+      `
+    }
     >
       <div className="relative justify-self-start mr-auto w-28 h-20 cursor-pointer hidden sm:block" onClick={() => router.push('/')}>
         <Image layout="fill" src={'/images/logo.png'} />
       </div>
       <div className="flex gap-x-5">
-        <Link href="/">
-          <p
-            className={cx(
-              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-gray-800' : getActiveHeaderTab('/')}
-            )}
-          > Home </p>
-        </Link>
-        <Link href="/knowledge-sharing">
-          <p
-            className={cx(
-              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-gray-800' : getActiveHeaderTab('/knowledge-sharing')}
-            )}
-          > Knowledge sharing  </p>
-        </Link>
-        <Link href="/deploy-tracker">
-          <p
-            className={cx(
-              'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
-              {'text-gray-800' : getActiveHeaderTab('/deploy-tracker')}
-            )}
-          > Deploy Tracker </p>
-        </Link>
-
+        {
+          router.asPath.includes('/admin-config') ? null : (
+            <>
+              <Link href={PRIVATE_PATHS.HOME_PAGE}>
+                <p
+                  className={cx(
+                    'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.HOME_PAGE)}
+                  )}
+                > Home </p>
+              </Link>
+              <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
+                <p
+                  className={cx(
+                    'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
+                  )}
+                > Knowledge sharing  </p>
+              </Link>
+              <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
+                <p
+                  className={cx(
+                    'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.DEPLOY_TRACKER)}
+                  )}
+                > Deploy Tracker </p>
+              </Link>
+              { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
+                <p className={cx(
+                  'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                  {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.ADMIN_CONFIG)}
+                )}
+                > Admin </p>
+              </Link>
+              }
+            </>
+          )
+        }
 
         <LogoutIcon
           className="w-7 self-center cursor-pointer text-gray-800 hover:text-gray-600 sm:w-6 md:w-5"
@@ -70,6 +96,7 @@ const Header = () => {
             <button
               className="px-4 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg"
               onClick={() => {
+                setValue({});
                 fetchData({
                   method : 'POST'
                 });
@@ -88,4 +115,10 @@ const Header = () => {
 };
 
 Header.displayName = 'Header';
+Header.propTypes = {
+  className : string
+};
+Header.defaultProps = {
+  className : ''
+};
 export default Header;

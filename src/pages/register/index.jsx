@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import {useRouter} from 'next/router';
 import {ArrowCircleLeftIcon} from '@heroicons/react/outline';
 import {useForm} from 'react-hook-form';
-import * as Yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+import {yupResolver} from '@hookform/resolvers/yup';
 import * as cx from 'classnames';
 
 import {useFetch} from 'utils/useFetch';
@@ -23,16 +23,16 @@ const Register = () => {
       .required('Email is required'),
     password : Yup.string()
       .required('Password is required')
-      .min(4, 'Password length should be at least 4 characters'),
-    confirmPassword: Yup.string()
+      .min(4, 'Password length should be at least 4 characters'), // eslint-disable-line no-magic-numbers
+    confirmPassword : Yup.string()
       .required('Confirm password is required')
       .oneOf([Yup.ref('password')], 'Passwords must match')
   });
 
-  const validationOptions = { resolver : yupResolver(formSchema)};
+  const validationOptions = {resolver : yupResolver(formSchema)};
 
   const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
-  const {result: {data, loading, error}, fetchData} = useFetch('/auth/register');
+  const {result: {data, loading}, fetchData} = useFetch('/auth/register');
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {}); // eslint-disable-line no-unused-vars
 
   const onSubmit = formData => {
@@ -40,7 +40,7 @@ const Register = () => {
       method : 'POST',
       data   : {
         ...formData,
-        jobTitle : USER_ROLES.USER,
+        jobTitle : USER_ROLES.USER
       }
     });
   };
@@ -55,10 +55,10 @@ const Register = () => {
   }, [data]);
 
   useEffect(() => {
-    if(storedValue && storedValue.accessToken) {
+    if (storedValue && storedValue.accessToken) {
       router.push('/');
     }
-  }, [storedValue])
+  }, [storedValue]);
 
   return (
     <Loader isLoading={loading}>
@@ -91,7 +91,7 @@ const Register = () => {
                     placeholder="First Name"
                     type="text"
                   />
-                { errors.firstName && <span className=" text-xs text-red-500 mx-2"> { errors.firstName.message } </span> }
+                  { errors.firstName && <span className=" text-xs text-red-500 mx-2"> { errors.firstName.message } </span> }
                 </div>
 
                 <div className="flex flex-col mb-5">
@@ -104,7 +104,7 @@ const Register = () => {
                     placeholder="Last Name"
                     type="text"
                   />
-                 { errors.lastName && <span className=" text-xs text-red-500 mx-2"> { errors.lastName.message } </span> }
+                  { errors.lastName && <span className=" text-xs text-red-500 mx-2"> { errors.lastName.message } </span> }
                 </div>
               </div>
 
@@ -119,7 +119,7 @@ const Register = () => {
                   placeholder="email@example.com"
                   type="email"
                 />
-              { errors.email && <span className=" text-xs text-red-500 mx-2"> { errors.email.message } </span> }
+                { errors.email && <span className=" text-xs text-red-500 mx-2"> { errors.email.message } </span> }
               </div>
 
               <div className="flex flex-col mb-5">
@@ -133,7 +133,7 @@ const Register = () => {
                   placeholder="*********"
                   type="password"
                 />
-              { errors.password && <span className=" text-xs text-red-500 mx-2"> { errors.password.message } </span> }
+                { errors.password && <span className=" text-xs text-red-500 mx-2"> { errors.password.message } </span> }
               </div>
 
               <div className="flex flex-col mb-5">
@@ -146,7 +146,7 @@ const Register = () => {
                   placeholder="*********"
                   type="password"
                 />
-              { errors.confirmPassword && <span className=" text-xs text-red-500 mx-2"> { errors.confirmPassword.message } </span> }
+                { errors.confirmPassword && <span className=" text-xs text-red-500 mx-2"> { errors.confirmPassword.message } </span> }
               </div>
 
               <button

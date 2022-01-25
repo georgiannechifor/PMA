@@ -17,15 +17,17 @@ const registerHandler = async (req, res) => {
       try {
         const user = await User.create(req.body);
         const token = user.getJwtToken();
+
         user.password = undefined;
+
         return res.status(STATUS_CREATED).json({
-          data: user,
+          data        : user,
           accessToken : token
-        })
-      } catch(error) {
+        });
+      } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
-          error: error.message
-        })
+          error : error.message
+        });
       }
     }
     default : {

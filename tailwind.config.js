@@ -22,8 +22,9 @@ module.exports = {
         DEFAULT : '0px 1px 5px #0000001A'
       },
       height : {
-        '2px'   : '2px',
-        '100vh' : '100vh'
+        '2px'    : '2px',
+        '100vh'  : '100vh',
+        relative : 'calc(100vh - 6rem)'
       },
       maxHeight : {
         90 : '23rem'

@@ -8,7 +8,7 @@ import * as cx from 'classnames';
 import {useFetch} from 'utils/useFetch';
 import useLocalStorage from 'utils/useLocalStorage';
 import {Loader} from 'components';
-import {USER_LOCAL_STORAGE_KEY} from 'constants/index';
+import {LOCAL_STORAGE_USER_KEY} from 'constants/index';
 
 const Login = () => {
   const formSchema = Yup.object().shape({
@@ -21,7 +21,7 @@ const Login = () => {
   const validationOptions = {resolver : yupResolver(formSchema)};
   const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
   const {result: {data, loading, error}, fetchData} = useFetch('auth/login');
-  const [, setStoredValue] = useLocalStorage(USER_LOCAL_STORAGE_KEY, {});
+  const [, setStoredValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {});
 
   const onSubmit = formData => {
     fetchData({
@@ -33,11 +33,10 @@ const Login = () => {
     });
   };
 
-
   useEffect(() => {
     if (data && data.email) { // eslint-disable-line no-underscore-dangle
       setStoredValue(data);
-      router.push(router.query.returnUrl || '/');
+      router.push('/');
     }
   }, [data]);
 

@@ -1,23 +1,24 @@
-import {Header, Footer} from '../';
-import {elementType, object, oneOfType, bool} from 'prop-types';
+import {AdminMenu, Header} from '../';
+import {elementType, object, oneOfType} from 'prop-types';
 
-const AdminLayout = ({children, isPublic}) => (isPublic ? <>
-  {children}
-</> : (
+const AdminLayout = ({children}) => (
   <div className="flex flex-col min-h-screen">
-    <Header />
-    {children}
-    <Footer />
+    <Header className="fixed" />
+    <div className="flex w-full min-h-screen">
+      <div className="fixed top-24 h-relative w-60 shadow-xl bg-gray-50">
+        <AdminMenu />
+      </div>
+      <div className="w-full ml-64 mt-28">
+        {children}
+      </div>
+    </div>
   </div>
-));
+);
 
 AdminLayout.propTypes = {
-  children : oneOfType([object, elementType]).isRequired,
-  isPublic : bool
+  children : oneOfType([object, elementType]).isRequired
 };
 
-AdminLayout.defaultProps = {
-  isPublic : true
-};
-AdminLayout.displayName = 'Layout';
+
+AdminLayout.displayName = 'AdminLayout';
 export default AdminLayout;
