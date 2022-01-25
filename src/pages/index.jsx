@@ -3,7 +3,7 @@ import {CalendarIcon} from '@heroicons/react/outline';
 import map from 'lodash/map';
 import {array} from 'prop-types';
 import moment from 'moment';
-import {Calendar, Loader} from 'components/index';
+import {Calendar, Loader} from 'components';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 
 
