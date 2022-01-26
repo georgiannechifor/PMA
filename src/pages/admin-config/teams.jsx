@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import {array} from 'prop-types';
 import map from 'lodash/map';
 import unionBy from 'lodash/unionBy';
+import isArray from 'lodash/isArray';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -42,18 +43,31 @@ const AdminTeams = ({
   ];
 
   const onSubmit = formdata => {
-    fetchData({
-      method : 'POST',
-      data   : {
-        name  : formdata.teamName,
-        admin : formdata.admin
-      }
-    });
+    if (editTeamModalOpen) {
+      fetchData({
+        // eslint-disable-next-line no-underscore-dangle
+        entityId : editTeamItem._id,
+        method   : 'PUT',
+        data     : {
+          name  : formdata.teamName,
+          admin : formdata.admin
+        }
+      });
+    } else {
+      fetchData({
+        method : 'POST',
+        data   : {
+          name  : formdata.teamName,
+          admin : formdata.admin
+        }
+      });
+    }
   };
 
   useEffect(() => {
     if (data && data.name) {
       setCreateTeamModalOpen(false);
+      setEditTeamModalOpen(false);
       fetchData();
     }
   }, [data]);
@@ -72,8 +86,7 @@ const AdminTeams = ({
         <div className="flex-1">
           <Table
             columns={teamsColumns}
-            data={unionBy(
-              teams,
+            data={isArray(data) ? unionBy(
               map(data, dataItem => ({
                 ...dataItem,
                 admin : {
@@ -81,22 +94,33 @@ const AdminTeams = ({
                   fullName : dataItem.admin.firstName + ' ' + dataItem.admin.lastName
                 }
               })),
+              teams,
               // eslint-disable-next-line no-underscore-dangle
-              item => item._id)}
+              item => item._id) : teams}
             onRowClick={item => {
               setEditTeamItem(item);
+              setSelectedTeamAdmin({
+                name  : item.admin.fullName,
+                value : item.admin._id // eslint-disable-line no-underscore-dangle
+              });
+              // eslint-disable-next-line no-underscore-dangle
+              setValue('admin', item.admin._id);
+              setValue('teamName', item.name);
               setEditTeamModalOpen(true);
             }}
           />
         </div>
 
         <Modal
-          isModalOpen={createTeamModalOpen}
+          isModalOpen={createTeamModalOpen || editTeamModalOpen}
           modalActions={(
             <div className="flex w-full items-center justify-end gap-2">
               <button
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
-                onClick={() => setCreateTeamModalOpen(false)}
+                onClick={() => {
+                  setCreateTeamModalOpen(false);
+                  setEditTeamModalOpen(false);
+                }}
               > Cancel </button>
               <button
                 className="px-8 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg"
