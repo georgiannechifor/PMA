@@ -2,12 +2,21 @@ import {useState} from 'react';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Modal, Table} from 'components';
 import {array} from 'prop-types';
+import useSWR, {useSWRConfig} from 'swr';
 
 const AdminUsers = ({
-  users
+  defaultTeams,
+  defaultUsers
 }) => {
   const [selectedUser, setSelectedUser] = useState({});
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+
+  const {data: teams} = useSWR('/teams', {
+    initialData : defaultTeams
+  });
+  const {data: users} = useSWR('/users', {
+    initialData : defaultUsers
+  });
 
   const userColumns = [
     {
@@ -45,8 +54,6 @@ const AdminUsers = ({
             setIsEditUserModalOpen(true);
           }}
         />
-
-
       </div>
 
       <Modal
@@ -84,20 +91,24 @@ const AdminUsers = ({
 
 AdminUsers.getInitialProps = async ctx => {
   try {
-    const {data} = await getPropsFromFetch('/users', ctx);
+    const {data: teams} = await getPropsFromFetch('/teams', ctx);
+    const {data: users} = await getPropsFromFetch('/users', ctx);
 
     return {
-      users : data
+      defaultTeams : teams,
+      defaultUsers : users
     };
   } catch {
     return {
-      users : []
+      defaultTeams : [],
+      defaultUsers : []
     };
   }
 };
 AdminUsers.displayName = 'AdminUsers';
 AdminUsers.propTypes = {
-  users : array.isRequired
+  defaultTeams : array.isRequired,
+  defaultUsers : array.isRequired
 };
 
 export default AdminUsers;

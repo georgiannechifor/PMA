@@ -1,21 +1,28 @@
 import {useState, useEffect} from 'react';
 import {array} from 'prop-types';
 import map from 'lodash/map';
-import unionBy from 'lodash/unionBy';
-import isArray from 'lodash/isArray';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import * as cx from 'classnames';
-import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Table, Modal, Select, Loader} from 'components';
+import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {useFetch} from 'utils/useFetch';
+import useSWR, {useSWRConfig} from 'swr';
 
 // eslint-disable-next-line complexity
 const AdminTeams = ({
-  teams,
-  users
+  defaultTeams,
+  defaultUsers
 }) => {
+  const {data: teams} = useSWR('/teams', {
+    initialData : defaultTeams
+  });
+  const {data: users} = useSWR('/users', {
+    initialData : defaultUsers
+  });
+  const {mutate} = useSWRConfig();
+
   const formSchema = Yup.object().shape({
     teamName : Yup.string()
       .required('Team Name is required'),
@@ -29,7 +36,7 @@ const AdminTeams = ({
   const [selectedTeamAdmin, setSelectedTeamAdmin] = useState({});
 
   const {result: {data, loading, error}, fetchData} = useFetch('teams');
-  const {register, handleSubmit, setValue, formState: {errors}} = useForm(validationOptions);
+  const {register, handleSubmit, reset, setValue, formState: {errors}} = useForm(validationOptions);
 
   const teamsColumns = [
     {
@@ -68,7 +75,12 @@ const AdminTeams = ({
     if (data && data.name) {
       setCreateTeamModalOpen(false);
       setEditTeamModalOpen(false);
-      fetchData();
+      setSelectedTeamAdmin({});
+      reset({
+        teamName : '',
+        admin    : ''
+      });
+      mutate('/teams');
     }
   }, [data]);
 
@@ -86,17 +98,13 @@ const AdminTeams = ({
         <div className="flex-1">
           <Table
             columns={teamsColumns}
-            data={isArray(data) ? unionBy(
-              map(data, dataItem => ({
-                ...dataItem,
-                admin : {
-                  ...dataItem.admin,
-                  fullName : dataItem.admin.firstName + ' ' + dataItem.admin.lastName
-                }
-              })),
-              teams,
-              // eslint-disable-next-line no-underscore-dangle
-              item => item._id) : teams}
+            data={map(teams, item => ({
+              ...item,
+              admin : {
+                ...item.admin,
+                fullName : item.admin.firstName + ' ' + item.admin.lastName
+              }
+            }))}
             onRowClick={item => {
               setEditTeamItem(item);
               setSelectedTeamAdmin({
@@ -185,21 +193,12 @@ const AdminTeams = ({
 
 AdminTeams.getInitialProps = async ctx => {
   try {
-    const {data} = await getPropsFromFetch('/teams', ctx);
+    const {data: teams} = await getPropsFromFetch('/teams', ctx);
     const {data: users} = await getPropsFromFetch('/users', ctx);
 
-    const mappedData = map(data, team => ({
-      ...team,
-      admin : {
-        ...team.admin,
-        fullName : team.admin.firstName + ' ' + team.admin.lastName
-      }
-    }));
-
-
     return {
-      teams : mappedData,
-      users
+      defaultTeams : teams,
+      defaultUsers : users
     };
   } catch {
     return {};
@@ -208,8 +207,8 @@ AdminTeams.getInitialProps = async ctx => {
 
 AdminTeams.displayName = 'AdminTeams';
 AdminTeams.propTypes = {
-  teams : array.isRequired,
-  users : array.isRequired
+  defaultTeams : array.isRequired,
+  defaultUsers : array.isRequired
 };
 
 export default AdminTeams;
