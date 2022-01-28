@@ -7,3 +7,7 @@
 body {
   @apply bg-gray-100;
 }
+
+.bg-stripes {
+  background: repeating-linear-gradient(130deg, rgba(255,255,255, 1) -3px, rgba(150,150,150,0.05) 15px, rgba(255,255,255, 1) 20px);
+}

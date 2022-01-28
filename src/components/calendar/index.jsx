@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 import moment from 'moment';
+import map from 'lodash/map';
 import * as cx from 'classnames';
 import {object, func} from 'prop-types';
 
@@ -25,9 +26,9 @@ const Calendar = ({
   };
 
   const getDaysClass = (day, monthStart) => ({
-    'text-white bg-gray-300'          : moment(day).isSame(new Date(), 'days') && !moment(day).isSame(selectedDate, 'days'),
-    'text-white bg-primary-green-100' : moment(day).isSame(selectedDate, 'days'),
-    'text-gray-400'                   : !moment(day).isSame(monthStart, 'month')
+    'bg-blue-50 font-medium'   : moment(day).isSame(new Date(), 'days') && !moment(day).isSame(selectedDate, 'days'),
+    'bg-green-100 font-medium' : moment(day).isSame(selectedDate, 'days'),
+    'bg-gray-50 text-gray-400' : !moment(day).isSame(monthStart, 'month')
   });
 
   const renderHeaderSection = () => (
@@ -66,7 +67,7 @@ const Calendar = ({
         .format(DAYS_DATE_FORMAT);
 
       days.push(
-        <div className="uppercase select-none text-sm text-center font-medium py-4 w-10 h-4 text-gray-500 select-none" key={`${temp}-${index}`}>
+        <div className="uppercase text-center text-sm text-black font-medium select-none w-full " key={`${temp}-${index}`}>
           { temp }
         </div>
       );
@@ -82,11 +83,12 @@ const Calendar = ({
           getDaysClass(day, monthStart),
           `relative
           select-none
-          w-8 h-9 m-0.5 flex flex-col
-          items-center justify-center
-          cursor-pointer
-          rounded
-          text-center`
+          border
+          border-1
+          border-gray-100
+          flex-col
+          p-1
+          cursor-pointer`
         )}
       key={moment(day).format('DD/MM/YYYY')}
       onClick={() => {
@@ -94,17 +96,22 @@ const Calendar = ({
         onDateClick(day);
       }}
     >
-      <span className="user-select-none mb-auto">{moment(day).format('D')}</span>
+      <span className="flex-1 text-gray-500 user-select-none mb-auto text-left">{moment(day).format('D')}</span>
 
-      {
-        events[moment(day).format('DD/MM/YYYY')] && (
-          <span className={cx('h-2px w-1/2 mb-1', {
-            'bg-white'   : moment(day).isSame(selectedDate, 'days'),
-            'bg-red-500' : !moment(day).isSame(selectedDate, 'days')
-          })}
-          />
-        )
-      }
+      <div className="flex h-4/6 flex-col items-center w-full">
+        {
+          events[moment(day).format('DD/MM/YYYY')] &&
+            map(events[moment(day).format('DD/MM/YYYY')].slice(0, 2), item => (
+              <span className="bg-red-200 px-1 text-sm text-gray-400 w-full my-1 rounded"> { item.title }</span>
+            ))
+        }
+        {
+          events[moment(day).format('DD/MM/YYYY')]?.length > 2 && (
+            <span className="px-1 text-sm text-gray-500 font-medium w-full my-1 hover:bg-gray-100 transition"> Other { events[moment(day).format('DD/MM/YYYY')]?.length - 2 }</span>
+          )
+        }
+
+      </div>
 
     </div>
   );
@@ -127,11 +134,7 @@ const Calendar = ({
         days.push(getDayContainer(day, monthStart));
         day = moment(day).add(1, 'days');
       }
-      rows.push(
-        <div className="w-full flex items-center justify-between text-center" key={`${moment(day).format('DD/MM/YYYY')}-${currentMonth}`}>
-          {days}
-        </div>
-      );
+      rows.push(days);
       days = [];
     }
     if (rows.length === 6) { // eslint-disable-line no-magic-numbers
@@ -140,14 +143,18 @@ const Calendar = ({
 
 
     rows.push(
-      <div className="w-full flex items-center justify-between text-center" key="supplementary-row">
+      <div
+        className="w-full "
+        key="supplementary-row"
+      >
         <div className="relative
-          w-8 h-9 m-0.5 flex flex-col
-          items-center justify-center
-          cursor-pointer
-          rounded
           select-none
-          text-center"
+          border-1
+          border-gray-100
+          flex-col
+          text-gray-500
+          p-1
+          cursor-pointer"
         > &nbsp;
         </div>
       </div>
@@ -157,16 +164,16 @@ const Calendar = ({
   };
 
   return (
-    <div className="flex flex-col w-full items-center justify-center">
-      <div className="w-full pb-3">
+    <div className="h-full flex flex-col items-center justify-center">
+      <div className="w-full pb-2">
         { renderHeaderSection() }
       </div>
 
-      <div className="flex items-center justify-between w-full mb-3 text-center">
+      <div className="grid grid-cols-7 w-full py-1 bg-gray-100">
         {renderDaysSection()}
       </div>
 
-      <div className="w-full flex flex-col items-center justify-between" key="dada">
+      <div className="w-full h-full grid grid-cols-7 grid-rows-6 " key="dada">
         { renderCellsForDays() }
       </div>
     </div>

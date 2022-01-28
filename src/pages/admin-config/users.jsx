@@ -2,12 +2,21 @@ import {useState} from 'react';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Modal, Table} from 'components';
 import {array} from 'prop-types';
+import useSWR from 'swr';
 
 const AdminUsers = ({
   users
 }) => {
   const [selectedUser, setSelectedUser] = useState({});
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+
+  // eslint-disable-next-line no-unused-vars
+  const {data: teams} = useSWR('/teams', {
+    initialData : defaultTeams
+  });
+  const {data: users} = useSWR('/users', {
+    initialData : defaultUsers
+  });
 
   const userColumns = [
     {
