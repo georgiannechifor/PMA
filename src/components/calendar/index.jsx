@@ -87,14 +87,9 @@ const Calendar = ({
           border-1
           border-gray-100
           flex-col
-          p-1
-          cursor-pointer`
+          p-1`
         )}
       key={moment(day).format('DD/MM/YYYY')}
-      onClick={() => {
-        setCurrentMonth(day);
-        onDateClick(day);
-      }}
     >
       <span className="flex-1 text-gray-500 user-select-none mb-auto text-left">{moment(day).format('D')}</span>
 
@@ -102,12 +97,20 @@ const Calendar = ({
         {
           events[moment(day).format('DD/MM/YYYY')] &&
             map(events[moment(day).format('DD/MM/YYYY')].slice(0, 2), item => (
-              <span className="bg-red-200 px-1 text-sm text-gray-400 w-full my-1 rounded"> { item.title }</span>
+              <span
+                className="bg-red-200 px-1 text-sm text-gray-400 w-full my-1 rounded cursor-pointer hover:text-gray-600 transition"
+              >
+                { item.title }
+              </span>
             ))
         }
         {
           events[moment(day).format('DD/MM/YYYY')]?.length > 2 && (
-            <span className="px-1 text-sm text-gray-500 font-medium w-full my-1 hover:bg-gray-100 transition"> Other { events[moment(day).format('DD/MM/YYYY')]?.length - 2 }</span>
+            <span
+              className="px-1 text-sm text-gray-500 font-medium w-full my-1 hover:bg-gray-100 transition cursor-pointer"
+            >
+              Other { events[moment(day).format('DD/MM/YYYY')]?.length - 2 }
+            </span>
           )
         }
 
