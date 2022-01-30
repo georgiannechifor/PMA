@@ -65,7 +65,8 @@ const Header = ({
                     'text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
                     {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.DEPLOY_TRACKER)}
                   )}
-                > Deploy Tracker </p>
+                > Deploy Tracker
+                </p>
               </Link>
               { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
                 <p className={cx(

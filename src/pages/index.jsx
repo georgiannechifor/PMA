@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {array} from 'prop-types';
+import {object} from 'prop-types';
 import {Calendar, Loader} from 'components';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 
@@ -31,6 +31,6 @@ Home.getInitialProps = async ctx => {
 
 Home.displayName = 'Home';
 Home.propTypes = {
-  events : array.isRequired
+  events : object.isRequired
 };
 export default Home;

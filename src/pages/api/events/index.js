@@ -18,7 +18,10 @@ const eventsHandler = authenticated(async (req, res) => {
   switch (method) {
     case 'GET': {
       try {
-        const events = await Event.find({});
+        const events = await Event.find({})
+          .populate('author', 'firstName lastName email')
+          .populate('assignee', 'firstName lastName email')
+          .exec();
         const groupedEvents = groupBy(events, event => event.date);
 
 

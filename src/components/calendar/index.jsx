@@ -1,21 +1,21 @@
 import {useState} from 'react';
-import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
+import {ChevronLeftIcon, ChevronRightIcon, XIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import map from 'lodash/map';
 import * as cx from 'classnames';
 import {object, func} from 'prop-types';
 
 const Calendar = ({
-  events,
-  selectedDate,
-  setSelectedDate
+  events
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [eventDetails, setEventDetails] = useState({
+    visible : false
+  });
 
   const HEADER_DATE_FORMAT = 'MMMM YYYY';
   const DAYS_DATE_FORMAT = 'ddd';
 
-  const onDateClick = day => setSelectedDate(day);
 
   const nextMonth = () => {
     setCurrentMonth(moment(currentMonth).add(1, 'M'));
@@ -26,8 +26,7 @@ const Calendar = ({
   };
 
   const getDaysClass = (day, monthStart) => ({
-    'bg-blue-50 font-medium'   : moment(day).isSame(new Date(), 'days') && !moment(day).isSame(selectedDate, 'days'),
-    'bg-green-100 font-medium' : moment(day).isSame(selectedDate, 'days'),
+    'bg-blue-50 font-medium'   : moment(day).isSame(new Date(), 'days'),
     'bg-gray-50 text-gray-400' : !moment(day).isSame(monthStart, 'month')
   });
 
@@ -61,7 +60,7 @@ const Calendar = ({
     let startDate = moment(currentMonth).startOf('week');
     const days = [];
 
-    for (let index = 1; index <=7; index++) { // eslint-disable-line
+    for (let index = 1; index <= 7; index++) { // eslint-disable-line
       const temp = moment(startDate)
         .add(index, 'days')
         .format(DAYS_DATE_FORMAT);
@@ -76,6 +75,7 @@ const Calendar = ({
     return days;
   };
 
+  // eslint-disable-next-line complexity
   const getDayContainer = (day, monthStart) => (
     <div
       className={
@@ -91,7 +91,11 @@ const Calendar = ({
         )}
       key={moment(day).format('DD/MM/YYYY')}
     >
-      <span className="flex-1 text-gray-500 user-select-none mb-auto text-left">{moment(day).format('D')}</span>
+      <span
+        className="text-gray-500 user-select-none"
+      >
+        {moment(day).format('D')}
+      </span>
 
       <div className="flex h-4/6 flex-col items-center w-full">
         {
@@ -99,6 +103,7 @@ const Calendar = ({
             map(events[moment(day).format('DD/MM/YYYY')].slice(0, 2), item => (
               <span
                 className="bg-red-200 px-1 text-sm text-gray-400 w-full my-1 rounded cursor-pointer hover:text-gray-600 transition"
+                key={item._id} // eslint-disable-line no-underscore-dangle
               >
                 { item.title }
               </span>
@@ -108,9 +113,76 @@ const Calendar = ({
           events[moment(day).format('DD/MM/YYYY')]?.length > 2 && (
             <span
               className="px-1 text-sm text-gray-500 font-medium w-full my-1 hover:bg-gray-100 transition cursor-pointer"
+              onClick={() => setEventDetails({
+                visible : true,
+                item    : day.format('DD/MM/YYYY'),
+                details : events[moment(day).format('DD/MM/YYYY')][0]
+              })}
             >
               Other { events[moment(day).format('DD/MM/YYYY')]?.length - 2 }
             </span>
+          )
+        }
+
+        {
+          eventDetails &&
+          eventDetails.visible &&
+          eventDetails.item === day.format('DD/MM/YYYY') && (
+            <div
+              className={cx(
+                'absolute z-50 -top-10 rounded shadow-2xl bg-white flex flex-col min-h-full pb-8',
+                {'right-full' : Number(moment(day).format('e')) < 3},
+                {'left-full' : Number(moment(day).format('e')) >= 3}
+              )} style={{width : '200%'}}
+            >
+              <div className="w-full flex items-end justify-end px-2 py-1">
+                <div
+                  className="hover:bg-gray-100 cursor-pointer rounded-full p-2"
+                  onClick={() => setEventDetails({
+                    visible : false
+                  })}
+                >
+                  <XIcon className="w-5 h-5 text-gray-500 " />
+                </div>
+              </div>
+              <div className="px-5">
+                <div className="flex gap-x-5">
+                  <span className="bg-green-500 w-4 h-4 rounded" />
+                  <div className="flex flex-col text-sm text-gray-500">
+                    <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails.details.title}</h1>
+                    { moment(day)
+                      .format('ddd DDD, MMMM YYYY')}
+                  </div>
+                </div>
+
+                <div className="flex flex-col mt-5">
+                  <div className="flex items-center ">
+                    <p className="text-sm font-weight w-20 text-gray-400"> Author </p>
+                    <p className="text-sm text-gray-500">
+                      { `${eventDetails.details.author.firstName} - ${eventDetails.details.author.email}` }
+                    </p>
+                  </div>
+
+                  <div className="flex items-center ">
+                    <p className="text-sm font-weight w-20 text-gray-400 "> Assignee </p>
+                    <p className="text-sm text-gray-500">
+                      { `${eventDetails.details.assignee.firstName} - ${eventDetails.details.assignee.email}` }
+                    </p>
+                  </div>
+
+                  {
+                    eventDetails.details.teamAssigned.length > 0 && (
+                      <div className="flex items-center ">
+                        <p className="text-sm font-weight w-20 text-gray-400 "> Team </p>
+                        <p className="text-sm text-gray-500">
+                          { `${eventDetails.details.teamAssigned[0]}` }
+                        </p>
+                      </div>
+                    )
+                  }
+                </div>
+              </div>
+            </div>
           )
         }
 
@@ -119,9 +191,8 @@ const Calendar = ({
     </div>
   );
 
-
   const renderCellsForDays = () => { //eslint-disable-line
-    const monthStart = moment(currentMonth).isoWeekday(1)
+    const monthStart = moment(currentMonth)
       .startOf('month');
     const monthEnd = moment(monthStart).endOf('month');
     const startDate = moment(monthStart).startOf('week');
@@ -133,9 +204,9 @@ const Calendar = ({
     let day = startDate;
 
     while (day <= endDate) {
-      for (let i = 1; i <= 7; i++) { // eslint-disable-line
-        days.push(getDayContainer(day, monthStart));
+      for (let i = 0; i < 7; i++) { // eslint-disable-line
         day = moment(day).add(1, 'days');
+        days.push(getDayContainer(day, monthStart));
       }
       rows.push(days);
       days = [];
@@ -165,6 +236,7 @@ const Calendar = ({
 
     return rows;
   };
+
 
   return (
     <div className="h-full flex flex-col items-center justify-center">
