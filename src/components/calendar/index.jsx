@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useState, Fragment} from 'react';
+import {Transition} from '@headlessui/react';
 import {ChevronLeftIcon, ChevronRightIcon, XIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import map from 'lodash/map';
@@ -124,70 +125,80 @@ const Calendar = ({
           )
         }
 
-        {
-          eventDetails &&
-          eventDetails.visible &&
-          eventDetails.item === day.format('DD/MM/YYYY') && (
-            <div
-              className={cx(
-                'absolute z-50 -top-10 rounded shadow-2xl bg-white flex flex-col min-h-full pb-8',
-                {'right-full' : Number(moment(day).format('e')) < 3},
-                {'left-full' : Number(moment(day).format('e')) >= 3}
-              )} style={{width : '200%'}}
-            >
-              <div className="w-full flex items-end justify-end px-2 py-1">
-                <div
-                  className="hover:bg-gray-100 cursor-pointer rounded-full p-2"
-                  onClick={() => setEventDetails({
-                    visible : false
-                  })}
-                >
-                  <XIcon className="w-5 h-5 text-gray-500 " />
-                </div>
-              </div>
-              <div className="px-5">
-                <div className="flex gap-x-5">
-                  <span className="bg-green-500 w-4 h-4 rounded" />
-                  <div className="flex flex-col text-sm text-gray-500">
-                    <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails.details.title}</h1>
-                    { moment(day)
-                      .format('ddd DDD, MMMM YYYY')}
-                  </div>
-                </div>
-
-                <div className="flex flex-col mt-5">
-                  <div className="flex items-center ">
-                    <p className="text-sm font-weight w-20 text-gray-400"> Author </p>
-                    <p className="text-sm text-gray-500">
-                      { `${eventDetails.details.author.firstName} - ${eventDetails.details.author.email}` }
-                    </p>
-                  </div>
-
-                  <div className="flex items-center ">
-                    <p className="text-sm font-weight w-20 text-gray-400 "> Assignee </p>
-                    <p className="text-sm text-gray-500">
-                      { `${eventDetails.details.assignee.firstName} - ${eventDetails.details.assignee.email}` }
-                    </p>
-                  </div>
-
-                  {
-                    eventDetails.details.teamAssigned.length > 0 && (
-                      <div className="flex items-center ">
-                        <p className="text-sm font-weight w-20 text-gray-400 "> Team </p>
-                        <p className="text-sm text-gray-500">
-                          { `${eventDetails.details.teamAssigned[0]}` }
-                        </p>
-                      </div>
-                    )
-                  }
-                </div>
+        <Transition
+          as={Fragment}
+          enter="transition-opacity duration-150"
+          enterFrom="opacity-0 -ml-16"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          show={
+            eventDetails &&
+            eventDetails.visible &&
+            eventDetails.item === day.format('DD/MM/YYYY')
+          }
+        >
+          <div
+            className={cx(
+              'absolute z-10 -top-10 rounded shadow-2xl bg-white flex flex-col min-h-full pb-8',
+              {'right-full' : Number(moment(day).format('e')) < 3},
+              {'left-full' : Number(moment(day).format('e')) >= 3}
+            )} style={{width : '200%'}}
+          >
+            <div className="w-full flex items-end justify-end px-2 py-1">
+              <div
+                className="hover:bg-gray-100 cursor-pointer rounded-full p-2"
+                onClick={() => setEventDetails({
+                  ...eventDetails,
+                  visible : false
+                })}
+              >
+                <XIcon className="w-5 h-5 text-gray-500 " />
               </div>
             </div>
-          )
-        }
+            <div className="px-5">
+              <div className="flex gap-x-5">
+                <span className="bg-green-500 w-4 h-4 rounded" />
+                <div className="flex flex-col text-sm text-gray-500">
+                  <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails?.details?.title}</h1>
+                  { moment(day)
+                    .format('ddd DDD, MMMM YYYY')}
+                </div>
+              </div>
+
+              <div className="flex flex-col mt-5">
+                <div className="flex items-center ">
+                  <p className="text-sm font-weight w-20 text-gray-400"> Author </p>
+                  <p className="text-sm text-gray-500">
+                    { `${eventDetails?.details?.author?.firstName} - ${eventDetails?.details?.author.email}` }
+                  </p>
+                </div>
+
+                <div className="flex items-center ">
+                  <p className="text-sm font-weight w-20 text-gray-400 "> Assignee </p>
+                  <p className="text-sm text-gray-500">
+                    { `${eventDetails?.details?.assignee.firstName} - ${eventDetails?.details?.assignee.email}` }
+                  </p>
+                </div>
+
+                {
+                  eventDetails?.details?.teamAssigned.length > 0 && (
+                    <div className="flex items-center ">
+                      <p className="text-sm font-weight w-20 text-gray-400 "> Team </p>
+                      <p className="text-sm text-gray-500">
+                        { `${eventDetails?.details?.teamAssigned[0]}` }
+                      </p>
+                    </div>
+                  )
+                }
+              </div>
+            </div>
+          </div>
+
+        </Transition>
 
       </div>
-
     </div>
   );
 
@@ -243,6 +254,7 @@ const Calendar = ({
       <div className="w-full pb-2">
         { renderHeaderSection() }
       </div>
+
 
       <div className="grid grid-cols-7 w-full py-1 bg-gray-100">
         {renderDaysSection()}

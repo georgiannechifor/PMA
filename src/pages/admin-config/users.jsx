@@ -5,7 +5,8 @@ import {array} from 'prop-types';
 import useSWR from 'swr';
 
 const AdminUsers = ({
-  users
+  defaultUsers,
+  defaultTeams
 }) => {
   const [selectedUser, setSelectedUser] = useState({});
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
@@ -55,7 +56,6 @@ const AdminUsers = ({
           }}
         />
 
-
       </div>
 
       <Modal
@@ -96,17 +96,20 @@ AdminUsers.getInitialProps = async ctx => {
     const {data} = await getPropsFromFetch('/users', ctx);
 
     return {
-      users : data
+      defaultUsers : data,
+      defaultTeams : []
     };
   } catch {
     return {
-      users : []
+      defaultUsers : [],
+      defaultTeams : []
     };
   }
 };
 AdminUsers.displayName = 'AdminUsers';
 AdminUsers.propTypes = {
-  users : array.isRequired
+  defaultUsers : array.isRequired,
+  defaultTeams : array.isRequired
 };
 
 export default AdminUsers;
