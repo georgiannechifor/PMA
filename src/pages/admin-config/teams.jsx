@@ -1,20 +1,28 @@
 import {useState, useEffect} from 'react';
 import {array} from 'prop-types';
 import map from 'lodash/map';
-import unionBy from 'lodash/unionBy';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import * as cx from 'classnames';
-import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Table, Modal, Select, Loader} from 'components';
+import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {useFetch} from 'utils/useFetch';
+import useSWR, {useSWRConfig} from 'swr';
 
 // eslint-disable-next-line complexity
 const AdminTeams = ({
-  teams,
-  users
+  defaultTeams,
+  defaultUsers
 }) => {
+  const {data: teams} = useSWR('/teams', {
+    initialData : defaultTeams
+  });
+  const {data: users} = useSWR('/users', {
+    initialData : defaultUsers
+  });
+  const {mutate} = useSWRConfig();
+
   const formSchema = Yup.object().shape({
     teamName : Yup.string()
       .required('Team Name is required'),
@@ -28,7 +36,7 @@ const AdminTeams = ({
   const [selectedTeamAdmin, setSelectedTeamAdmin] = useState({});
 
   const {result: {data, loading, error}, fetchData} = useFetch('teams');
-  const {register, handleSubmit, setValue, formState: {errors}} = useForm(validationOptions);
+  const {register, handleSubmit, reset, setValue, formState: {errors}} = useForm(validationOptions);
 
   const teamsColumns = [
     {
@@ -42,19 +50,37 @@ const AdminTeams = ({
   ];
 
   const onSubmit = formdata => {
-    fetchData({
-      method : 'POST',
-      data   : {
-        name  : formdata.teamName,
-        admin : formdata.admin
-      }
-    });
+    if (editTeamModalOpen) {
+      fetchData({
+        // eslint-disable-next-line no-underscore-dangle
+        entityId : editTeamItem._id,
+        method   : 'PUT',
+        data     : {
+          name  : formdata.teamName,
+          admin : formdata.admin
+        }
+      });
+    } else {
+      fetchData({
+        method : 'POST',
+        data   : {
+          name  : formdata.teamName,
+          admin : formdata.admin
+        }
+      });
+    }
   };
 
   useEffect(() => {
     if (data && data.name) {
       setCreateTeamModalOpen(false);
-      fetchData();
+      setEditTeamModalOpen(false);
+      setSelectedTeamAdmin({});
+      reset({
+        teamName : '',
+        admin    : ''
+      });
+      mutate('/teams');
     }
   }, [data]);
 
@@ -72,31 +98,37 @@ const AdminTeams = ({
         <div className="flex-1">
           <Table
             columns={teamsColumns}
-            data={unionBy(
-              teams,
-              map(data, dataItem => ({
-                ...dataItem,
-                admin : {
-                  ...dataItem.admin,
-                  fullName : dataItem.admin.firstName + ' ' + dataItem.admin.lastName
-                }
-              })),
-              // eslint-disable-next-line no-underscore-dangle
-              item => item._id)}
+            data={map(teams, item => ({
+              ...item,
+              admin : {
+                ...item.admin,
+                fullName : item.admin.firstName + ' ' + item.admin.lastName
+              }
+            }))}
             onRowClick={item => {
               setEditTeamItem(item);
+              setSelectedTeamAdmin({
+                name  : item.admin.fullName,
+                value : item.admin._id // eslint-disable-line no-underscore-dangle
+              });
+              // eslint-disable-next-line no-underscore-dangle
+              setValue('admin', item.admin._id);
+              setValue('teamName', item.name);
               setEditTeamModalOpen(true);
             }}
           />
         </div>
 
         <Modal
-          isModalOpen={createTeamModalOpen}
+          isModalOpen={createTeamModalOpen || editTeamModalOpen}
           modalActions={(
             <div className="flex w-full items-center justify-end gap-2">
               <button
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
-                onClick={() => setCreateTeamModalOpen(false)}
+                onClick={() => {
+                  setCreateTeamModalOpen(false);
+                  setEditTeamModalOpen(false);
+                }}
               > Cancel </button>
               <button
                 className="px-8 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg"
@@ -161,21 +193,12 @@ const AdminTeams = ({
 
 AdminTeams.getInitialProps = async ctx => {
   try {
-    const {data} = await getPropsFromFetch('/teams', ctx);
+    const {data: teams} = await getPropsFromFetch('/teams', ctx);
     const {data: users} = await getPropsFromFetch('/users', ctx);
 
-    const mappedData = map(data, team => ({
-      ...team,
-      admin : {
-        ...team.admin,
-        fullName : team.admin.firstName + ' ' + team.admin.lastName
-      }
-    }));
-
-
     return {
-      teams : mappedData,
-      users
+      defaultTeams : teams,
+      defaultUsers : users
     };
   } catch {
     return {};
@@ -184,8 +207,8 @@ AdminTeams.getInitialProps = async ctx => {
 
 AdminTeams.displayName = 'AdminTeams';
 AdminTeams.propTypes = {
-  teams : array.isRequired,
-  users : array.isRequired
+  defaultTeams : array.isRequired,
+  defaultUsers : array.isRequired
 };
 
 export default AdminTeams;
