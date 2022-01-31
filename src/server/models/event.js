@@ -22,6 +22,10 @@ const EventSchema = new mongoose.Schema({
     type     : String,
     required : true
   },
+  backgroundColor : {
+    type     : String,
+    required : true
+  },
   isRecurring : {
     type    : String,
     default : false

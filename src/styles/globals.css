@@ -4,6 +4,12 @@
 
 @import './scroll.css';
 
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 body {
   @apply bg-gray-100;
 }

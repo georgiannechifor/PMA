@@ -1,18 +1,19 @@
-import {useState, Fragment} from 'react';
-import {Transition} from '@headlessui/react';
-import {ChevronLeftIcon, ChevronRightIcon, XIcon} from '@heroicons/react/outline';
+import {useState} from 'react';
+import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import map from 'lodash/map';
 import * as cx from 'classnames';
 import {object, func} from 'prop-types';
 
+import OtherEvents from './OtherEvents';
+import EventDetails from './EventDetails';
+
 const Calendar = ({
   events
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [eventDetails, setEventDetails] = useState({
-    visible : false
-  });
+  const [otherEventsDetails, setOtherEventsDetails] = useState({visible : false});
+  const [eventDetails, setEventDetails] = useState({visible : false});
 
   const HEADER_DATE_FORMAT = 'MMMM YYYY';
   const DAYS_DATE_FORMAT = 'ddd';
@@ -82,13 +83,17 @@ const Calendar = ({
       className={
         cx(
           getDaysClass(day, monthStart),
-          `relative
+          `
           select-none
           border
           border-1
           border-gray-100
           flex-col
-          p-1`
+          p-1
+          max-h-24
+          md:max-h-max
+          md:relative
+          `
         )}
       key={moment(day).format('DD/MM/YYYY')}
     >
@@ -103,8 +108,21 @@ const Calendar = ({
           events[moment(day).format('DD/MM/YYYY')] &&
             map(events[moment(day).format('DD/MM/YYYY')].slice(0, 2), item => (
               <span
-                className="bg-red-200 px-1 text-sm text-gray-400 w-full my-1 rounded cursor-pointer hover:text-gray-600 transition"
+                className={
+                  `${item.backgroundColor || 'bg-gray-400'} 
+                  px-1 py-0.5 w-full my-0.5 rounded cursor-pointer 
+                  text-white bg-opacity-90  hover:bg-opacity-100 transition text-xs truncate md:text-sm md:bg-opacity-40`
+                }
                 key={item._id} // eslint-disable-line no-underscore-dangle
+                onClick={() => {
+                  setOtherEventsDetails({...otherEventsDetails,
+                    visible : false});
+                  setEventDetails({
+                    visible : true,
+                    item    : day.format('DD/MM/YYYY'),
+                    details : item
+                  });
+                }}
               >
                 { item.title }
               </span>
@@ -113,90 +131,39 @@ const Calendar = ({
         {
           events[moment(day).format('DD/MM/YYYY')]?.length > 2 && (
             <span
-              className="px-1 text-sm text-gray-500 font-medium w-full my-1 hover:bg-gray-100 transition cursor-pointer"
-              onClick={() => setEventDetails({
-                visible : true,
-                item    : day.format('DD/MM/YYYY'),
-                details : events[moment(day).format('DD/MM/YYYY')][0]
-              })}
+              className="text-tiny text-gray-500 font-medium w-full hover:bg-gray-100 transition cursor-pointer md:py-1 md:px-1 md:text-sm"
+              onClick={() => {
+                setEventDetails({...eventDetails,
+                  visible : false});
+                setOtherEventsDetails({
+                  visible : true,
+                  item    : day.format('DD/MM/YYYY'),
+                  details : events[moment(day).format('DD/MM/YYYY')]
+                });
+              }}
             >
               Other { events[moment(day).format('DD/MM/YYYY')]?.length - 2 }
             </span>
           )
         }
 
-        <Transition
-          as={Fragment}
-          enter="transition-opacity duration-150"
-          enterFrom="opacity-0 -ml-16"
-          enterTo="opacity-100"
-          leave="transition-opacity duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          show={
-            eventDetails &&
-            eventDetails.visible &&
-            eventDetails.item === day.format('DD/MM/YYYY')
-          }
-        >
-          <div
-            className={cx(
-              'absolute z-10 -top-10 rounded shadow-2xl bg-white flex flex-col min-h-full pb-8',
-              {'right-full' : Number(moment(day).format('e')) < 3},
-              {'left-full' : Number(moment(day).format('e')) >= 3}
-            )} style={{width : '200%'}}
-          >
-            <div className="w-full flex items-end justify-end px-2 py-1">
-              <div
-                className="hover:bg-gray-100 cursor-pointer rounded-full p-2"
-                onClick={() => setEventDetails({
-                  ...eventDetails,
-                  visible : false
-                })}
-              >
-                <XIcon className="w-5 h-5 text-gray-500 " />
-              </div>
-            </div>
-            <div className="px-5">
-              <div className="flex gap-x-5">
-                <span className="bg-green-500 w-4 h-4 rounded" />
-                <div className="flex flex-col text-sm text-gray-500">
-                  <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails?.details?.title}</h1>
-                  { moment(day)
-                    .format('ddd DDD, MMMM YYYY')}
-                </div>
-              </div>
+        {
+          eventDetails.visible &&
+          <EventDetails
+            eventDetails={eventDetails}
+            selectedDay={day}
+            setEventDetails={setEventDetails}
+          />
+        }
 
-              <div className="flex flex-col mt-5">
-                <div className="flex items-center ">
-                  <p className="text-sm font-weight w-20 text-gray-400"> Author </p>
-                  <p className="text-sm text-gray-500">
-                    { `${eventDetails?.details?.author?.firstName} - ${eventDetails?.details?.author.email}` }
-                  </p>
-                </div>
-
-                <div className="flex items-center ">
-                  <p className="text-sm font-weight w-20 text-gray-400 "> Assignee </p>
-                  <p className="text-sm text-gray-500">
-                    { `${eventDetails?.details?.assignee.firstName} - ${eventDetails?.details?.assignee.email}` }
-                  </p>
-                </div>
-
-                {
-                  eventDetails?.details?.teamAssigned.length > 0 && (
-                    <div className="flex items-center ">
-                      <p className="text-sm font-weight w-20 text-gray-400 "> Team </p>
-                      <p className="text-sm text-gray-500">
-                        { `${eventDetails?.details?.teamAssigned[0]}` }
-                      </p>
-                    </div>
-                  )
-                }
-              </div>
-            </div>
-          </div>
-
-        </Transition>
+        {
+          otherEventsDetails.visible &&
+          <OtherEvents
+            eventDetails={otherEventsDetails}
+            selectedDay={day}
+            setEventDetails={setOtherEventsDetails}
+          />
+        }
 
       </div>
     </div>
@@ -234,12 +201,13 @@ const Calendar = ({
       >
         <div className="relative
           select-none
+          border
           border-1
           border-gray-100
           flex-col
-          text-gray-500
           p-1
-          cursor-pointer"
+          max-h-24
+          md:max-h-max"
         > &nbsp;
         </div>
       </div>
@@ -250,8 +218,8 @@ const Calendar = ({
 
 
   return (
-    <div className="h-full flex flex-col items-center justify-center">
-      <div className="w-full pb-2">
+    <div className="h-full flex flex-col items-center justify-start md:justify-center">
+      <div className="hidden w-full pb-2 md:block">
         { renderHeaderSection() }
       </div>
 
@@ -260,7 +228,7 @@ const Calendar = ({
         {renderDaysSection()}
       </div>
 
-      <div className="w-full h-full grid grid-cols-7 grid-rows-6 " key="dada">
+      <div className="w-full h-auto grid grid-cols-7 grid-rows-6 md:h-full relative">
         { renderCellsForDays() }
       </div>
     </div>
