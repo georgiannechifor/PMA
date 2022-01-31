@@ -5,6 +5,7 @@ import classname from 'classnames';
 import moment from 'moment';
 import {func, object} from 'prop-types';
 
+// eslint-disable-next-line complexity
 const EventDetails = ({
   selectedDay,
   eventDetails,
@@ -44,25 +45,24 @@ const EventDetails = ({
       </div>
       <div className="px-5">
         <div className="flex gap-x-5">
-          <span className="bg-green-500 w-4 h-4 rounded" />
-          <div className="flex flex-col text-sm text-gray-500">
+          <span className={`${eventDetails?.details?.backgroundColor || 'bg-gray-500'} w-4 h-4 rounded`} />
+          <div className="flex flex-col text-gray-500">
             <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails?.details?.title}</h1>
-            { moment(selectedDay)
-              .format('ddd DDD, MMMM YYYY')}
+            <p className="text-sm"> { moment(selectedDay).format('ddd DDD, MMMM YYYY') } </p>
           </div>
         </div>
 
         <div className="flex flex-col mt-5">
-          <div className="flex items-center ">
-            <p className="text-sm font-weight w-20 text-gray-400"> Author </p>
-            <p className="text-sm text-gray-500">
+          <div className="flex text-sm items-center ">
+            <p className="w-20 text-gray-400"> Author </p>
+            <p className="text-gray-500">
               { `${eventDetails?.details?.author?.firstName} - ${eventDetails?.details?.author.email}` }
             </p>
           </div>
 
-          <div className="flex items-center ">
-            <p className="text-sm font-weight w-20 text-gray-400 "> Assignee </p>
-            <p className="text-sm text-gray-500">
+          <div className="flex text-sm items-center ">
+            <p className="w-20 text-gray-400 "> Assignee </p>
+            <p className="text-gray-500">
               { `${eventDetails?.details?.assignee.firstName} - ${eventDetails?.details?.assignee.email}` }
             </p>
           </div>

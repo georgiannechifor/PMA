@@ -90,7 +90,8 @@ const Calendar = ({
           border-gray-100
           flex-col
           p-1
-          max-h-24
+          h-24
+          md:h-full
           md:max-h-max
           md:relative
           `
@@ -199,15 +200,14 @@ const Calendar = ({
         className="w-full "
         key="supplementary-row"
       >
-        <div className="relative
-          select-none
-          border
-          border-1
+        <div className="select-none
           border-gray-100
           flex-col
           p-1
-          max-h-24
-          md:max-h-max"
+          h-24
+          md:h-full
+          md:max-h-max
+          md:relative"
         > &nbsp;
         </div>
       </div>

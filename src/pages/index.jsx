@@ -9,7 +9,7 @@ const Home = ({events}) => {
 
   return (
     <Loader isLoading={false}>
-      <div className="relative w-11/12 h-screen mx-auto rounded shadow bg-white mt-2 p-1 py-4 md:mt-5 md:p-5">
+      <div className="relative w-11/12 h-full mx-auto rounded shadow bg-white mt-2 p-1 py-4 md:mt-5 md:p-5 md:h-screen ">
         <Calendar
           events={events}
           selectedDate={selectedDate}

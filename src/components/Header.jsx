@@ -46,7 +46,7 @@ const Header = ({
               <Link href={PRIVATE_PATHS.HOME_PAGE}>
                 <p
                   className={cx(
-                    'text-xs md:text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                     {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.HOME_PAGE)}
                   )}
                 > Home </p>
@@ -54,7 +54,7 @@ const Header = ({
               <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
                 <p
                   className={cx(
-                    'text-xs md:text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                     {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
                   )}
                 > Knowledge sharing  </p>
@@ -62,7 +62,7 @@ const Header = ({
               <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
                 <p
                   className={cx(
-                    'text-xs md:text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                    'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                     {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.DEPLOY_TRACKER)}
                   )}
                 > Deploy Tracker
@@ -70,7 +70,7 @@ const Header = ({
               </Link>
               { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
                 <p className={cx(
-                  'text-xs md:text-md font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 sm:p-4',
+                  'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                   {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.ADMIN_CONFIG)}
                 )}
                 > Admin </p>
