@@ -35,7 +35,7 @@ const Calendar = ({
   const renderHeaderSection = () => (
     <div className="flex items-center justify-between w-full">
       <div
-        className="bg-gray-500 p-1 rounded-md cursor-pointer"
+        className="bg-gray-500 rounded-md cursor-pointer ml-2 md:p-1"
         onClick={() => prevMonth()}
       >
         <ChevronLeftIcon
@@ -43,12 +43,12 @@ const Calendar = ({
         />
       </div>
       <span
-        className="select-none text-xl font-medium text-gray-600"
+        className="select-none text-lg font-medium text-gray-600 md:text-xl"
         key={moment(currentMonth).format(HEADER_DATE_FORMAT)}
       >
         { moment(currentMonth).format(HEADER_DATE_FORMAT) }</span>
       <div
-        className="bg-gray-500 p-1 rounded-md cursor-pointer"
+        className="bg-gray-500 rounded-md cursor-pointer mr-2 md:p-1"
         onClick={() => nextMonth()}
       >
         <ChevronRightIcon
@@ -219,7 +219,7 @@ const Calendar = ({
 
   return (
     <div className="h-full flex flex-col items-center justify-start md:justify-center">
-      <div className="hidden w-full pb-2 md:block">
+      <div className="w-full pb-2">
         { renderHeaderSection() }
       </div>
 
