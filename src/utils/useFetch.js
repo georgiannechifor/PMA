@@ -18,7 +18,7 @@ export const useFetch = endpoint => {
   const fetchData = async options => {
     setLoading(true);
     await fetch(
-      `/api/${endpoint}`,
+      options?.entityId ? `/api/${endpoint}/${options.entityId}` : `/api/${endpoint}`,
       {
         ...options,
         body    : JSON.stringify(options?.data),
