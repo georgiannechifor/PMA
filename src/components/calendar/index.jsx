@@ -2,9 +2,9 @@ import {useState} from 'react';
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import map from 'lodash/map';
-import * as cx from 'classnames';
+import classNames, * as cx from 'classnames';
 import {object, func} from 'prop-types';
-
+import {EVENT_BACKGROUND_COLOR} from 'constants/index';
 import OtherEvents from './OtherEvents';
 import EventDetails from './EventDetails';
 
@@ -112,11 +112,13 @@ const Calendar = ({
           {
             map(getEventsForDay(day).slice(0, 2), item => (
               <span
-                className={
-                  `${item?.backgroundColor || 'bg-gray-400'} 
-                  px-1 py-0.5 w-full my-0.5 rounded cursor-pointer 
-                  text-white bg-opacity-90  hover:bg-opacity-100 transition text-xs truncate md:text-sm md:bg-opacity-40`
-                }
+                className={classNames(
+                  `${EVENT_BACKGROUND_COLOR[item.backgroundColor || 'default']}`,
+                  `transition px-1 py-0.5 my-0.5 rounded
+                   w-full bg-opacity-90 hover:bg-opacity-100
+                   cursor-pointer text-white text-xs truncate
+                   md:text-sm md:bg-opacity-40`
+                )}
                 key={item._id} // eslint-disable-line no-underscore-dangle
                 onClick={() => {
                   setOtherEventsDetails({...otherEventsDetails,
@@ -173,6 +175,7 @@ const Calendar = ({
       }
     </div>
   );
+
 
   const renderCellsForDays = () => { //eslint-disable-line
     const monthStart = moment(currentMonth)

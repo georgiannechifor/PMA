@@ -19,6 +19,7 @@ import {
   USER_ROLES
 } from './userRoles';
 
+import {EVENT_BACKGROUND_COLOR} from './events';
 
 import {
   PRIVATE_PATHS,
@@ -40,6 +41,7 @@ export {
   TIME_FORMAT_FULL,
   TIME_FORMAT_TWELVE,
   DATE_FORMAT,
+  EVENT_BACKGROUND_COLOR,
 
   USER_ROLES,
   PRIVATE_PATHS,

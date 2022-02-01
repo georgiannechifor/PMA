@@ -4,6 +4,7 @@ import {XIcon} from '@heroicons/react/outline';
 import classname from 'classnames';
 import moment from 'moment';
 import {func, object} from 'prop-types';
+import {EVENT_BACKGROUND_COLOR} from 'constants/index';
 
 // eslint-disable-next-line complexity
 const EventDetails = ({
@@ -45,7 +46,7 @@ const EventDetails = ({
       </div>
       <div className="px-5">
         <div className="flex gap-x-5">
-          <span className={`${eventDetails?.details?.backgroundColor || 'bg-gray-500'} w-4 h-4 rounded`} />
+          <span className={`${EVENT_BACKGROUND_COLOR[eventDetails.details.backgroundColor || 'default']} w-4 h-4 rounded`} />
           <div className="flex flex-col text-gray-500">
             <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails?.details?.title}</h1>
             <p className="text-sm"> { moment(selectedDay).format('ddd DDD, MMMM YYYY') } </p>

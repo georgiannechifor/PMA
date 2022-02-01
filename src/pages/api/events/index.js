@@ -3,7 +3,6 @@ import Event from 'models/event';
 import User from 'models/user';
 import {authenticated} from 'service/index';
 import groupBy from 'lodash/groupBy';
-import userRoles from 'constants';
 
 import {
   STATUS_METHOD_NOT_ALLOWED,
