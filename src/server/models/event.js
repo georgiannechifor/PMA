@@ -22,6 +22,10 @@ const EventSchema = new mongoose.Schema({
     type     : String,
     required : true
   },
+  backgroundColor : {
+    type     : String,
+    required : true
+  },
   isRecurring : {
     type    : String,
     default : false
@@ -35,6 +39,7 @@ const EventSchema = new mongoose.Schema({
   },
   teamAssigned : [{
     type     : String,
+    ref      : 'Team',
     required : function() {  // eslint-disable-line
       return typeof this.assignee === 'undefined';
     }
