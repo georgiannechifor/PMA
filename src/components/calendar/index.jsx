@@ -77,6 +77,8 @@ const Calendar = ({
     return days;
   };
 
+  const getEventsForDay = day => events[moment(day).format('DD/MM/YYYY')] || [];
+
   // eslint-disable-next-line complexity
   const getDayContainer = (day, monthStart) => (
     <div
@@ -104,13 +106,14 @@ const Calendar = ({
         {moment(day).format('D')}
       </span>
 
-      <div className="flex h-4/6 flex-col items-center w-full">
-        {
-          events[moment(day).format('DD/MM/YYYY')] &&
-            map(events[moment(day).format('DD/MM/YYYY')].slice(0, 2), item => (
+      {
+        getEventsForDay.length > 0 &&
+        <div className="flex h-4/6 flex-col items-center w-full">
+          {
+            map(getEventsForDay(day).slice(0, 2), item => (
               <span
                 className={
-                  `${item.backgroundColor || 'bg-gray-400'} 
+                  `${item?.backgroundColor || 'bg-gray-400'} 
                   px-1 py-0.5 w-full my-0.5 rounded cursor-pointer 
                   text-white bg-opacity-90  hover:bg-opacity-100 transition text-xs truncate md:text-sm md:bg-opacity-40`
                 }
@@ -128,45 +131,46 @@ const Calendar = ({
                 { item.title }
               </span>
             ))
-        }
-        {
-          events[moment(day).format('DD/MM/YYYY')]?.length > 2 && (
-            <span
-              className="text-tiny text-gray-500 font-medium w-full hover:bg-gray-100 transition cursor-pointer md:py-1 md:px-1 md:text-sm"
-              onClick={() => {
-                setEventDetails({...eventDetails,
-                  visible : false});
-                setOtherEventsDetails({
-                  visible : true,
-                  item    : day.format('DD/MM/YYYY'),
-                  details : events[moment(day).format('DD/MM/YYYY')]
-                });
-              }}
-            >
-              Other { events[moment(day).format('DD/MM/YYYY')]?.length - 2 }
-            </span>
-          )
-        }
+          }
+          {
+            getEventsForDay(day).length > 2 && (
+              <span
+                className="text-tiny text-gray-500 font-medium w-full hover:bg-gray-100 transition cursor-pointer md:py-1 md:px-1 md:text-sm"
+                onClick={() => {
+                  setEventDetails({...eventDetails,
+                    visible : false});
+                  setOtherEventsDetails({
+                    visible : true,
+                    item    : day.format('DD/MM/YYYY'),
+                    details : getEventsForDay(day)
+                  });
+                }}
+              >
+                Other { getEventsForDay(day).length - 2 }
+              </span>
+            )
+          }
 
-        {
-          eventDetails.visible &&
-          <EventDetails
-            eventDetails={eventDetails}
-            selectedDay={day}
-            setEventDetails={setEventDetails}
-          />
-        }
+          {
+            eventDetails.visible &&
+            <EventDetails
+              eventDetails={eventDetails}
+              selectedDay={day}
+              setEventDetails={setEventDetails}
+            />
+          }
 
-        {
-          otherEventsDetails.visible &&
-          <OtherEvents
-            eventDetails={otherEventsDetails}
-            selectedDay={day}
-            setEventDetails={setOtherEventsDetails}
-          />
-        }
+          {
+            otherEventsDetails.visible &&
+            <OtherEvents
+              eventDetails={otherEventsDetails}
+              selectedDay={day}
+              setEventDetails={setOtherEventsDetails}
+            />
+          }
 
-      </div>
+        </div>
+      }
     </div>
   );
 

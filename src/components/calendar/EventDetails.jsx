@@ -80,8 +80,6 @@ const EventDetails = ({
         </div>
       </div>
     </div>
-
-
   </Transition>
 );
 
