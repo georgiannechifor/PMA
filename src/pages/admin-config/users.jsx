@@ -2,12 +2,22 @@ import {useState} from 'react';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Modal, Table} from 'components';
 import {array} from 'prop-types';
+import useSWR from 'swr';
 
 const AdminUsers = ({
-  users
+  defaultTeams,
+  defaultUsers
 }) => {
   const [selectedUser, setSelectedUser] = useState({});
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+
+  // eslint-disable-next-line no-unused-vars
+  const {data: teams} = useSWR('/teams', {
+    initialData : defaultTeams
+  });
+  const {data: users} = useSWR('/users', {
+    initialData : defaultUsers
+  });
 
   const userColumns = [
     {
@@ -15,7 +25,7 @@ const AdminUsers = ({
       title : 'First Name'
     }, {
       key   : 'lastName',
-      title : 'LastName'
+      title : 'Last Name'
     }, {
       key   : 'email',
       title : 'Email'
@@ -31,7 +41,10 @@ const AdminUsers = ({
 
   return (
     <div className="w-full flex flex-col">
-      <h1 className="text-xl font-medium text-gray-600 py-4"> Company Users </h1>
+      <section className="w-5/6 mx-auto flex items-center justify-between">
+        <h1 className="text-xl font-medium py-4"> Company Users </h1>
+        <button className="px-5 py-2 bg-gray-500 rounded text-white font-medium text-md cursor-not-allowed" disabled> Create User </button>
+      </section>
 
       <div className="flex-1 ">
         <Table
@@ -42,8 +55,6 @@ const AdminUsers = ({
             setIsEditUserModalOpen(true);
           }}
         />
-
-
       </div>
 
       <Modal
@@ -81,20 +92,24 @@ const AdminUsers = ({
 
 AdminUsers.getInitialProps = async ctx => {
   try {
-    const {data} = await getPropsFromFetch('/users', ctx);
+    const {data: teams} = await getPropsFromFetch('/teams', ctx);
+    const {data: users} = await getPropsFromFetch('/users', ctx);
 
     return {
-      users : data
+      defaultTeams : teams,
+      defaultUsers : users
     };
   } catch {
     return {
-      users : []
+      defaultTeams : [],
+      defaultUsers : []
     };
   }
 };
 AdminUsers.displayName = 'AdminUsers';
 AdminUsers.propTypes = {
-  users : array.isRequired
+  defaultTeams : array.isRequired,
+  defaultUsers : array.isRequired
 };
 
 export default AdminUsers;

@@ -28,6 +28,13 @@ module.exports = {
       },
       maxHeight : {
         90 : '23rem'
+      },
+      fontSize : {
+        tiny : '10px'
+      },
+      width : {
+        200 : '200%',
+        90  : '90vw'
       }
     }
   },

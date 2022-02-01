@@ -3,7 +3,6 @@ import Link from 'next/link';
 import * as cx from 'classnames';
 import {useRouter} from 'next/router';
 import {ArrowLeftIcon} from '@heroicons/react/outline';
-import {string, func} from 'prop-types';
 import {PRIVATE_PATHS, TABS} from 'constants/index';
 
 const AdminMenu = () => {
@@ -58,9 +57,6 @@ const AdminMenu = () => {
 };
 
 AdminMenu.displayName = 'AdminMenu';
-AdminMenu.propTypes = {
-  activeTab    : string.isRequired,
-  setActiveTab : func.isRequired
-};
+AdminMenu.propTypes = {};
 
 export default AdminMenu;

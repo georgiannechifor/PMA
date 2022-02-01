@@ -4,6 +4,7 @@ import {useRouter} from 'next/router';
 import '../styles/globals.css';
 import {Layout, AdminLayout} from 'components';
 import {PUBLIC_PATHS} from 'constants/index';
+import {SWRConfig} from 'swr';
 
 const PageLayout = ({children, route}) => {
   if (route && route.includes('/admin-config')) {
@@ -27,8 +28,15 @@ const App = ({Component, pageProps}) => {
 
   return (
     <PageLayout route={router.asPath}>
-      <Component {...pageProps} />
+      <SWRConfig value={{
+        fetcher : endpoint => fetch('http://localhost:3000/api' + endpoint).then(res => res.json())
+          .then(res => res.data)
+      }}
+      >
+        <Component {...pageProps} />
+      </SWRConfig>
     </PageLayout>
+
   );
 };
 
