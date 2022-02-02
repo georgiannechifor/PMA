@@ -1,10 +1,12 @@
 import {array, func} from 'prop-types';
+import classnames from 'classnames';
 import map from 'lodash/map';
 
 const Table = ({
   data,
   columns,
-  onRowClick
+  onRowClick,
+  isDisabled
 }) => {
   const getRowColumnValue = (rowItem, key) => {
     const keys = key.split('.');
@@ -38,7 +40,10 @@ const Table = ({
             data.length &&
             map(data, item => (
               <tr
-                className="bg-white cursor-pointer hover:bg-gray-50"
+                className={classnames(
+                  'bg-white cursor-pointer hover:bg-gray-50',
+                  {'pointer-events-none bg-gray-100 text-gray-400' : isDisabled(item)}
+                )}
                 key={item._id} // eslint-disable-line no-underscore-dangle
                 onClick={() => onRowClick(item)}
               >
@@ -68,7 +73,12 @@ Table.displayName = 'Table';
 Table.propTypes = {
   onRowClick : func.isRequired,
   data       : array.isRequired,
-  columns    : array.isRequired
+  columns    : array.isRequired,
+  isDisabled : func
+};
+
+Table.defaultProps = {
+  isDisabled : () => false
 };
 
 export default Table;

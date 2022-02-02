@@ -49,7 +49,7 @@ const OtherEvents = ({
         {
           map(eventDetails.details, item => (
             <div className="flex gap-x-5">
-              <span className={`${EVENT_BACKGROUND_COLOR[item.backgroundColor || 'default']} w-4 h-4 rounded`} />
+              <span className={`${item.backgroundColor || 'gray'} w-4 h-4 rounded`} />
               <div className="flex flex-col text-sm text-gray-500">
                 <h1 className="-mt-2 text-xl font-medium text-gray-600 truncate"> {item.title}</h1>
                 { moment(selectedDay)

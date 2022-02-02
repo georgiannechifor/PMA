@@ -7,16 +7,17 @@ const Select = ({
   errorClassname,
   options,
   value,
-  onChange
+  onChange,
+  placeholder
 }) => (
   <div>
-    <Listbox onChange={onChange} value={value || options[0]}>
+    <Listbox onChange={onChange} value={value}>
       <div className="relative mt-1">
         <Listbox.Button
           className={`relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg
             border border-gray-400 cursor-default sm:text-sm ${errorClassname}`}
         >
-          <span className="block truncate">{value.name || 'Select a team admin'}</span>
+          <span className="block truncate">{value?.name || placeholder}</span>
           <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
             <SelectorIcon
               aria-hidden="true"
@@ -31,7 +32,7 @@ const Select = ({
           leaveTo="opacity-0"
         >
           <Listbox.Options
-            className="absolute w-full py-1 mt-1 overflow-auto
+            className="z-50 absolute w-full py-1 mt-1 overflow-auto
               text-base bg-white rounded-md shadow-lg max-h-60 sm:text-sm"
           >
             {options.map(option => (
@@ -55,7 +56,7 @@ const Select = ({
                     {selected ? (
                       <span
                         className={`${
-                          active ? 'text-gray-600' : 'text-gray-600'
+                          active ? 'text-gray-600' : 'text-gray-400'
                         }
                                 absolute inset-y-0 left-0 flex items-center pl-3`}
                       >
@@ -78,11 +79,13 @@ Select.propTypes = {
   options        : array.isRequired,
   value          : object.isRequired,
   onChange       : func.isRequired,
-  errorClassname : string
+  errorClassname : string,
+  placeholder    : string
 };
 
 Select.defaultProps = {
-  errorClassname : ''
+  errorClassname : '',
+  placeholder    : ''
 };
 
 export default Select;

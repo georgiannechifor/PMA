@@ -77,6 +77,8 @@ const Calendar = ({
     return days;
   };
 
+  const hashCode = str => str.hexEncode().hexDecode();
+
   const getEventsForDay = day => events[moment(day).format('DD/MM/YYYY')] || [];
 
   // eslint-disable-next-line complexity
@@ -112,13 +114,11 @@ const Calendar = ({
           {
             map(getEventsForDay(day).slice(0, 2), item => (
               <span
-                className={classNames(
-                  `${EVENT_BACKGROUND_COLOR[item.backgroundColor || 'default']}`,
-                  `transition px-1 py-0.5 my-0.5 rounded
+                className={
+                  `${item.backgroundColor || 'gray'} transition px-1 py-0.5 my-0.5 rounded
                    w-full bg-opacity-90 hover:bg-opacity-100
                    cursor-pointer text-white text-xs truncate
-                   md:text-sm md:bg-opacity-40`
-                )}
+                   md:text-sm md:bg-opacity-40`}
                 key={item._id} // eslint-disable-line no-underscore-dangle
                 onClick={() => {
                   setOtherEventsDetails({...otherEventsDetails,
@@ -129,6 +129,7 @@ const Calendar = ({
                     details : item
                   });
                 }}
+
               >
                 { item.title }
               </span>

@@ -9,5 +9,4 @@ export const EVENT_BACKGROUND_COLOR = {
   cyan    : 'bg-cyan-400',
   violet  : 'bg-violet-400',
   pink    : 'bg-pink-400'
-
 };

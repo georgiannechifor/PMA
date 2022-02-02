@@ -4,7 +4,7 @@ import map from 'lodash/map';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import * as cx from 'classnames';
+import classnames from 'classnames';
 import {Table, Modal, Select, Loader} from 'components';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {useFetch} from 'utils/useFetch';
@@ -140,7 +140,7 @@ const AdminTeams = ({
             <div>
               <input
                 {...register('teamName')}
-                className={cx(
+                className={classnames(
                   'text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none',
                   {'border-1 border-red-400' : errors.teamName}
                 )}
@@ -162,11 +162,12 @@ const AdminTeams = ({
                       shouldValidate : true
                     });
                   }}
-                  options={users.map(user => ({
+                  options={map(users, user => ({
                   // eslint-disable-next-line no-underscore-dangle
                     value : user._id,
                     name  : user.firstName + ' ' + user.lastName
                   }))}
+                  placeholder="Select a team admin"
                   value={selectedTeamAdmin}
                 />
               </div>

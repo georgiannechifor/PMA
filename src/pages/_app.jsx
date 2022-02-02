@@ -1,7 +1,7 @@
 import {object, elementType, string} from 'prop-types';
 import {useRouter} from 'next/router';
 
-import '../styles/globals.css';
+import '../styles/globals.scss';
 import {Layout, AdminLayout} from 'components';
 import {PUBLIC_PATHS} from 'constants/index';
 import {SWRConfig} from 'swr';
