@@ -16,6 +16,8 @@ const AdminUsers = ({
   defaultUsers
 }) => {
   const [selectedUser, setSelectedUser] = useState({});
+  const [selectedTeam, setSelectedTeam] = useState({});
+  const [selectedUserRole, setSelectedUserRole] = useState({});
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
@@ -53,7 +55,6 @@ const AdminUsers = ({
   });
   const validationOptions = {resolver : yupResolver(formSchema)};
   const {register, handleSubmit, reset, watch, setValue, formState: {errors}} = useForm(validationOptions);
-
 
   return (
     <div className="w-full flex flex-col">
@@ -127,42 +128,26 @@ const AdminUsers = ({
 
             <Select
               errorClassname={errors.jobTitle ? 'border-1 border-red-400' : ''}
-              onChange={event => {
-                setValue('jobTitle', event, {
-                  shouldValidate : true
-                });
-                setSelectedUser({
-                  ...selectedUser,
-                  jobTitle : event
-                });
-              }}
               options={map(filter(USER_ROLES, item => item !== 'superadmin'), role => ({
                 // eslint-disable-next-line no-underscore-dangle
                 value : role,
                 name  : role
               }))}
               placeholder="Select a job title"
-              value={selectedUser.jobTitle}
+              selected={selectedUserRole}
+              setSelected={setSelectedUserRole}
             />
 
             <Select
               errorClassname={errors.team ? 'border-1 border-red-400' : ''}
-              onChange={event => {
-                setSelectedUser({
-                  ...selectedUser,
-                  team : event
-                });
-                setValue('team', event, {
-                  shouldValidate : true
-                });
-              }}
               options={map(teams, team => ({
                 // eslint-disable-next-line no-underscore-dangle
                 value : team._id,
                 name  : team.name
               }))}
               placeholder="Select a team"
-              value={selectedUser.team}
+              selected={selectedTeam}
+              setSelected={setSelectedTeam}
             />
 
           </div>
