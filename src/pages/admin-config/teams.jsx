@@ -158,7 +158,7 @@ const AdminTeams = ({
                 <Select
                   errorClassname={errors.admin ? 'border-1 border-red-400' : ''}
                   options={map(
-                    filter(users, user => user.team._id === editTeamItem._id), // eslint-disable-line no-underscore-dangle
+                    filter(users, user => user.team?._id === editTeamItem?._id), // eslint-disable-line no-underscore-dangle
                     user => ({
                       // eslint-disable-next-line no-underscore-dangle
                       value : user._id,
