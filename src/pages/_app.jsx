@@ -29,7 +29,7 @@ const App = ({Component, pageProps}) => {
   return (
     <PageLayout route={router.asPath}>
       <SWRConfig value={{
-        fetcher : endpoint => fetch('https://pma-ui.vercel.app/api' + endpoint).then(res => res.json())
+        fetcher : endpoint => fetch(`${process.env.ORIGIN_URL}/api` + endpoint).then(res => res.json())
           .then(res => res.data)
       }}
       >

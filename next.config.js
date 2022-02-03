@@ -2,6 +2,10 @@
 module.exports = {
   reactStrictMode : true,
 
+  env : {
+    ORIGIN_URL : process.env.ORIGIN_URL
+  },
+
   redirects () {
     return [
       {

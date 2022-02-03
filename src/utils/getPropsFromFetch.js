@@ -3,7 +3,8 @@ import {STATUS_UNAUTHORIZED} from 'constants/index';
 
 export async function getPropsFromFetch (url, ctx) {
   const cookie = ctx.req?.headers.cookie;
-  const response = await fetch(`https://pma-ui.vercel.app/api${url}`, {
+
+  const response = await fetch(`${process.env.ORIGIN_URL}/api${url}`, {
     headers : {
       cookie : cookie ?? ''
     }
