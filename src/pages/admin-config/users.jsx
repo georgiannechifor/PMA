@@ -21,6 +21,7 @@ const AdminUsers = ({
   const [selectedTeam, setSelectedTeam] = useState({});
   const [selectedUserRole, setSelectedUserRole] = useState({});
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+  const [removeUserConfirmationModal, setRemoveUserConfirmationModal] = useState(false);
   const {mutate} = useSWRConfig();
   // eslint-disable-next-line no-unused-vars
   const {data: teams} = useSWR('/teams', {
@@ -74,6 +75,13 @@ const AdminUsers = ({
     });
   };
 
+  const removeUser = () => {
+    fetchData({
+      entityId : selectedUser._id, // eslint-disable-line no-underscore-dangle
+      method   : 'DELETE'
+    });
+  };
+
 
   useEffect(() => {
     if (selectedUser) {
@@ -93,8 +101,10 @@ const AdminUsers = ({
   }, [selectedUser]);
 
   useEffect(() => {
-    if (data && data._id) {
+    // eslint-disable-next-line no-underscore-dangle
+    if (data && data._id || data && data.deletedCount) {
       setIsEditUserModalOpen(false);
+      setRemoveUserConfirmationModal(false);
       reset({
         teamName : '',
         admin    : ''
@@ -109,10 +119,15 @@ const AdminUsers = ({
       <div className="w-full flex flex-col">
         <section className="w-5/6 mx-auto flex items-center justify-between">
           <h1 className="text-xl font-medium py-4"> Company Users </h1>
-          <button className="px-5 py-2 bg-gray-500 rounded text-white font-medium text-md cursor-not-allowed" disabled> Create User </button>
+          <button
+            className="px-5 py-2 bg-gray-500 rounded text-white font-medium text-md cursor-not-allowed"
+            disabled
+            title="Feature in next versions"
+          > Create User
+          </button>
         </section>
 
-        <div className="flex-1 ">
+        <div className="flex-1">
           <Table
             columns={userColumns}
             data={users}
@@ -129,6 +144,10 @@ const AdminUsers = ({
           isModalOpen={isEditUserModalOpen}
           modalActions={(
             <div className="flex w-full items-center justify-end gap-2">
+              <button
+                className="pl-2 py-2 font-medium text-sm text-red-400 mr-auto hover:underline transition"
+                onClick={() => setRemoveUserConfirmationModal(true)}
+              > Delete </button>
               <button
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
                 onClick={() => setIsEditUserModalOpen(false)}
@@ -212,10 +231,38 @@ const AdminUsers = ({
               />
               { errors?.teamName && <p className="-mt-2 text-red-500 text-xs font-medium"> { errors.teamName.message} </p> }
 
+              {
+                error &&
+                error.message && (
+                  <p className="my-1 text-red-500 text-xs font-medium"> { error.message }</p>
+                )
+              }
+
             </div>
           )}
           modalTitle="User details"
-          setIsModalOpen={setIsEditUserModalOpen}
+          setIsModalOpen={() => null}
+        />
+
+        <Modal
+          isModalOpen={removeUserConfirmationModal}
+          modalActions={(
+            <div className="flex w-full items-center justify-end gap-2">
+              <button
+                className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
+                onClick={() => setRemoveUserConfirmationModal(false)}
+              > Cancel </button>
+              <button
+                className="px-8 py-2 text-sm text-white font-medium bg-red-500 rounded-lg"
+                onClick={() => removeUser()}
+              > Remove </button>
+            </div>
+          )}
+          modalContent={(
+            <p> Are you sure you want to remove { selectedUser.firstName} {selectedUser.lastName}?</p>
+          )}
+          modalTitle="Remove confirmation"
+          setIsModalOpen={setRemoveUserConfirmationModal}
         />
       </div>
 

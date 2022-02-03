@@ -2,9 +2,8 @@ import {useState} from 'react';
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import map from 'lodash/map';
-import classNames, * as cx from 'classnames';
+import classNames from 'classnames';
 import {object, func} from 'prop-types';
-import {EVENT_BACKGROUND_COLOR} from 'constants/index';
 import OtherEvents from './OtherEvents';
 import EventDetails from './EventDetails';
 
@@ -77,15 +76,13 @@ const Calendar = ({
     return days;
   };
 
-  const hashCode = str => str.hexEncode().hexDecode();
-
   const getEventsForDay = day => events[moment(day).format('DD/MM/YYYY')] || [];
 
   // eslint-disable-next-line complexity
   const getDayContainer = (day, monthStart) => (
     <div
       className={
-        cx(
+        classNames(
           getDaysClass(day, monthStart),
           `
           select-none

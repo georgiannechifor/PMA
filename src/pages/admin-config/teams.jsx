@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import {array} from 'prop-types';
 import map from 'lodash/map';
+import filter from 'lodash/filter';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -156,11 +157,13 @@ const AdminTeams = ({
               <div className="mt-5">
                 <Select
                   errorClassname={errors.admin ? 'border-1 border-red-400' : ''}
-                  options={map(users, user => ({
-                  // eslint-disable-next-line no-underscore-dangle
-                    value : user._id,
-                    name  : user.firstName + ' ' + user.lastName
-                  }))}
+                  options={map(
+                    filter(users, user => user.team._id === editTeamItem._id), // eslint-disable-line no-underscore-dangle
+                    user => ({
+                      // eslint-disable-next-line no-underscore-dangle
+                      value : user._id,
+                      name  : user.firstName + ' ' + user.lastName
+                    }))}
                   placeholder="Select a team admin"
                   selected={selectedTeamAdmin}
                   setSelected={event => {
@@ -178,7 +181,8 @@ const AdminTeams = ({
               }
 
               {
-                error && error.message && (
+                error &&
+                error.message && (
                   <p className="my-1 text-red-500 text-xs font-medium"> { error.message }</p>
                 )
               }

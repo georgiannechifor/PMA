@@ -22,7 +22,7 @@ const Table = ({
 
   return (
     <>
-      <table className="w-5/6 mx-auto table-auto">
+      <table className="w-5/6 mx-auto table-auto shadow">
         <thead>
           <tr className="bg-gradient-to-r from-indigo-600 to-purple-600">
             {

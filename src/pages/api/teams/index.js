@@ -19,7 +19,6 @@ const eventsHandler = authenticated(async (req, res) => {
       try {
         const events = await Team.find({}).populate('admin', 'firstName lastName');
 
-
         return res.status(STATUS_OK).json({
           data : events
         });

@@ -5,7 +5,8 @@ import classname from 'classnames';
 import moment from 'moment';
 import {func, object} from 'prop-types';
 import map from 'lodash/map';
-import {EVENT_BACKGROUND_COLOR} from 'constants/index';
+
+const CALENDAR_MIDDLE_DAY = 3;
 
 const OtherEvents = ({
   selectedDay,
@@ -30,8 +31,8 @@ const OtherEvents = ({
     <div
       className={classname(
         'absolute w-90 z-10 rounded shadow-2xl bg-white flex flex-col pb-4 md:min-h-full md:-top-10 md:w-200',
-        {'right-0 left-auto md:right-full' : Number(moment(selectedDay).format('e')) >= 3 || Number(moment(selectedDay).format('e')) === 0},
-        {'left-0 right-auto md:left-full' : Number(moment(selectedDay).format('e')) < 3 && Number(moment(selectedDay).format('e')) > 0}
+        {'right-0 left-auto md:right-full' : Number(moment(selectedDay).format('e')) >= CALENDAR_MIDDLE_DAY || Number(moment(selectedDay).format('e')) === 0},
+        {'left-0 right-auto md:left-full' : Number(moment(selectedDay).format('e')) < CALENDAR_MIDDLE_DAY && Number(moment(selectedDay).format('e')) > 0}
       )}
     >
       <div className="w-full flex items-end justify-end px-2 py-1">

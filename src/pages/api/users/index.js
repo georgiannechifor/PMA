@@ -7,6 +7,7 @@ import {
   STATUS_NOT_FOUND,
   STATUS_OK
 } from 'constants/responseStatus';
+import {USER_ROLES} from 'constants/userRoles';
 
 dbConnect();
 
@@ -16,7 +17,7 @@ const usersHandler = authenticated(async (req, res) => {
   switch (method) {
     case 'GET': {
       try {
-        const users = await User.find({}).populate('team')
+        const users = await User.find({jobTitle : {$ne : USER_ROLES.SUPER_ADMIN}}).populate('team')
           .select(['-__v', '-password'])
           .exec();
 

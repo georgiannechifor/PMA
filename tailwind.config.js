@@ -19,7 +19,8 @@ module.exports = {
         }
       },
       boxShadow : {
-        DEFAULT : '0px 1px 5px #0000001A'
+        DEFAULT : '0px 1px 5px #0000001A',
+        full    : '0 0 7px 1px rgba(0, 0, 0, 0.3)'
       },
       height : {
         '2px'    : '2px',
