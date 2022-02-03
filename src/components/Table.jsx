@@ -14,7 +14,7 @@ const Table = ({
     let item = rowItem;
 
     for (let keyValue of keys) {
-      item = item[keyValue];
+      item = item && item[keyValue] || '';
     }
 
     return item;

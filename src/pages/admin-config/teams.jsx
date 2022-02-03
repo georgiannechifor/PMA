@@ -156,19 +156,19 @@ const AdminTeams = ({
               <div className="mt-5">
                 <Select
                   errorClassname={errors.admin ? 'border-1 border-red-400' : ''}
-                  onChange={event => {
-                    setSelectedTeamAdmin(event);
-                    setValue('admin', event.value, {
-                      shouldValidate : true
-                    });
-                  }}
                   options={map(users, user => ({
                   // eslint-disable-next-line no-underscore-dangle
                     value : user._id,
                     name  : user.firstName + ' ' + user.lastName
                   }))}
                   placeholder="Select a team admin"
-                  value={selectedTeamAdmin}
+                  selected={selectedTeamAdmin}
+                  setSelected={event => {
+                    setSelectedTeamAdmin(event);
+                    setValue('admin', event.value, {
+                      shouldValidate : true
+                    });
+                  }}
                 />
               </div>
               {

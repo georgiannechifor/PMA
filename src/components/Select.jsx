@@ -44,7 +44,7 @@ const Select = ({
                 key={optionIdx.toString()}
                 value={option}
               >
-                {({selected, active}) => (
+                {({active}) => (
                   <>
                     <span
                       className={`${
@@ -53,7 +53,7 @@ const Select = ({
                     >
                       {option.name}
                     </span>
-                    {selected ? (
+                    {selected.name === option.name ? (
                       <span
                         className={`${active ? 'text-gray-600' : 'text-gray-400'} 
                         absolute inset-y-0 left-0 flex items-center pl-3`}

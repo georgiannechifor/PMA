@@ -16,7 +16,8 @@ const usersHandler = authenticated(async (req, res) => {
   switch (method) {
     case 'GET': {
       try {
-        const users = await User.find({}).select(['-__v', '-password'])
+        const users = await User.find({}).populate('team')
+          .select(['-__v', '-password'])
           .exec();
 
 
