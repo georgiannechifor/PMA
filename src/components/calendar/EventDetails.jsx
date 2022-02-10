@@ -1,39 +1,37 @@
-import {Fragment} from 'react';
-import {Transition} from '@headlessui/react';
+import {useRef} from 'react';
 import {XIcon} from '@heroicons/react/outline';
 import classname from 'classnames';
 import moment from 'moment';
 import {func, object} from 'prop-types';
+import {useOnClickOutside} from 'utils/useOnClickOutside';
 
 const CALENDAR_MIDDLE_DAY = 3;
+
 // eslint-disable-next-line complexity
 const EventDetails = ({
   selectedDay,
   eventDetails,
   setEventDetails
-}) => (
-  <Transition
-    as={Fragment}
-    enter="transition-opacity duration-150"
-    enterFrom="opacity-0"
-    enterTo="opacity-100"
-    leave="transition-opacity duration-150"
-    leaveFrom="opacity-100"
-    leaveTo="opacity-0"
-    show={
-      eventDetails &&
-        eventDetails.visible &&
-        eventDetails.item === selectedDay.format('DD/MM/YYYY')
-    }
-  >
+}) => {
+  const wrapperRef = useRef();
+
+  useOnClickOutside(wrapperRef, () => setEventDetails({
+    ...eventDetails,
+    visible : !eventDetails.visible
+  }));
+
+  return (
     <div
       className={classname(
         'absolute w-90 z-10 rounded shadow-2xl bg-white flex flex-col md:min-h-full pb-4 md:-top-10 md:w-200',
         {'right-0 left-auto md:right-full' : Number(moment(selectedDay).format('e')) >= CALENDAR_MIDDLE_DAY || Number(moment(selectedDay).format('e')) === 0},
         {'left-0 right-auto md:left-full' : Number(moment(selectedDay).format('e')) < CALENDAR_MIDDLE_DAY && Number(moment(selectedDay).format('e')) > 0}
       )}
+      ref={wrapperRef}
     >
-      <div className="w-full flex items-end justify-end px-2 py-1">
+      <div
+        className="w-full flex items-end justify-end px-2 py-1"
+      >
         <div
           className="hover:bg-gray-100 cursor-pointer rounded-full p-2"
           onClick={() => setEventDetails({
@@ -81,8 +79,8 @@ const EventDetails = ({
         </div>
       </div>
     </div>
-  </Transition>
-);
+  );
+};
 
 EventDetails.propTypes = {
   selectedDay     : object.isRequired,

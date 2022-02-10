@@ -26,9 +26,26 @@ const EventSchema = new mongoose.Schema({
     type     : String,
     required : true
   },
-  isRecurring : {
-    type    : String,
-    default : false
+  recurring : {
+    startDate : {
+      type     : String,
+      required : true
+    },
+    endDate : {
+      type : String
+    },
+
+    // Daily, weekly, monthly or yearly
+    repeat : {
+      type     : String,
+      required : true
+    },
+
+    // MON TUE WED THU FRA SAT SUN
+    byDay : {
+      type     : String,
+      required : true
+    }
   },
   assignee : {
     type     : mongoose.Schema.Types.ObjectId,

@@ -3,6 +3,7 @@ import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import map from 'lodash/map';
 import classNames from 'classnames';
+import {Transition} from '@headlessui/react';
 import {object, func} from 'prop-types';
 import OtherEvents from './OtherEvents';
 import EventDetails from './EventDetails';
@@ -67,7 +68,7 @@ const Calendar = ({
         .format(DAYS_DATE_FORMAT);
 
       days.push(
-        <div className="uppercase text-center text-sm text-black font-medium select-none w-full " key={`${temp}-${index}`}>
+        <div className="uppercase text-left text-sm text-black font-medium select-none table-cell" key={`${temp}-${index}`}>
           { temp }
         </div>
       );
@@ -84,30 +85,18 @@ const Calendar = ({
       className={
         classNames(
           getDaysClass(day, monthStart),
-          `
-          select-none
-          border
-          border-1
-          border-gray-100
-          flex-col
-          p-1
-          h-24
-          md:h-full
-          md:max-h-max
-          md:relative
-          `
-        )}
+          'table-cell border-b border-r first:border-l h-1/6 relative'
+        )
+      }
       key={moment(day).format('DD/MM/YYYY')}
     >
-      <span
-        className="text-gray-500 user-select-none"
-      >
+      <span className="text-gray-500 user-select-none">
         {moment(day).format('D')}
       </span>
 
       {
         getEventsForDay.length > 0 &&
-        <div className="flex h-4/6 flex-col items-center w-full">
+        <div className="w-full flex flex-col px-1">
           {
             map(getEventsForDay(day).slice(0, 2), item => (
               <span
@@ -151,29 +140,48 @@ const Calendar = ({
             )
           }
 
-          {
-            eventDetails.visible &&
+          <Transition
+            enter="transition-opacity duration-200"
+            enterFrom="opacity-0"
+            enterTo="opacity-100 "
+            leave="transition-opacity duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            show={
+              eventDetails?.visible &&
+              eventDetails?.item === day.format('DD/MM/YYYY')
+            }
+          >
             <EventDetails
               eventDetails={eventDetails}
               selectedDay={day}
               setEventDetails={setEventDetails}
             />
-          }
+          </Transition>
 
-          {
-            otherEventsDetails.visible &&
+          <Transition
+            enter="transition-opacity duration-100"
+            enterFrom="opacity-0"
+            enterTo="opacity-100 "
+            leave="transition-opacity duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            show={
+              otherEventsDetails?.visible &&
+              otherEventsDetails?.item === day.format('DD/MM/YYYY')
+            }
+          >
             <OtherEvents
               eventDetails={otherEventsDetails}
               selectedDay={day}
               setEventDetails={setOtherEventsDetails}
             />
-          }
+          </Transition>
 
         </div>
       }
     </div>
   );
-
 
   const renderCellsForDays = () => { //eslint-disable-line
     const monthStart = moment(currentMonth)
@@ -192,35 +200,36 @@ const Calendar = ({
         day = moment(day).add(1, 'days');
         days.push(getDayContainer(day, monthStart));
       }
-      rows.push(days);
+      const row = (
+        <div className="table-row w-full select-none align-top">
+          {days}
+        </div>
+      );
+
+      rows.push(row);
       days = [];
     }
+
     if (rows.length === 6) { // eslint-disable-line no-magic-numbers
       return rows;
     }
 
 
-    rows.push(
-      <div
-        className="w-full "
-        key="supplementary-row"
-      >
-        <div className="select-none
-          border-gray-100
-          flex-col
-          p-1
-          h-24
-          md:h-full
-          md:max-h-max
-          md:relative"
-        > &nbsp;
-        </div>
+    for (let i = 0; i < 7; i++) { // eslint-disable-line
+      day = moment(day).add(1, 'days');
+      days.push(getDayContainer(day, monthStart));
+    }
+    const row = (
+      <div className="table-row w-full select-none align-top">
+        {days}
       </div>
     );
 
+    rows.push(row);
+
+
     return rows;
   };
-
 
   return (
     <div className="h-full flex flex-col items-center justify-start md:justify-center">
@@ -229,12 +238,15 @@ const Calendar = ({
       </div>
 
 
-      <div className="grid grid-cols-7 w-full py-1 bg-gray-100">
-        {renderDaysSection()}
-      </div>
+      <div className="table table-fixed w-full h-full">
+        <div className="table-row table-fixed w-full bg-gray-100">
+          {renderDaysSection()}
+        </div>
 
-      <div className="w-full h-auto grid grid-cols-7 grid-rows-6 md:h-full relative">
         { renderCellsForDays() }
+
+        <div className="table-row table-fixed md:h-full relative" />
+
       </div>
     </div>
   );
