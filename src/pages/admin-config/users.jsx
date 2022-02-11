@@ -82,7 +82,6 @@ const AdminUsers = ({
     });
   };
 
-
   useEffect(() => {
     if (selectedUser) {
       setValue('admin', selectedUser.jobTitle);
@@ -146,7 +145,10 @@ const AdminUsers = ({
             <div className="flex w-full items-center justify-end gap-2">
               <button
                 className="pl-2 py-2 font-medium text-sm text-red-400 mr-auto hover:underline transition"
-                onClick={() => setRemoveUserConfirmationModal(true)}
+                onClick={() => {
+                  setIsEditUserModalOpen(false);
+                  setRemoveUserConfirmationModal(true);
+                }}
               > Delete </button>
               <button
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
@@ -250,7 +252,10 @@ const AdminUsers = ({
             <div className="flex w-full items-center justify-end gap-2">
               <button
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
-                onClick={() => setRemoveUserConfirmationModal(false)}
+                onClick={() => {
+                  setRemoveUserConfirmationModal(false);
+                  setIsEditUserModalOpen(true);
+                }}
               > Cancel </button>
               <button
                 className="px-8 py-2 text-sm text-white font-medium bg-red-500 rounded-lg"

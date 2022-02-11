@@ -1,13 +1,15 @@
 import {dbConnect} from 'utils/dbConnect';
 import Team from 'models/team';
+import User from 'models/user';
 import {authenticated} from 'service/index';
 
 import {
   STATUS_METHOD_NOT_ALLOWED,
   STATUS_BAD_REQUEST,
   STATUS_OK,
-  STATUS_CREATED
-} from 'constants/responseStatus';
+  STATUS_CREATED,
+  USER_ROLES
+} from 'constants/index';
 
 dbConnect();
 
@@ -30,12 +32,19 @@ const eventsHandler = authenticated(async (req, res) => {
     }
     case 'POST': {
       try {
-        const event = await Team.create({
+        const team = await Team.create({
           ...req.body
         });
 
+        if (team.admin) {
+          await User.findByIdAndUpdate(team.admin, {
+            jobTitle : USER_ROLES.ADMIN,
+            team     : team._id // eslint-disable-line no-underscore-dangle
+          });
+        }
+
         return res.status(STATUS_CREATED).json({
-          data : event
+          data : team
         });
       } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
