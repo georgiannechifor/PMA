@@ -28,8 +28,7 @@ const EventSchema = new mongoose.Schema({
   },
   recurring : {
     startDate : {
-      type     : String,
-      required : true
+      type : String
     },
     endDate : {
       type : String
@@ -37,14 +36,12 @@ const EventSchema = new mongoose.Schema({
 
     // Daily, weekly, monthly or yearly
     repeat : {
-      type     : String,
-      required : true
+      type : String
     },
 
     // MON TUE WED THU FRA SAT SUN
     byDay : {
-      type     : String,
-      required : true
+      type : String
     }
   },
   assignee : {

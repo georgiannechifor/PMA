@@ -5,7 +5,7 @@ import moment from 'moment';
 import {func, object} from 'prop-types';
 import {useOnClickOutside} from 'utils/useOnClickOutside';
 
-const CALENDAR_MIDDLE_DAY = 3;
+const CALENDAR_MIDDLE_DAY = 4;
 
 // eslint-disable-next-line complexity
 const EventDetails = ({
@@ -23,7 +23,7 @@ const EventDetails = ({
   return (
     <div
       className={classname(
-        'absolute w-90 z-10 rounded shadow-2xl bg-white flex flex-col md:min-h-full pb-4 md:-top-10 md:w-200',
+        'absolute w-90 z-20 rounded shadow-2xl bg-white flex flex-col md:min-h-full pb-4 md:-top-10 md:w-200',
         {'right-0 left-auto md:right-full' : Number(moment(selectedDay).format('e')) >= CALENDAR_MIDDLE_DAY || Number(moment(selectedDay).format('e')) === 0},
         {'left-0 right-auto md:left-full' : Number(moment(selectedDay).format('e')) < CALENDAR_MIDDLE_DAY && Number(moment(selectedDay).format('e')) > 0}
       )}
@@ -47,7 +47,7 @@ const EventDetails = ({
           <span className={`${eventDetails.details.backgroundColor || 'gray'} w-4 h-4 rounded`} />
           <div className="flex flex-col text-gray-500">
             <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails?.details?.title}</h1>
-            <p className="text-sm"> { moment(selectedDay).format('ddd DDD, MMMM YYYY') } </p>
+            <p className="text-sm"> { moment(selectedDay).format('ddd DD, MMMM YYYY') } </p>
           </div>
         </div>
 

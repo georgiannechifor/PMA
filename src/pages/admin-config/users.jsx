@@ -48,7 +48,6 @@ const AdminUsers = ({
       key   : 'jobTitle',
       title : 'Position'
     }
-
   ];
 
   const formSchema = Yup.object().shape({

@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 import moment from 'moment';
 import map from 'lodash/map';
+import groupBy from 'lodash/groupBy';
 import classNames from 'classnames';
 import {Transition} from '@headlessui/react';
 import {object, func} from 'prop-types';
@@ -11,6 +12,11 @@ import EventDetails from './EventDetails';
 const Calendar = ({
   events
 }) => {
+  const groupedEvents = groupBy(map(events, item => ({
+    ...item,
+    date : moment(item.date).format('DD/MM/YYYY')
+  })), event => event.date);
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [otherEventsDetails, setOtherEventsDetails] = useState({visible : false});
   const [eventDetails, setEventDetails] = useState({visible : false});
@@ -77,7 +83,7 @@ const Calendar = ({
     return days;
   };
 
-  const getEventsForDay = day => events[moment(day).format('DD/MM/YYYY')] || [];
+  const getEventsForDay = day => groupedEvents[moment(day).format('DD/MM/YYYY')] || [];
 
   // eslint-disable-next-line complexity
   const getDayContainer = (day, monthStart) => (
@@ -143,7 +149,7 @@ const Calendar = ({
           <Transition
             enter="transition-opacity duration-200"
             enterFrom="opacity-0"
-            enterTo="opacity-100 "
+            enterTo="opacity-100"
             leave="transition-opacity duration-200"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
@@ -160,10 +166,10 @@ const Calendar = ({
           </Transition>
 
           <Transition
-            enter="transition-opacity duration-100"
+            enter="transition-opacity duration-200"
             enterFrom="opacity-0"
-            enterTo="opacity-100 "
-            leave="transition-opacity duration-100"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-200"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
             show={

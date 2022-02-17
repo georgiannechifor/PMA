@@ -1,20 +1,21 @@
 import {Fragment} from 'react';
 import {Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid';
-import {array, func, object, string} from 'prop-types';
+import {array, func, object, string, boolean} from 'prop-types';
 
 const Select = ({
   errorClassname,
   options,
   selected,
   setSelected,
-  placeholder
+  placeholder,
+  disabled
 }) => (
   <div>
     <Listbox onChange={setSelected} value={selected}>
       <div className="relative mt-1">
         <Listbox.Button
-          className={`relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg
+          className={`relative w-full py-2 pl-3 pr-10 text-left ${disabled ? 'bg-gray-200' : 'bg-white'} rounded-lg
             border border-gray-400 cursor-default sm:text-sm ${errorClassname}`}
         >
           <span className="block truncate">{selected?.name || placeholder}</span>
@@ -55,7 +56,7 @@ const Select = ({
                     </span>
                     {selected.name === option.name ? (
                       <span
-                        className={`${active ? 'text-gray-600' : 'text-gray-400'} 
+                        className={`${active ? 'text-gray-600' : 'text-gray-400'}
                         absolute inset-y-0 left-0 flex items-center pl-3`}
                       >
                         <CheckIcon aria-hidden="true" className="w-5 w-5" />
@@ -78,12 +79,14 @@ Select.propTypes = {
   selected       : object.isRequired,
   setSelected    : func.isRequired,
   errorClassname : string,
-  placeholder    : string
+  placeholder    : string,
+  disabled       : boolean
 };
 
 Select.defaultProps = {
   errorClassname : '',
-  placeholder    : ''
+  placeholder    : '',
+  disabled       : false
 };
 
 export default Select;

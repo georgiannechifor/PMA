@@ -2,7 +2,6 @@ import {dbConnect} from 'utils/dbConnect';
 import Event from 'models/event';
 import User from 'models/user';
 import {authenticated} from 'service/index';
-import groupBy from 'lodash/groupBy';
 
 import {
   STATUS_METHOD_NOT_ALLOWED,
@@ -51,10 +50,10 @@ const eventsHandler = authenticated(async (req, res) => {
           .populate('author', 'firstName lastName email')
           .populate('assignee', 'firstName lastName email')
           .exec();
-        const groupedEvents = groupBy(events, event => event.date);
+
 
         return res.status(STATUS_OK).json({
-          data : groupedEvents
+          data : events
         });
       } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({

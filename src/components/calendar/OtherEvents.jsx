@@ -7,7 +7,7 @@ import map from 'lodash/map';
 
 import {useOnClickOutside} from 'utils/useOnClickOutside';
 
-const CALENDAR_MIDDLE_DAY = 3;
+const CALENDAR_MIDDLE_DAY = 4;
 
 const OtherEvents = ({
   selectedDay,
@@ -24,15 +24,15 @@ const OtherEvents = ({
   return (
     <div
       className={classname(
-        'absolute w-90 z-10 rounded shadow-2xl bg-white flex flex-col pb-4 md:min-h-full md:-top-10 md:w-200',
+        'absolute w-90 z-20 rounded shadow-2xl bg-white flex flex-col pb-2 md:min-h-full md:-top-10 md:w-200 md:-bottom-10',
         {'right-0 left-auto md:right-full' : Number(moment(selectedDay).format('e')) >= CALENDAR_MIDDLE_DAY || Number(moment(selectedDay).format('e')) === 0},
         {'left-0 right-auto md:left-full' : Number(moment(selectedDay).format('e')) < CALENDAR_MIDDLE_DAY && Number(moment(selectedDay).format('e')) > 0}
       )}
       ref={wrapperRef}
     >
-      <div className="w-full flex items-end justify-end px-2 py-1">
+      <div className="w-full flex items-end justify-end px-2">
         <div
-          className="hover:bg-gray-100 cursor-pointer rounded-full p-2"
+          className="hover:bg-gray-100 cursor-pointer rounded-full p-1.5"
           onClick={() => setEventDetails({
             ...eventDetails,
             visible : false
@@ -49,7 +49,7 @@ const OtherEvents = ({
               <div className="flex flex-col text-sm text-gray-500">
                 <h1 className="-mt-2 text-xl font-medium text-gray-600 truncate"> {item.title}</h1>
                 { moment(selectedDay)
-                  .format('ddd DDD, MMMM YYYY')}
+                  .format('ddd DD, MMMM YYYY')}
               </div>
             </div>
           ))
