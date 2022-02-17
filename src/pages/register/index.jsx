@@ -11,6 +11,7 @@ import useLocalStorage from 'utils/useLocalStorage';
 import {USER_ROLES, LOCAL_STORAGE_USER_KEY} from 'constants/index';
 import {Loader} from 'components';
 
+// eslint-disable-next-line complexity
 const Register = () => {
   const router = useRouter();
 
@@ -32,7 +33,7 @@ const Register = () => {
   const validationOptions = {resolver : yupResolver(formSchema)};
 
   const {register, handleSubmit, formState: {errors}} = useForm(validationOptions);
-  const {result: {data, loading}, fetchData} = useFetch('auth/register');
+  const {result: {data, loading, error}, fetchData} = useFetch('auth/register');
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY, {}); // eslint-disable-line no-unused-vars
 
   const onSubmit = formData => {
@@ -140,6 +141,8 @@ const Register = () => {
                 />
                 { errors.confirmPassword && <span className=" text-xs text-red-500 mx-2"> { errors.confirmPassword.message } </span> }
               </div>
+
+              { error && <span className=" text-xs text-red-500 mx-2"> { JSON.stringify(error) } </span> }
 
               <button
                 className="

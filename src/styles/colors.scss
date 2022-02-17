@@ -1,0 +1,9 @@
+@use "sass:map";
+
+$colors: "gray", "blue", "red", "green", "purple", "orange", "lime", "cyan", "violet", "pink";
+
+@each $name in $colors {
+  .#{$name} {
+    @apply bg-#{$name}-400;
+  }
+}

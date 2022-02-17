@@ -1,10 +1,13 @@
 import {array, func} from 'prop-types';
+import classnames from 'classnames';
 import map from 'lodash/map';
+import moment from 'moment';
 
 const Table = ({
   data,
   columns,
-  onRowClick
+  onRowClick,
+  isDisabled
 }) => {
   const getRowColumnValue = (rowItem, key) => {
     const keys = key.split('.');
@@ -12,7 +15,7 @@ const Table = ({
     let item = rowItem;
 
     for (let keyValue of keys) {
-      item = item[keyValue];
+      item = item && item[keyValue] || '';
     }
 
     return item;
@@ -20,7 +23,7 @@ const Table = ({
 
   return (
     <>
-      <table className="w-5/6 mx-auto table-auto">
+      <table className="w-5/6 mx-auto table-auto shadow">
         <thead>
           <tr className="bg-gradient-to-r from-indigo-600 to-purple-600">
             {
@@ -38,7 +41,10 @@ const Table = ({
             data.length &&
             map(data, item => (
               <tr
-                className="bg-white cursor-pointer hover:bg-gray-50"
+                className={classnames(
+                  'bg-white cursor-pointer hover:bg-gray-50',
+                  {'pointer-events-none bg-gray-100 text-gray-400' : isDisabled(item)}
+                )}
                 key={item._id} // eslint-disable-line no-underscore-dangle
                 onClick={() => onRowClick(item)}
               >
@@ -46,7 +52,10 @@ const Table = ({
                   map(columns, rowColumn => (
                     // eslint-disable-next-line no-underscore-dangle
                     <td className="px-16 py-2 text-left" key={`${item._id}-${rowColumn.key}`}>
-                      <span>{ getRowColumnValue(item, rowColumn.key) || <span className="italic"> No value </span>}</span>
+                      <span>{ rowColumn.isDate ? moment(getRowColumnValue(item, rowColumn.key))
+                        .format(rowColumn.options) : getRowColumnValue(item, rowColumn.key) ||
+                          <span className="italic"> No value </span>}
+                      </span>
                     </td>
                   ))
                 }
@@ -68,7 +77,12 @@ Table.displayName = 'Table';
 Table.propTypes = {
   onRowClick : func.isRequired,
   data       : array.isRequired,
-  columns    : array.isRequired
+  columns    : array.isRequired,
+  isDisabled : func
+};
+
+Table.defaultProps = {
+  isDisabled : () => false
 };
 
 export default Table;

@@ -1,10 +1,12 @@
 import {dbConnect} from 'utils/dbConnect';
 import User from 'models/user';
+import Team from 'models/team';
 import {
   STATUS_OK,
   STATUS_BAD_REQUEST,
   STATUS_NOT_FOUND
 } from 'constants/responseStatus';
+import {USER_ROLES} from 'constants/userRoles';
 
 dbConnect();
 
@@ -40,6 +42,19 @@ export default async (req, res) => { // eslint-disable-line complexity, max-stat
           })
           .select(['-__v', '-password']);
 
+        if (user.team && user.jobTitle === USER_ROLES.ADMIN) {
+          await User.updateMany({
+            _id      : {$ne : user._id}, // eslint-disable-line no-underscore-dangle
+            team     : user.team,
+            jobTitle : USER_ROLES.ADMIN
+          }, {
+            jobTitle : USER_ROLES.USER
+          });
+          await Team.findByIdAndUpdate(user.team, {
+            admin : user._id // eslint-disable-line no-underscore-dangle
+          });
+        }
+
         if (!user) {
           return res.status(STATUS_NOT_FOUND).json({
             message : 'User not found'
@@ -66,7 +81,7 @@ export default async (req, res) => { // eslint-disable-line complexity, max-stat
         }
 
         return res.status(STATUS_OK).json({
-          data : {}
+          data : deletedUser
         });
       } catch (error) {
         return res.status(STATUS_OK).json({

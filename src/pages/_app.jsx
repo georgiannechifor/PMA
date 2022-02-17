@@ -1,7 +1,7 @@
 import {object, elementType, string} from 'prop-types';
 import {useRouter} from 'next/router';
 
-import '../styles/globals.css';
+import '../styles/globals.scss';
 import {Layout, AdminLayout} from 'components';
 import {PUBLIC_PATHS} from 'constants/index';
 import {SWRConfig} from 'swr';
@@ -29,7 +29,7 @@ const App = ({Component, pageProps}) => {
   return (
     <PageLayout route={router.asPath}>
       <SWRConfig value={{
-        fetcher : endpoint => fetch('http://localhost:3000/api' + endpoint).then(res => res.json())
+        fetcher : endpoint => fetch(`${process.env.ORIGIN_URL}/api` + endpoint).then(res => res.json())
           .then(res => res.data)
       }}
       >
