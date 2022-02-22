@@ -10,7 +10,7 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useFetch} from 'utils/useFetch';
-import {USER_ROLES} from 'constants/userRoles';
+import {USER_ROLES, userColumns} from 'constants/index';
 
 // eslint-disable-next-line complexity
 const AdminUsers = ({
@@ -31,24 +31,7 @@ const AdminUsers = ({
     initialData : defaultUsers
   });
 
-  const userColumns = [
-    {
-      key   : 'firstName',
-      title : 'First Name'
-    }, {
-      key   : 'lastName',
-      title : 'Last Name'
-    }, {
-      key   : 'email',
-      title : 'Email'
-    }, {
-      key   : 'team.name',
-      title : 'Team Name'
-    }, {
-      key   : 'jobTitle',
-      title : 'Position'
-    }
-  ];
+
 
   const formSchema = Yup.object().shape({
     firstName : Yup.string().required('First name is required'),

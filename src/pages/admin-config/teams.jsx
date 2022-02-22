@@ -10,6 +10,7 @@ import {Table, Modal, Select, Loader} from 'components';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {useFetch} from 'utils/useFetch';
 import useSWR, {useSWRConfig} from 'swr';
+import { teamsColumns } from 'constants/index';
 
 // eslint-disable-next-line complexity
 const AdminTeams = ({
@@ -38,17 +39,6 @@ const AdminTeams = ({
 
   const {result: {data, loading, error}, fetchData} = useFetch('teams');
   const {register, handleSubmit, reset, setValue, formState: {errors}} = useForm(validationOptions);
-
-  const teamsColumns = [
-    {
-      key   : 'name',
-      title : 'Team Name'
-    },
-    {
-      key   : 'admin.fullName',
-      title : 'Admin Name'
-    }
-  ];
 
   const onSubmit = formdata => {
     if (editTeamModalOpen) {

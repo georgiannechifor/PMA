@@ -8,6 +8,7 @@ import Calendar from './calendar';
 import AdminMenu from './AdminMenu';
 import Table from './Table';
 import Select from './Select';
+import Pagination from './Pagination';
 
 export {
   Loader,
@@ -18,5 +19,6 @@ export {
   Modal,
   Calendar,
   Select,
-  Table
+  Table,
+  Pagination
 };

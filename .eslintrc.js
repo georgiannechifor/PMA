@@ -6,14 +6,13 @@ module.exports = {
   extends : ['plugin:react/recommended'],
 
   plugins : [
-    'react',
-    '@babel'
+    'react'
   ],
-  parser        : '@babel/eslint-parser',
   parserOptions : {
-    ecmaVersion  : 6,
-    sourceType   : 'module',
-    ecmaFeatures : {
+    ecmaVersion       : 6,
+    sourceType        : 'module',
+    requireConfigFile : false,
+    ecmaFeatures      : {
       jsx                          : true,
       experimantalObjectRestSpread : true
     },

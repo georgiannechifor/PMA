@@ -22,7 +22,7 @@ const Table = ({
   };
 
   return (
-    <>
+    <div className="min-h-440">
       <table className="w-5/6 mx-auto table-auto shadow">
         <thead>
           <tr className="bg-gradient-to-r from-indigo-600 to-purple-600">
@@ -51,7 +51,7 @@ const Table = ({
                 {
                   map(columns, rowColumn => (
                     // eslint-disable-next-line no-underscore-dangle
-                    <td className="px-16 py-2 text-left" key={`${item._id}-${rowColumn.key}`}>
+                    <td className="px-16 py-2 text-left truncate max-w-sm" key={`${item._id}-${rowColumn.key}`}>
                       <span>{ rowColumn.isDate ? moment(getRowColumnValue(item, rowColumn.key))
                         .format(rowColumn.options) : getRowColumnValue(item, rowColumn.key) ||
                           <span className="italic"> No value </span>}
@@ -69,7 +69,7 @@ const Table = ({
         </tbody>
 
       </table>
-    </>
+    </div>
   );
 };
 

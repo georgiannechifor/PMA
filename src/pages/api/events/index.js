@@ -24,8 +24,11 @@ const eventsHandler = authenticated(async (req, res) => {
 
         let query = {};
 
+        /* If user is super admin, then deliver all events saved on platform */
         if (user.jobTitle === USER_ROLES.SUPER_ADMIN) {
           query = {};
+
+        /* If user is an admin, then deliver all events assigned to its team, a member of its team or to current user */
         } else if (user.jobTitle === USER_ROLES.ADMIN) {
           query = {$or : [{
             assignee : {
@@ -38,6 +41,7 @@ const eventsHandler = authenticated(async (req, res) => {
           }
           ]};
         } else {
+        /* In case of an user, deliver events assigned to user's team or to user */
           query = {$or : [{
             assignee : user._id // eslint-disable-line no-underscore-dangle
           }, {

@@ -5,7 +5,8 @@ import {authenticated} from 'service/index';
 import {
   STATUS_METHOD_NOT_ALLOWED,
   STATUS_NOT_FOUND,
-  STATUS_OK
+  STATUS_OK,
+  STATUS_FORBIDDEN
 } from 'constants/responseStatus';
 import {USER_ROLES} from 'constants/userRoles';
 
@@ -17,7 +18,23 @@ const usersHandler = authenticated(async (req, res) => {
   switch (method) {
     case 'GET': {
       try {
-        const users = await User.find({jobTitle : {$ne : USER_ROLES.SUPER_ADMIN}}).populate('team')
+        let query = {};
+        const user = await User.findById(req.userIDFromToken);
+    
+        if(user.jobTitle === USER_ROLES.SUPER_ADMIN) {
+            query = {}
+        } else if(user.jobTitle === USER_ROLES.ADMIN && user.team) {
+          query = {
+            team : user.team
+          }
+        } else {
+          return res.status(STATUS_FORBIDDEN).json({
+            message : "Simple user cannot access this endpoint"
+          })
+        }
+
+        const users = await User.find({...query, jobTitle : {$ne : USER_ROLES.SUPER_ADMIN}})
+          .populate('team')
           .select(['-__v', '-password'])
           .exec();
 
@@ -27,7 +44,7 @@ const usersHandler = authenticated(async (req, res) => {
         });
       } catch (error) {
         return res.status(STATUS_NOT_FOUND).json({
-          error
+          error : error.message
         });
       }
     }

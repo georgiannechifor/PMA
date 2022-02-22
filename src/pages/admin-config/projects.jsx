@@ -1,24 +1,6 @@
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Table} from 'components/index';
-
-const projectsColumns = [
-  {
-    key   : 'firstName',
-    title : 'First Name'
-  }, {
-    key   : 'lastName',
-    title : 'Last Name'
-  }, {
-    key   : 'email',
-    title : 'Email'
-  }, {
-    key   : 'team.name',
-    title : 'Team Name'
-  }, {
-    key   : 'jobTitle',
-    title : 'Position'
-  }
-];
+import { projectsColumns } from 'constants/index';
 
 const AdminProjects = () => (
   <div>
