@@ -27,7 +27,6 @@ export const eventsColumns = [
   }
 ];
 
-
 export const projectsColumns = [
   {
     key   : 'firstName',

@@ -1,8 +1,10 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
-import {Modal, Select, Table, Loader} from 'components';
+import {Modal, Select, Table, Loader, Pagination} from 'components';
 import {array} from 'prop-types';
 import map from 'lodash/map';
+import size from 'lodash/size';
+import slice from 'lodash/slice';
 import filter from 'lodash/filter';
 import classnames from 'classnames';
 import useSWR, {useSWRConfig} from 'swr';
@@ -10,7 +12,7 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import {useFetch} from 'utils/useFetch';
-import {USER_ROLES, userColumns} from 'constants/index';
+import {USER_ROLES, userColumns, PAGE_SIZE} from 'constants/index';
 
 // eslint-disable-next-line complexity
 const AdminUsers = ({
@@ -30,6 +32,15 @@ const AdminUsers = ({
   const {data: users} = useSWR('/users', {
     initialData : defaultUsers
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginatedUsers, setPaginatedUsers] = useState(users);
+
+  useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * PAGE_SIZE;
+    const lastPageIndex = firstPageIndex + PAGE_SIZE;
+    setPaginatedUsers(slice(users, firstPageIndex, lastPageIndex));
+  }, [currentPage, users]);
 
 
 
@@ -111,7 +122,7 @@ const AdminUsers = ({
         <div className="flex-1">
           <Table
             columns={userColumns}
-            data={users}
+            data={paginatedUsers}
             isDisabled={item => item.jobTitle === 'superadmin'}
             onRowClick={item => {
               setSelectedUser(item);
@@ -251,6 +262,10 @@ const AdminUsers = ({
           modalTitle="Remove confirmation"
           setIsModalOpen={setRemoveUserConfirmationModal}
         />
+
+        <div className="w-full">
+          <Pagination currentPage={currentPage} onPageChange={page => setCurrentPage(page)} totalCount={size(paginatedUsers)} pageSize={PAGE_SIZE} />
+        </div>
       </div>
 
 

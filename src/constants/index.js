@@ -34,6 +34,8 @@ import {
   userColumns
 } from './columns';
 
+const PAGE_SIZE = 10;
+
 export {
   STATUS_OK,
   STATUS_CREATED,
@@ -54,6 +56,7 @@ export {
   PUBLIC_PATHS,
   TABS,
 
+  PAGE_SIZE,
   colors,
   eventsColumns,
   projectsColumns,
