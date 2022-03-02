@@ -53,6 +53,7 @@ const eventsHandler = authenticated(async (req, res) => {
         const events = await Event.find(query)
           .populate('author', 'firstName lastName email')
           .populate('assignee', 'firstName lastName email')
+          .populate('teamAssigned', 'name')
           .exec();
 
 

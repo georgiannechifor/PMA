@@ -52,7 +52,7 @@ const EventSchema = new mongoose.Schema({
     }]
   },
   teamAssigned : [{
-    type     : String,
+    type     : mongoose.Schema.Types.ObjectId,
     ref      : 'Team',
     required : function() {  // eslint-disable-line
       return typeof this.assignee === 'undefined';

@@ -31,6 +31,9 @@ Home.getInitialProps = async ctx => {
 
 Home.displayName = 'Home';
 Home.propTypes = {
-  events : object.isRequired
+  events : object
 };
+Home.defaultProps = {
+  events : {}
+}
 export default Home;
