@@ -14,9 +14,9 @@ import moment from 'moment';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Modal, Select, Table, Loader, Pagination} from 'components'; // eslint-disable-line no-unused-vars
 import {getTimes} from 'utils/dateTimePickerItems';
-import {eventsColumns, colors, PAGE_SIZE } from 'constants/index';
+import {eventsColumns, colors, PAGE_SIZE} from 'constants/index';
 
-// eslint-disable-next-line complexity
+// eslint-disable-next-line complexity, max-statements
 const AdminEvents = ({initialEvents, users}) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -29,12 +29,12 @@ const AdminEvents = ({initialEvents, users}) => {
   const [removeEventConfirmationModal, setRemoveEventConfirmationModal] = useState(false);
   const {mutate} = useSWRConfig();
   const formSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    date: Yup.string().required('Date is required'),
-    startTime: Yup.string().required('Start time is required'),
-    endTime: Yup.string().required('End time is required')
+    title     : Yup.string().required('Title is required'),
+    date      : Yup.string().required('Date is required'),
+    startTime : Yup.string().required('Start time is required'),
+    endTime   : Yup.string().required('End time is required')
   });
-  const validationOptions = {resolver: yupResolver(formSchema)};
+  const validationOptions = {resolver : yupResolver(formSchema)};
   const {
     register,
     handleSubmit,
@@ -43,40 +43,41 @@ const AdminEvents = ({initialEvents, users}) => {
     formState: {errors}
   } = useForm(validationOptions);
   const {
-    result: {data, loading, error},
+    result: {data},
     fetchData
   } = useFetch('events'); // eslint-disable-line no-unused-vars
   const {data: events} = useSWR('/events', {
-    initialData: initialEvents
+    initialData : initialEvents
   });
 
   const [paginatedEvents, setPaginatedEvents] = useState(initialEvents);
 
   useMemo(() => {
-    const firstPageIndex = (currentPage -  1) * PAGE_SIZE;
+    const firstPageIndex = (currentPage - 1) * PAGE_SIZE;
     const lastPageIndex = firstPageIndex + PAGE_SIZE;
+
     setPaginatedEvents(slice(events, firstPageIndex, lastPageIndex));
-  }, [currentPage, events])
+  }, [currentPage, events]);
 
   const onSubmit = formData => {
     if (selectedEvent) {
       delete formData.author;
       fetchData({
-        entityId: formData._id, // eslint-disable-line no-underscore-dangle
-        method: 'PUT',
-        data: {
+        entityId : formData._id, // eslint-disable-line no-underscore-dangle
+        method   : 'PUT',
+        data     : {
           ...formData,
-          assignee: selectedAssignee.value,
-          startTime: startTime.value,
-          endTime: endTime.value
+          assignee  : selectedAssignee.value,
+          startTime : startTime.value,
+          endTime   : endTime.value
         }
       });
     } else {
       fetchData({
-        method: 'POST',
-        data: {
+        method : 'POST',
+        data   : {
           ...formData,
-          backgroundColor: selectedColor
+          backgroundColor : selectedColor
         }
       });
     }
@@ -84,25 +85,26 @@ const AdminEvents = ({initialEvents, users}) => {
 
   const removeEvent = () => {
     fetchData({
-      entityId: selectedEvent._id, // eslint-disable-line no-underscore-dangle
-      method: 'DELETE'
+      entityId : selectedEvent._id, // eslint-disable-line no-underscore-dangle
+      method   : 'DELETE'
     });
   };
 
   useEffect(() => {
     // eslint-disable-next-line no-underscore-dangle
-    if ((data && data._id) || (data && data.deletedCount)) {
+    if (data && data._id || data && data.deletedCount) {
       setEventModalOpen(false);
       setRemoveEventConfirmationModal(false);
       reset({
-        title: '',
-        date: '',
-        startTime: '',
-        endTime: ''
+        title     : '',
+        date      : '',
+        startTime : '',
+        endTime   : ''
       });
 
       mutate('/events');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
@@ -117,11 +119,11 @@ const AdminEvents = ({initialEvents, users}) => {
             setStartTime({});
             setEndTime({});
             reset({
-              title: '',
-              date: '',
-              startTime: '',
-              endTime: '',
-              assignee: null
+              title     : '',
+              date      : '',
+              startTime : '',
+              endTime   : '',
+              assignee  : null
             });
             setEventModalOpen(true);
           }}
@@ -141,15 +143,15 @@ const AdminEvents = ({initialEvents, users}) => {
           setValue('author', item.author.firstName + ' ' + item.author.lastName);
           setSelectedAssignee({
             value: item.assignee._id, // eslint-disable-line
-            name: item.assignee.firstName + ' ' + item.assignee.lastName
+            name  : item.assignee.firstName + ' ' + item.assignee.lastName
           });
           setStartTime({
-            name: item.startTime,
-            value: item.startTime
+            name  : item.startTime,
+            value : item.startTime
           });
           setEndTime({
-            name: item.endTime,
-            value: item.endTime
+            name  : item.endTime,
+            value : item.endTime
           });
         }}
       />
@@ -180,7 +182,7 @@ const AdminEvents = ({initialEvents, users}) => {
             <div>
               <input
                 className={classnames('flex-1 text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none', {
-                  'border-1 border-red-400': errors.title
+                  'border-1 border-red-400' : errors.title
                 })}
                 {...register('title')}
                 placeholder="Title"
@@ -192,7 +194,7 @@ const AdminEvents = ({initialEvents, users}) => {
             <div>
               <input
                 className={classnames('flex-1 text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none', {
-                  'border-1 border-red-400': errors.date
+                  'border-1 border-red-400' : errors.date
                 })}
                 {...register('date')}
                 placeholder="Event date"
@@ -206,15 +208,15 @@ const AdminEvents = ({initialEvents, users}) => {
                 <Select
                   errorClassname={errors.startTime ? 'border-1 border-red-400' : ''}
                   options={map(getTimes(), time => ({
-                    value: time,
-                    name: time
+                    value : time,
+                    name  : time
                   }))}
                   placeholder="Start Time"
                   selected={startTime}
                   setSelected={event => {
                     setStartTime(event);
                     setValue('startTime', event.value, {
-                      shouldValidate: true
+                      shouldValidate : true
                     });
                   }}
                 />
@@ -226,15 +228,15 @@ const AdminEvents = ({initialEvents, users}) => {
                 <Select
                   errorClassname={errors.endTime ? 'border-1 border-red-400' : ''}
                   options={map(getTimes(), time => ({
-                    value: time,
-                    name: time
+                    value : time,
+                    name  : time
                   }))}
                   placeholder="End Time"
                   selected={endTime}
                   setSelected={event => {
                     setEndTime(event);
                     setValue('endTime', event.value, {
-                      shouldValidate: true
+                      shouldValidate : true
                     });
                   }}
                 />
@@ -247,14 +249,14 @@ const AdminEvents = ({initialEvents, users}) => {
                 errorClassname={errors.endTime ? 'border-1 border-red-400' : ''}
                 options={map(users, user => ({
                   value: user._id, // eslint-disable-line
-                  name: user.firstName + ' ' + user.lastName
+                  name  : user.firstName + ' ' + user.lastName
                 }))}
                 placeholder="Assignee"
                 selected={selectedAssignee}
                 setSelected={event => {
                   setSelectedAssignee(event);
                   setValue('assignee', event.value, {
-                    shouldValidate: true
+                    shouldValidate : true
                   });
                 }}
               />
@@ -265,7 +267,7 @@ const AdminEvents = ({initialEvents, users}) => {
                 {colors.map(color => (
                   <div
                     className={classnames(`rounded cursor-pointer hover:opacity-70 transition ${color} w-5 h-5`, {
-                      'opacity-70 border border-2 border-gray-600': selectedColor === color || color.includes(selectedColor)
+                      'opacity-70 border border-2 border-gray-600' : selectedColor === color || color.includes(selectedColor)
                     })}
                     key={color}
                     onClick={() => setSelectedColor(color)}
@@ -303,7 +305,10 @@ const AdminEvents = ({initialEvents, users}) => {
       />
 
       <div className="w-full">
-        <Pagination currentPage={currentPage} onPageChange={page => setCurrentPage(page)} totalCount={size(events)} pageSize={PAGE_SIZE} />
+        <Pagination
+          currentPage={currentPage} onPageChange={page => setCurrentPage(page)} pageSize={PAGE_SIZE}
+          totalCount={size(events)}
+        />
       </div>
     </div>
   );
@@ -315,7 +320,7 @@ AdminEvents.getInitialProps = async ctx => {
     const {data: users} = await getPropsFromFetch('/users', ctx);
 
     return {
-      initialEvents: data,
+      initialEvents : data,
       users
     };
   } catch {
@@ -324,8 +329,8 @@ AdminEvents.getInitialProps = async ctx => {
 };
 AdminEvents.displayName = 'AdminEvents';
 AdminEvents.propTypes = {
-  initialEvents: array.isRequired,
-  users: array.isRequired
+  initialEvents : array.isRequired,
+  users         : array.isRequired
 };
 
 export default AdminEvents;

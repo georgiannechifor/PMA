@@ -10,8 +10,9 @@ import {useFetch} from 'utils/useFetch';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Table, Pagination, Modal, Select} from 'components/index';
 import {projectsColumns, PAGE_SIZE} from 'constants/index';
-import { array } from 'prop-types';
+import {array} from 'prop-types';
 
+// eslint-disable-next-line complexity
 const AdminProjects = ({
   initialProjects,
   teams
@@ -22,22 +23,22 @@ const AdminProjects = ({
   const [selectedTeam, setSelectedTeam] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const {data: projects} = useSWR('/projects', {
-    initialData: initialProjects
+    initialData : initialProjects
   });
   const [paginatedProjects, setPaginatedProjects] = useState(initialProjects);
   const {
-    result: {data, loading, error},
+    result: {data},
     fetchData
   } = useFetch('projects'); // eslint-disable-line no-unused-vars
   const {mutate} = useSWRConfig();
   const formSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    deadline: Yup.string().required('Date is required'),
-    team : Yup.string().required('Team is required'),
-    description: Yup.string(),
-    clientName: Yup.string(),
+    name        : Yup.string().required('Name is required'),
+    deadline    : Yup.string().required('Date is required'),
+    team        : Yup.string().required('Team is required'),
+    description : Yup.string(),
+    clientName  : Yup.string()
   });
-  const validationOptions = {resolver: yupResolver(formSchema)};
+  const validationOptions = {resolver : yupResolver(formSchema)};
   const {
     register,
     handleSubmit,
@@ -47,40 +48,42 @@ const AdminProjects = ({
   } = useForm(validationOptions);
 
   const onSubmit = formData => {
-    if(selectedProject._id) {
+    if (selectedProject._id) { // eslint-disable-line no-underscore-dangle
       fetchData({
-        entityId: formData._id, // eslint-disable-line no-underscore-dangle
-        method: 'PUT',
-        data: formData
+        entityId : formData._id, // eslint-disable-line no-underscore-dangle
+        method   : 'PUT',
+        data     : formData
       });
     } else {
       fetchData({
-        method: 'POST',
-        data: formData
+        method : 'POST',
+        data   : formData
       });
     }
-  }
+  };
 
   const removeProject = () => {
     fetchData({
-      entityId: selectedProject._id, // eslint-disable-line no-underscore-dangle
-      method: 'DELETE'
+      entityId : selectedProject._id, // eslint-disable-line no-underscore-dangle
+      method   : 'DELETE'
     });
   };
 
   useMemo(() => {
-    const firstPageIndex = (currentPage -  1) * PAGE_SIZE;
+    const firstPageIndex = (currentPage - 1) * PAGE_SIZE;
     const lastPageIndex = firstPageIndex + PAGE_SIZE;
+
     setPaginatedProjects(slice(projects, firstPageIndex, lastPageIndex));
-  }, [currentPage, projects])
+  }, [currentPage, projects]);
 
   useEffect(() => {
     // eslint-disable-next-line no-underscore-dangle
-    if ((data && data._id) || (data && data.deletedCount)) {
+    if (data && data._id || data && data.deletedCount) {
       setIsCreateProjectModalOpen(false);
       setIsRemovingModalOpen(false);
       mutate('/projects');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
@@ -94,10 +97,10 @@ const AdminProjects = ({
             setSelectedProject({});
             setSelectedTeam({});
             reset({
-              name : '',
-              clientName: '',
-              deadline: '',
-              description: ''
+              name        : '',
+              clientName  : '',
+              deadline    : '',
+              description : ''
             });
           }}
         > Create Project </button>
@@ -111,20 +114,18 @@ const AdminProjects = ({
           setSelectedProject(row);
           Object.entries(row).forEach(([name, value]) => setValue(name, value));
           setSelectedTeam({
-            value : row.team._id,
-            name : row.team.name
+            value : row.team._id, // eslint-disable-line no-underscore-dangle
+            name  : row.team.name
           });
-          setValue('team', row.team._id, {
-            shouldValidate: true
-          })
+          setValue('team', row.team._id, { // eslint-disable-line no-underscore-dangle
+            shouldValidate : true
+          });
           setIsCreateProjectModalOpen(true);
         }}
       />
 
       <Modal
         isModalOpen={isCreateProjectModalOpen}
-        modalTitle="Create project"
-        setIsModalOpen={setIsCreateProjectModalOpen}
         modalActions={(
           <div className="flex w-full items-center justify-end gap-2">
             <button
@@ -138,13 +139,14 @@ const AdminProjects = ({
             </button>
             <button
               className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
-              onClick={() => setIsCreateProjectModalOpen(false)}>
+              onClick={() => setIsCreateProjectModalOpen(false)}
+            >
               Cancel
             </button>
             <button
               className="px-8 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg"
               onClick={handleSubmit(onSubmit)}
-              >
+            >
               Save
             </button>
           </div>
@@ -155,7 +157,7 @@ const AdminProjects = ({
               <input
                 {...register('name')}
                 className={classnames('flex-1 text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none', {
-                'border-1 border-red-400': errors.name
+                  'border-1 border-red-400' : errors.name
                 })}
                 placeholder="Project's name"
               />
@@ -166,52 +168,57 @@ const AdminProjects = ({
               <input
                 {...register('clientName')}
                 className={classnames('flex-1 text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none', {
-                'border-1 border-red-400': errors.clientName
-              })}
-              placeholder="Client's name (optional)" />
+                  'border-1 border-red-400' : errors.clientName
+                })}
+                placeholder="Client's name (optional)"
+              />
             </div>
 
             <div className="flex-1">
               <textarea
                 {...register('description')}
-                rows="2"
                 className={classnames('flex-1 text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none', {
-                'border-1 border-red-400': errors.description
-              })}
-              placeholder="Project's description (optional)" />
+                  'border-1 border-red-400' : errors.description
+                })}
+                placeholder="Project's description (optional)"
+                rows="2"
+              />
             </div>
 
             <div className="flex-1">
               <input
                 {...register('deadline')}
-                type="date"
                 className={classnames('flex-1 text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none', {
-                'border-1 border-red-400': errors.deadline
-              })} />
-            {errors?.deadline && <p className="text-red-500 text-xs font-medium"> {errors.deadline.message} </p>}
+                  'border-1 border-red-400' : errors.deadline
+                })}
+                type="date"
+              />
+              {errors?.deadline && <p className="text-red-500 text-xs font-medium"> {errors.deadline.message} </p>}
             </div>
 
             <div className="flex-1">
               <Select
                 errorClassname={errors.team ? 'border-1 border-red-400' : ''}
+                options={teams && teams.map(team => ({
+                  value : team._id, // eslint-disable-line no-underscore-dangle
+                  name  : team.name
+                })) || []}
+                placeholder="Select Team"
                 selected={selectedTeam}
                 setSelected={event => {
                   setSelectedTeam(event);
                   setValue('team', event.value, {
-                    shouldValidate: true
-                  })
+                    shouldValidate : true
+                  });
                 }}
-                options={teams && teams.map(team => ({
-                  value : team._id, // eslint-disable-line no-underscore-dangle
-                  name : team.name
-                })) || []}
-                placeholder="Select Team"
               />
-            {errors?.team && <p className="text-red-500 text-xs font-medium"> {errors.team.message} </p>}
+              {errors?.team && <p className="text-red-500 text-xs font-medium"> {errors.team.message} </p>}
 
             </div>
           </div>
         )}
+        modalTitle="Create project"
+        setIsModalOpen={setIsCreateProjectModalOpen}
       />
 
       <Modal
@@ -232,17 +239,20 @@ const AdminProjects = ({
             </button>
           </div>
         }
+        modalContent={<p> Are you sure you want to remove {selectedProject?.title} ?</p>}
         modalTitle="Remove confirmation"
         setIsModalOpen={setIsRemovingModalOpen}
-        modalContent={<p> Are you sure you want to remove {selectedProject?.title} ?</p>}
       />
 
       <div className="w-full">
-        <Pagination currentPage={currentPage} onPageChange={page => setCurrentPage(page)} totalCount={size(paginatedProjects)} pageSize={PAGE_SIZE} />
+        <Pagination
+          currentPage={currentPage} onPageChange={page => setCurrentPage(page)} pageSize={PAGE_SIZE}
+          totalCount={size(paginatedProjects)}
+        />
       </div>
     </div>
-  )
-}
+  );
+};
 
 AdminProjects.getInitialProps = async ctx => {
   try {
@@ -251,7 +261,7 @@ AdminProjects.getInitialProps = async ctx => {
 
     return {
       initialProjects : data,
-      teams    : teams
+      teams
     };
   } catch {
     return {};
@@ -260,7 +270,7 @@ AdminProjects.getInitialProps = async ctx => {
 AdminProjects.displayName = 'AdminProjects';
 AdminProjects.propTypes = {
   initialProjects : array.isRequired,
-  teams : array.isRequired
+  teams           : array.isRequired
 };
 
 export default AdminProjects;

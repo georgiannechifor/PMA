@@ -1,14 +1,12 @@
 import {dbConnect} from 'utils/dbConnect';
 import Project from 'models/project';
-import User from 'models/user';
 import {authenticated} from 'service/index';
 
 import {
   STATUS_BAD_REQUEST,
   STATUS_CREATED,
   STATUS_METHOD_NOT_ALLOWED,
-  STATUS_OK,
-  USER_ROLES
+  STATUS_OK
 } from 'constants/index';
 
 dbConnect();

@@ -1,7 +1,7 @@
 import React from 'react';
 import {usePagination, DOTS} from 'utils/usePagination';
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
-import {number} from 'prop-types';
+import {func, number} from 'prop-types';
 import * as classNames from 'classnames';
 
 const Pagination = ({onPageChange, totalCount, currentPage, pageSize, siblingCount}) => {
@@ -13,16 +13,19 @@ const Pagination = ({onPageChange, totalCount, currentPage, pageSize, siblingCou
   if (currentPage === 0 || paginationRange.length < 2) {
     return null;
   }
+  const lastPage = paginationRange[paginationRange.length - 1];
 
   const onNext = () => {
-    currentPage < lastPage ? onPageChange(currentPage + 1) : null;
+    if (currentPage < lastPage) {
+      onPageChange(currentPage + 1);
+    }
   };
 
   const onPrevious = () => {
-    currentPage > 1 ? onPageChange(currentPage - 1) : null;
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
   };
-
-  const lastPage = paginationRange[paginationRange.length - 1];
 
   return (
     <div className="w-full justify-center flex items-center my-5">
@@ -42,6 +45,7 @@ const Pagination = ({onPageChange, totalCount, currentPage, pageSize, siblingCou
             className={classNames('select-none cursor-pointer hover:bg-gray-300 w-7 h-7 flex items-center justify-center bg-gray-200 rounded-full mx-2', {
               'bg-gray-600 text-white' : currentPage === index
             })}
+            key={index.toString()}
             onClick={() => onPageChange(index)}
           >
             {index}
@@ -60,6 +64,7 @@ const Pagination = ({onPageChange, totalCount, currentPage, pageSize, siblingCou
 
 Pagination.displayName = 'Pagination';
 Pagination.propTypes = {
+  onPageChange : func.isRequired,
   totalCount   : number.isRequired,
   currentPage  : number.isRequired,
   pageSize     : number,

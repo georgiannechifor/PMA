@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 import {useFetch} from 'utils/useFetch';
 import {USER_ROLES, userColumns, PAGE_SIZE} from 'constants/index';
 
-// eslint-disable-next-line complexity
+// eslint-disable-next-line complexity, max-statements
 const AdminUsers = ({
   defaultTeams,
   defaultUsers
@@ -39,9 +39,9 @@ const AdminUsers = ({
   useMemo(() => {
     const firstPageIndex = (currentPage - 1) * PAGE_SIZE;
     const lastPageIndex = firstPageIndex + PAGE_SIZE;
+
     setPaginatedUsers(slice(users, firstPageIndex, lastPageIndex));
   }, [currentPage, users]);
-
 
 
   const formSchema = Yup.object().shape({
@@ -90,6 +90,7 @@ const AdminUsers = ({
         name  : selectedUser.team?.name
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser]);
 
   useEffect(() => {
@@ -104,6 +105,7 @@ const AdminUsers = ({
 
       mutate('/users');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
@@ -264,7 +266,10 @@ const AdminUsers = ({
         />
 
         <div className="w-full">
-          <Pagination currentPage={currentPage} onPageChange={page => setCurrentPage(page)} totalCount={size(paginatedUsers)} pageSize={PAGE_SIZE} />
+          <Pagination
+            currentPage={currentPage} onPageChange={page => setCurrentPage(page)} pageSize={PAGE_SIZE}
+            totalCount={size(paginatedUsers)}
+          />
         </div>
       </div>
 

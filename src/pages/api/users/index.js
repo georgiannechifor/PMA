@@ -20,20 +20,21 @@ const usersHandler = authenticated(async (req, res) => {
       try {
         let query = {};
         const user = await User.findById(req.userIDFromToken);
-    
-        if(user.jobTitle === USER_ROLES.SUPER_ADMIN) {
-            query = {}
-        } else if(user.jobTitle === USER_ROLES.ADMIN && user.team) {
+
+        if (user.jobTitle === USER_ROLES.SUPER_ADMIN) {
+          query = {};
+        } else if (user.jobTitle === USER_ROLES.ADMIN && user.team) {
           query = {
             team : user.team
-          }
+          };
         } else {
           return res.status(STATUS_FORBIDDEN).json({
-            message : "Simple user cannot access this endpoint"
-          })
+            message : 'Simple user cannot access this endpoint'
+          });
         }
 
-        const users = await User.find({...query, jobTitle : {$ne : USER_ROLES.SUPER_ADMIN}})
+        const users = await User.find({...query,
+          jobTitle : {$ne : USER_ROLES.SUPER_ADMIN}})
           .populate('team')
           .select(['-__v', '-password'])
           .exec();

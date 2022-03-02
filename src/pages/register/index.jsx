@@ -51,6 +51,7 @@ const Register = () => {
       setValue(data);
       router.push('/');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (

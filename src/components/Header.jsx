@@ -37,13 +37,13 @@ const Header = ({
     }
     >
       <div className="relative justify-self-start mr-auto w-28 h-20 cursor-pointer hidden sm:block" onClick={() => router.push('/')}>
-        <Image layout="fill" src={'/images/logo.png'} />
+        <Image alt="ProjectManagementAppLogo" layout="fill" src={'/images/logo.png'} />
       </div>
       <div className="flex gap-x-5">
         {
           router.asPath.includes('/admin-config') ? null : (
             <>
-              <Link href={PRIVATE_PATHS.HOME_PAGE}>
+              <Link href={PRIVATE_PATHS.HOME_PAGE} passHref>
                 <p
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
@@ -51,7 +51,7 @@ const Header = ({
                   )}
                 > Home </p>
               </Link>
-              <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
+              <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING} passHref>
                 <p
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
@@ -59,7 +59,7 @@ const Header = ({
                   )}
                 > Knowledge sharing  </p>
               </Link>
-              <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
+              <Link href={PRIVATE_PATHS.DEPLOY_TRACKER} passHref>
                 <p
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
@@ -68,7 +68,7 @@ const Header = ({
                 > Deploy Tracker
                 </p>
               </Link>
-              { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
+              { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG} passHref>
                 <p className={cx(
                   'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                   {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.ADMIN_CONFIG)}

@@ -35,5 +35,5 @@ Home.propTypes = {
 };
 Home.defaultProps = {
   events : {}
-}
+};
 export default Home;

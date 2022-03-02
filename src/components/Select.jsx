@@ -42,7 +42,7 @@ const Select = ({
                   `${active ? 'text-gray-600 bg-gray-50' : 'text-gray-400'}
                           cursor-pointer select-none relative py-2 pl-10 pr-4`
                 }
-                key={optionIdx.toString()}
+                key={optionIdx.toString()} // eslint-disable-line
                 value={option}
               >
                 {({active}) => (

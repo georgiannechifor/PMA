@@ -38,6 +38,7 @@ const Login = () => {
       setValue(data);
       router.push('/');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handlePressEnterButton = event => {

@@ -11,7 +11,7 @@ const AdminMenu = () => {
 
   return (
     <div className="h-full flex flex-col items-start justify-center p-2 mt-3">
-      <Link href={PRIVATE_PATHS.ADMIN_USERS}>
+      <Link href={PRIVATE_PATHS.ADMIN_USERS} passHref>
         <p
           className={cx('px-5 my-1 py-3 text-gray-500 font-medium w-full cursor-pointer hover:text-gray-800 rounded',
             {'text-gray-800 bg-gray-200' : activeTab === TABS.USERS},
@@ -20,7 +20,7 @@ const AdminMenu = () => {
         > Users
         </p>
       </Link>
-      <Link href={PRIVATE_PATHS.ADMIN_TEAMS}>
+      <Link href={PRIVATE_PATHS.ADMIN_TEAMS} passHref>
         <p
           className={cx('px-5 my-1 py-3 text-gray-500 font-medium w-full cursor-pointer hover:text-gray-800 rounded',
             {'text-gray-800 bg-gray-200' : activeTab === TABS.TEAMS},
@@ -28,7 +28,7 @@ const AdminMenu = () => {
           onClick={() => setActiveTab(TABS.TEAMS)}
         > Teams </p>
       </Link>
-      <Link href={PRIVATE_PATHS.ADMIN_PROJECTS}>
+      <Link href={PRIVATE_PATHS.ADMIN_PROJECTS} passHref>
         <p
           className={cx('px-5 my-1 py-3 text-gray-500 font-medium w-full cursor-pointer hover:text-gray-800 rounded',
             {'text-gray-800 bg-gray-200' : activeTab === TABS.PROJECTS},
@@ -36,7 +36,7 @@ const AdminMenu = () => {
           onClick={() => setActiveTab(TABS.PROJECTS)}
         > Projects </p>
       </Link>
-      <Link href={PRIVATE_PATHS.ADMIN_EVENTS}>
+      <Link href={PRIVATE_PATHS.ADMIN_EVENTS} passHref>
         <p
           className={cx('px-5 my-1 py-3 text-gray-500 font-medium w-full cursor-pointer hover:text-gray-800 rounded',
             {'text-gray-800 bg-gray-200' : activeTab === TABS.EVENTS},
@@ -46,7 +46,7 @@ const AdminMenu = () => {
       </Link>
 
 
-      <Link href="/">
+      <Link href="/" passHref>
         <p className="mt-auto py-2 px-5 text-white bg-blue-500 w-full rounded mb-5 text-center font-medium cursor-pointer flex items-center justify-between">
           <ArrowLeftIcon className="w-5 h-5" />
           Back to homepage

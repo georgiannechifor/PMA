@@ -17,18 +17,18 @@ import {teamsColumns, PAGE_SIZE} from 'constants/index';
 // eslint-disable-next-line complexity
 const AdminTeams = ({defaultTeams, defaultUsers}) => {
   const {data: teams} = useSWR('/teams', {
-    initialData: defaultTeams
+    initialData : defaultTeams
   });
   const {data: users} = useSWR('/users', {
-    initialData: defaultUsers
+    initialData : defaultUsers
   });
   const {mutate} = useSWRConfig();
 
   const formSchema = Yup.object().shape({
-    teamName: Yup.string().required('Team Name is required'),
-    admin: Yup.string().required('Team Admin is required')
+    teamName : Yup.string().required('Team Name is required'),
+    admin    : Yup.string().required('Team Admin is required')
   });
-  const validationOptions = {resolver: yupResolver(formSchema)};
+  const validationOptions = {resolver : yupResolver(formSchema)};
 
   const [createTeamModalOpen, setCreateTeamModalOpen] = useState(false);
   const [editTeamModalOpen, setEditTeamModalOpen] = useState(false);
@@ -53,6 +53,7 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
   useMemo(() => {
     const firstPageIndex = (currentPage - 1) * PAGE_SIZE;
     const lastPageIndex = firstPageIndex + PAGE_SIZE;
+
     setPaginatedTeams(slice(teams, firstPageIndex, lastPageIndex));
   }, [currentPage, teams]);
 
@@ -60,19 +61,19 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
     if (editTeamModalOpen) {
       fetchData({
         // eslint-disable-next-line no-underscore-dangle
-        entityId: editTeamItem._id,
-        method: 'PUT',
-        data: {
-          name: formdata.teamName,
-          admin: formdata.admin
+        entityId : editTeamItem._id,
+        method   : 'PUT',
+        data     : {
+          name  : formdata.teamName,
+          admin : formdata.admin
         }
       });
     } else {
       fetchData({
-        method: 'POST',
-        data: {
-          name: formdata.teamName,
-          admin: formdata.admin
+        method : 'POST',
+        data   : {
+          name  : formdata.teamName,
+          admin : formdata.admin
         }
       });
     }
@@ -84,11 +85,12 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
       setEditTeamModalOpen(false);
       setSelectedTeamAdmin({});
       reset({
-        teamName: '',
-        admin: ''
+        teamName : '',
+        admin    : ''
       });
       mutate('/teams');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
@@ -106,16 +108,16 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
             columns={teamsColumns}
             data={map(paginatedTeams, item => ({
               ...item,
-              admin: {
+              admin : {
                 ...item.admin,
-                fullName: item.admin.firstName + ' ' + item.admin.lastName
+                fullName : item.admin.firstName + ' ' + item.admin.lastName
               }
             }))}
             onRowClick={item => {
               setEditTeamItem(item);
               setSelectedTeamAdmin({
-                name: item.admin.fullName,
-                value: item.admin._id // eslint-disable-line no-underscore-dangle
+                name  : item.admin.fullName,
+                value : item.admin._id // eslint-disable-line no-underscore-dangle
               });
               // eslint-disable-next-line no-underscore-dangle
               setValue('admin', item.admin._id);
@@ -150,7 +152,7 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
               <input
                 {...register('teamName')}
                 className={classnames('text-sm placeholder-gray-500 rounded-lg border border-gray-400 w-full py-2 px-4 focus:outline-none', {
-                  'border-1 border-red-400': errors.teamName
+                  'border-1 border-red-400' : errors.teamName
                 })}
                 placeholder="Team Name"
                 type="text"
@@ -164,8 +166,8 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
                     filter(users, user => user.team?._id === editTeamItem?._id), // eslint-disable-line no-underscore-dangle
                     user => ({
                       // eslint-disable-next-line no-underscore-dangle
-                      value: user._id,
-                      name: user.firstName + ' ' + user.lastName
+                      value : user._id,
+                      name  : user.firstName + ' ' + user.lastName
                     })
                   )}
                   placeholder="Select a team admin"
@@ -173,7 +175,7 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
                   setSelected={event => {
                     setSelectedTeamAdmin(event);
                     setValue('admin', event.value, {
-                      shouldValidate: true
+                      shouldValidate : true
                     });
                   }}
                 />
@@ -188,7 +190,10 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
         />
 
         <div className="w-full">
-          <Pagination currentPage={currentPage} onPageChange={page => setCurrentPage(page)} totalCount={size(paginatedTeams)} pageSize={PAGE_SIZE} />
+          <Pagination
+            currentPage={currentPage} onPageChange={page => setCurrentPage(page)} pageSize={PAGE_SIZE}
+            totalCount={size(paginatedTeams)}
+          />
         </div>
       </div>
     </Loader>
@@ -201,8 +206,8 @@ AdminTeams.getInitialProps = async ctx => {
     const {data: users} = await getPropsFromFetch('/users', ctx);
 
     return {
-      defaultTeams: teams,
-      defaultUsers: users
+      defaultTeams : teams,
+      defaultUsers : users
     };
   } catch {
     return {};
@@ -211,8 +216,8 @@ AdminTeams.getInitialProps = async ctx => {
 
 AdminTeams.displayName = 'AdminTeams';
 AdminTeams.propTypes = {
-  defaultTeams: array.isRequired,
-  defaultUsers: array.isRequired
+  defaultTeams : array.isRequired,
+  defaultUsers : array.isRequired
 };
 
 export default AdminTeams;

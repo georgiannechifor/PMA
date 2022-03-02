@@ -76,7 +76,8 @@ const EventDetails = ({
               <div className="flex items-center ">
                 <p className="text-sm font-weight w-20 text-gray-400 "> Teams </p>
                 <p className="text-sm text-gray-500 truancate">
-                  { `${eventDetails.details.teamAssigned.map(team => team.name + ", ").toString().slice(0, -2)}` }
+                  { `${eventDetails.details.teamAssigned.map(team => team.name + ', ').toString()
+                    .slice(0, -2)}` } {/* eslint-disable-line no-magic-numbers */}
                 </p>
               </div>
             )
