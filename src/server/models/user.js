@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const BCRYPT_SALT = 10;
-const DEFAULT_EXPIRE_TIME = 640800;
+const DEFAULT_EXPIRE_TIME = '7d';
 
 const UserSchema = new mongoose.Schema({
   firstName : {
