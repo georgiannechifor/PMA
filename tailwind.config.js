@@ -30,6 +30,9 @@ module.exports = {
       maxHeight : {
         90 : '23rem'
       },
+      minHeight: {
+        '440': '440px'
+      },
       fontSize : {
         tiny : '10px'
       },

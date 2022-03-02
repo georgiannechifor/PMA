@@ -19,7 +19,7 @@ import {
   USER_ROLES
 } from './userRoles';
 
-import {EVENT_BACKGROUND_COLOR} from './events';
+import {EVENT_BACKGROUND_COLOR, colors} from './events';
 
 import {
   PRIVATE_PATHS,
@@ -27,6 +27,14 @@ import {
 } from './routes';
 
 import {TABS} from './adminTabs';
+import {
+  eventsColumns,
+  projectsColumns,
+  teamsColumns,
+  userColumns
+} from './columns';
+
+const PAGE_SIZE = 10;
 
 export {
   STATUS_OK,
@@ -46,7 +54,14 @@ export {
   USER_ROLES,
   PRIVATE_PATHS,
   PUBLIC_PATHS,
-  TABS
+  TABS,
+
+  PAGE_SIZE,
+  colors,
+  eventsColumns,
+  projectsColumns,
+  teamsColumns,
+  userColumns
 };
 
 export {
