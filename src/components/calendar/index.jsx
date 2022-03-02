@@ -88,6 +88,7 @@ const Calendar = ({
   // eslint-disable-next-line complexity
   const getDayContainer = (day, monthStart) => (
     <div
+      key={day.toString() + "-" + monthStart}
       className={
         classNames(
           getDaysClass(day, monthStart),

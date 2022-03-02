@@ -46,7 +46,7 @@ const EventDetails = ({
         <div className="flex gap-x-5">
           <span className={`${eventDetails.details.backgroundColor || 'gray'} w-4 h-4 rounded`} />
           <div className="flex flex-col text-gray-500">
-            <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails?.details?.title}</h1>
+            <h1 className="-mt-2 text-xl font-medium text-gray-600"> {eventDetails.details.title}</h1>
             <p className="text-sm"> { moment(selectedDay).format('ddd DD, MMMM YYYY') } </p>
           </div>
         </div>
@@ -55,23 +55,28 @@ const EventDetails = ({
           <div className="flex text-sm items-center ">
             <p className="w-20 text-gray-400"> Author </p>
             <p className="text-gray-500">
-              { `${eventDetails?.details?.author?.firstName} - ${eventDetails?.details?.author.email}` }
-            </p>
-          </div>
-
-          <div className="flex text-sm items-center ">
-            <p className="w-20 text-gray-400 "> Assignee </p>
-            <p className="text-gray-500">
-              { `${eventDetails?.details?.assignee.firstName} - ${eventDetails?.details?.assignee.email}` }
+              { `${eventDetails.details.author.firstName} - ${eventDetails.details.author.email}` }
             </p>
           </div>
 
           {
+            eventDetails &&
+            eventDetails.details.assignee && (
+              <div className="flex text-sm items-center ">
+                <p className="w-20 text-gray-400 "> Assignee </p>
+                <p className="text-gray-500">
+                  { `${eventDetails.details.assignee.firstName} - ${eventDetails.details.assignee.email}` }
+                </p>
+              </div>
+            )
+          }
+
+          {
             eventDetails?.details?.teamAssigned.length > 0 && (
               <div className="flex items-center ">
-                <p className="text-sm font-weight w-20 text-gray-400 "> Team </p>
-                <p className="text-sm text-gray-500">
-                  { `${eventDetails?.details?.teamAssigned[0]}` }
+                <p className="text-sm font-weight w-20 text-gray-400 "> Teams </p>
+                <p className="text-sm text-gray-500 truancate">
+                  { `${eventDetails.details.teamAssigned.map(team => team.name + ", ").toString().slice(0, -2)}` }
                 </p>
               </div>
             )

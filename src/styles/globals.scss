@@ -14,3 +14,8 @@ body {
 body {
   @apply bg-gray-100;
 }
+
+textarea {
+  resize: vertical;
+  max-height: 150px;
+}

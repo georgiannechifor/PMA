@@ -14,7 +14,7 @@ import moment from 'moment';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Modal, Select, Table, Loader, Pagination} from 'components'; // eslint-disable-line no-unused-vars
 import {getTimes} from 'utils/dateTimePickerItems';
-import { eventsColumns, colors, PAGE_SIZE } from 'constants/index';
+import {eventsColumns, colors, PAGE_SIZE } from 'constants/index';
 
 // eslint-disable-next-line complexity
 const AdminEvents = ({initialEvents, users}) => {
