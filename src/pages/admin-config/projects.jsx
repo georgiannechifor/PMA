@@ -18,6 +18,7 @@ const AdminProjects = ({
 }) => {
   const [selectedProject, setSelectedProject] = useState({});
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
+  const [isRemovingModalOpen, setIsRemovingModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const {data: projects} = useSWR('/projects', {
@@ -45,25 +46,6 @@ const AdminProjects = ({
     formState: {errors}
   } = useForm(validationOptions);
 
-  useMemo(() => {
-    const firstPageIndex = (currentPage -  1) * PAGE_SIZE;
-    const lastPageIndex = firstPageIndex + PAGE_SIZE;
-    setPaginatedProjects(slice(projects, firstPageIndex, lastPageIndex));
-  }, [currentPage, projects])
-
-  useEffect(() => {
-    if(!isCreateProjectModalOpen) {
-      setSelectedProject({});
-      setSelectedTeam({});
-      reset({
-        name : '',
-        clientName: '',
-        deadline: '',
-        description: ''
-      });
-    }
-  }, [isCreateProjectModalOpen])
-
   const onSubmit = formData => {
     if(selectedProject._id) {
       fetchData({
@@ -79,10 +61,24 @@ const AdminProjects = ({
     }
   }
 
+  const removeProject = () => {
+    fetchData({
+      entityId: selectedProject._id, // eslint-disable-line no-underscore-dangle
+      method: 'DELETE'
+    });
+  };
+
+  useMemo(() => {
+    const firstPageIndex = (currentPage -  1) * PAGE_SIZE;
+    const lastPageIndex = firstPageIndex + PAGE_SIZE;
+    setPaginatedProjects(slice(projects, firstPageIndex, lastPageIndex));
+  }, [currentPage, projects])
+
   useEffect(() => {
     // eslint-disable-next-line no-underscore-dangle
     if ((data && data._id) || (data && data.deletedCount)) {
       setIsCreateProjectModalOpen(false);
+      setIsRemovingModalOpen(false);
       mutate('/projects');
     }
   }, [data]);
@@ -93,7 +89,17 @@ const AdminProjects = ({
         <h1 className="text-xl font-medium py-4"> Company Projects </h1>
         <button
           className="px-5 py-2 bg-blue-500 rounded text-white font-medium text-md"
-          onClick={() => setIsCreateProjectModalOpen(true)}
+          onClick={() => {
+            setIsCreateProjectModalOpen(true);
+            setSelectedProject({});
+            setSelectedTeam({});
+            reset({
+              name : '',
+              clientName: '',
+              deadline: '',
+              description: ''
+            });
+          }}
         > Create Project </button>
       </section>
 
@@ -124,6 +130,7 @@ const AdminProjects = ({
             <button
               className="pl-2 py-2 font-medium text-sm text-red-400 mr-auto hover:underline transition"
               onClick={() => {
+                setIsRemovingModalOpen(true);
                 setIsCreateProjectModalOpen(false);
               }}
             >
@@ -205,6 +212,29 @@ const AdminProjects = ({
             </div>
           </div>
         )}
+      />
+
+      <Modal
+        isModalOpen={isRemovingModalOpen}
+        modalActions={
+          <div className="flex w-full items-center justify-end gap-2">
+            <button
+              className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
+              onClick={() => {
+                setIsRemovingModalOpen(false);
+                setIsCreateProjectModalOpen(true);
+              }}
+            >
+              Cancel
+            </button>
+            <button className="px-8 py-2 text-sm text-white font-medium bg-red-500 rounded-lg" onClick={() => removeProject()}>
+              Remove
+            </button>
+          </div>
+        }
+        modalTitle="Remove confirmation"
+        setIsModalOpen={setIsRemovingModalOpen}
+        modalContent={<p> Are you sure you want to remove {selectedProject?.title} ?</p>}
       />
 
       <div className="w-full">
