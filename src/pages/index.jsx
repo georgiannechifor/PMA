@@ -3,7 +3,6 @@ import {object} from 'prop-types';
 import {Calendar, Loader} from 'components';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 
-
 const Home = ({events}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 

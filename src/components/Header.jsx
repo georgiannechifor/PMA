@@ -20,12 +20,13 @@ const Header = ({
   const [storedValue, setValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
   const {fetchData} = useFetch('auth/logout');
 
-  const getActiveHeaderTab = tab => router.asPath === tab;
+  const getActiveHeaderTab = menuItem => router.asPath === menuItem;
 
   const getIsAdmin = () =>
     storedValue &&
   (storedValue.jobTitle === USER_ROLES.ADMIN || storedValue.jobTitle === USER_ROLES.SUPER_ADMIN);
 
+  console.log(getActiveHeaderTab(PRIVATE_PATHS.KNOWLEDGE_SHARING));
 
   return (
     <div className={`${className}
@@ -47,7 +48,7 @@ const Header = ({
                 <p
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.HOME_PAGE)}
+                    {'text-black' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
                   )}
                 > Home </p>
               </Link>
@@ -55,7 +56,7 @@ const Header = ({
                 <p
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
+                    {'text-black' : router.asPath === PRIVATE_PATHS.KNOWLEDGE_SHARING}
                   )}
                 > Knowledge sharing  </p>
               </Link>
@@ -63,17 +64,13 @@ const Header = ({
                 <p
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.DEPLOY_TRACKER)}
+                    {'text-black' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
                   )}
                 > Deploy Tracker
                 </p>
               </Link>
               { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG} passHref>
-                <p className={cx(
-                  'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                  {'text-gray-800' : getActiveHeaderTab(PRIVATE_PATHS.ADMIN_CONFIG)}
-                )}
-                > Admin </p>
+                <p className="text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base"> Admin </p>
               </Link>
               }
             </>
