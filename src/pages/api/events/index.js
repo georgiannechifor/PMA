@@ -1,6 +1,7 @@
 import {dbConnect} from 'utils/dbConnect';
 import Event from 'models/event';
 import User from 'models/user';
+import Team from 'models/team';
 import {authenticated} from 'service/index';
 
 import {
@@ -13,13 +14,15 @@ import {USER_ROLES} from 'constants/userRoles';
 
 dbConnect();
 
-// eslint-disable-next-line complexity
+// eslint-disable-next-line complexity, max-statements
 const eventsHandler = authenticated(async (req, res) => {
   const {method} = req;
 
   switch (method) {
     case 'GET': {
       try {
+        // Without this mongodb won't find team schema so we can filter users by their team
+        await Team.find({});
         const user = await User.findById(req.userIDFromToken);
 
         let query = {};
@@ -30,22 +33,24 @@ const eventsHandler = authenticated(async (req, res) => {
 
         /* If user is an admin, then deliver all events assigned to its team, a member of its team or to current user */
         } else if (user.jobTitle === USER_ROLES.ADMIN) {
-          query = {$or : [{
+          const teamFilter = user.team ? [{
             assignee : {
               team : user.team
             }
           }, {
-            author : user._id // eslint-disable-line no-underscore-dangle
-          }, {
             teamAssigned : user.team
+          }] : [];
+
+          query = {$or : [...teamFilter, {
+            author : user._id // eslint-disable-line no-underscore-dangle
           }
           ]};
         } else {
         /* In case of an user, deliver events assigned to user's team or to user */
-          query = {$or : [{
+          const teamAssigned = user.team ? [{teamAssigned : user.team}] : [];
+
+          query = {$or : [...teamAssigned, {
             assignee : user._id // eslint-disable-line no-underscore-dangle
-          }, {
-            teamAssigned : user.team
           }
           ]};
         }

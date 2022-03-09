@@ -11,6 +11,7 @@ import Table from './Table';
 import Select from './Select';
 import Pagination from './Pagination';
 import PostCard from './PostCard';
+import PostMenu from './PostMenu';
 
 export {
   Loader,
@@ -24,5 +25,6 @@ export {
   Table,
   Pagination,
   PostCard,
+  PostMenu,
   ImageUpload
 };

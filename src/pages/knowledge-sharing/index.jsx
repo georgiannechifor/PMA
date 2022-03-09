@@ -3,7 +3,7 @@ import {useRouter} from 'next/router';
 import {array} from 'prop-types';
 import map from 'lodash/map';
 import size from 'lodash/size';
-import useSWR, {useSWRConfig} from 'swr';
+import useSWR from 'swr';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {PostCard, Pagination} from 'components';
 import {PAGE_SIZE, PRIVATE_PATHS} from 'constants';
@@ -32,7 +32,7 @@ const KnowledgeSharing = ({
         </button>
       </div>
 
-      <div className="grid grid-cols-3 justify-center items-center mx-auto gap-y-10 mb-5">
+      <div className="grid grid-cols-3 justify-center items-center mx-auto gap-5 mb-10">
         {
           map(posts, post => (
             <PostCard

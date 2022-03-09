@@ -15,14 +15,14 @@ const PostCard = ({
 
   return (
     <div
-      className=" cursor-pointer flex flex-col rounded-xl bg-white shadow max-w-md mx-auto"
+      className=" cursor-pointer flex flex-col rounded-xl bg-white shadow mx-auto w-full h-full"
       onClick={() => router.push(`${PRIVATE_PATHS.KNOWLEDGE_SHARING}/${id}`)}
     >
-      <div className="w-full">
+      <div className="w-full flex items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt="Postcard image"
-          className="object-cover w-full h-40 mx-auto rounded-t-lg"
+          className="object-cover w-full h-40 rounded-t-lg"
           src={image}
         />
 
@@ -33,7 +33,7 @@ const PostCard = ({
         <p className="line-clamp-3 mt-2"> { description} </p>
       </div>
 
-      <div className="text-gray-300 font-medium flex justify-between px-5 mb-2">
+      <div className="text-gray-300 font-medium flex justify-between px-5 mb-2 mt-auto">
         <p> { author } </p>
         <p> { date} </p>
       </div>

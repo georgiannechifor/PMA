@@ -11,7 +11,7 @@ import {
 
 dbConnect();
 
-const eventsHandler = authenticated(async (req, res) => {
+const projectsHandler = authenticated(async (req, res) => {
   const {method} = req;
 
   switch (method) {
@@ -51,4 +51,4 @@ const eventsHandler = authenticated(async (req, res) => {
   }
 });
 
-export default eventsHandler;
+export default projectsHandler;

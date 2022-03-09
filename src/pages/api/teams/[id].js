@@ -10,7 +10,7 @@ import {USER_ROLES} from 'constants/userRoles';
 
 dbConnect();
 
-const teamsHandler = async (req, res) => { // eslint-disable-line complexity, max-statements
+const teamHandler = async (req, res) => { // eslint-disable-line complexity, max-statements
   const {query : {id}, method} = req;
 
   switch (method) {
@@ -82,4 +82,4 @@ const teamsHandler = async (req, res) => { // eslint-disable-line complexity, ma
   }
 };
 
-export default teamsHandler;
+export default teamHandler;
