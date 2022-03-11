@@ -1,5 +1,5 @@
 import {dbConnect} from 'utils/dbConnect';
-import Post from 'models/post';
+import Deployment from 'models/deployment';
 import {authenticated} from 'service/index';
 
 import {
@@ -11,22 +11,22 @@ import {
 dbConnect();
 
 // eslint-disable-next-line complexity, max-statements
-const postHandler = authenticated(async (req, res) => {
+const deploymentHandler = authenticated(async (req, res) => {
   const {query : {id}, method} = req;
 
   switch (method) {
     case 'GET': {
       try {
-        const post = await Post.findById(id).populate('author', 'firstName lastName');
+        const deployment = await Deployment.findById(id);
 
-        if (post) {
+        if (deployment) {
           res.status(STATUS_OK).json({
-            data : post
+            data : deployment
           });
         } else {
           res.status(STATUS_NOT_FOUND).json({
             error : {
-              message : 'Post not found'
+              message : 'Deployment not found'
             }
           });
         }
@@ -42,22 +42,22 @@ const postHandler = authenticated(async (req, res) => {
     }
     case 'PUT': {
       try {
-        const post = await Post
+        const deployment = await Deployment
           .findByIdAndUpdate(id, req.body, {
             new : true
           });
 
-        if (!post) {
+        if (!deployment) {
           res.status(STATUS_NOT_FOUND).json({
             error : {
-              message : 'Post not found'
+              message : 'Deployment not found'
             }
           });
           break;
         }
 
         res.status(STATUS_OK).json({
-          data : post
+          data : deployment
         });
         break;
       } catch (error) {
@@ -71,19 +71,19 @@ const postHandler = authenticated(async (req, res) => {
     }
     case 'DELETE': {
       try {
-        const deletedPost = await Post.deleteOne({_id : id});
+        const deletedDeployment = await Deployment.deleteOne({_id : id});
 
-        if (!deletedPost) {
+        if (!deletedDeployment) {
           res.status(STATUS_NOT_FOUND).json({
             error : {
-              message : 'Post not deleted'
+              message : 'Deployment not deleted'
             }
           });
           break;
         }
 
         res.status(STATUS_OK).json({
-          data : deletedPost
+          data : deletedDeployment
         });
         break;
       } catch (error) {
@@ -106,4 +106,4 @@ const postHandler = authenticated(async (req, res) => {
   }
 });
 
-export default postHandler;
+export default deploymentHandler;

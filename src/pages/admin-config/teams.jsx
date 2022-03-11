@@ -138,12 +138,10 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
                   setEditTeamModalOpen(false);
                 }}
               >
-                {' '}
-                Cancel{' '}
+                Cancel
               </button>
               <button className="px-8 py-2 text-sm text-white font-medium bg-blue-500 rounded-lg" onClick={handleSubmit(onSubmit)}>
-                {' '}
-                Save{' '}
+                Save
               </button>
             </div>
           }

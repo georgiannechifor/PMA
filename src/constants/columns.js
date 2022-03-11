@@ -1,29 +1,29 @@
 export const eventsColumns = [
   {
-    key: 'title',
-    title: 'Event Name'
+    key   : 'title',
+    title : 'Event Name'
   },
   {
-    key: 'date',
-    options: 'DD MMM, YYYY',
-    isDate: true,
-    title: 'Date'
+    key     : 'date',
+    options : 'DD MMM, YYYY',
+    isDate  : true,
+    title   : 'Date'
   },
   {
-    key: 'startTime',
-    title: 'Start Time'
+    key   : 'startTime',
+    title : 'Start Time'
   },
   {
-    key: 'endTime',
-    title: 'End Time'
+    key   : 'endTime',
+    title : 'End Time'
   },
   {
-    key: 'author.firstName',
-    title: 'Author'
+    key   : 'author.firstName',
+    title : 'Author'
   },
   {
-    key: 'assignee.firstName',
-    title: 'Assignee'
+    key   : 'assignee.firstName',
+    title : 'Assignee'
   }
 ];
 
@@ -67,5 +67,21 @@ export const userColumns = [
   }, {
     key   : 'jobTitle',
     title : 'Position'
+  }
+];
+
+export const deploymentColumns = [
+  {
+    key   : 'title',
+    title : 'Deployment name'
+  }, {
+    key   : 'date',
+    title : 'Date'
+  }, {
+    key   : 'project.name',
+    title : 'Project Name'
+  }, {
+    key   : 'author.fullName',
+    title : 'Author'
   }
 ];
