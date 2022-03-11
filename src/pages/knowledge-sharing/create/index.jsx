@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 
-// Import 'react-quill/dist/quill.bubble.css';
+import {boolean, object} from 'prop-types';
 import {useRouter} from 'next/router';
 import * as Yup from 'yup';
 import {useForm} from 'react-hook-form';
@@ -18,7 +18,10 @@ import {useFetch} from 'utils/useFetch';
 const ReactQuill = dynamic(() => import('react-quill'), {ssr : false});
 
 // eslint-disable-next-line complexity
-const CreatePost = () => {
+const CreatePost = ({
+  isEdit,
+  initialValues
+}) => {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState({});
   const [contentValue, setContentValue] = useState('');
@@ -40,13 +43,24 @@ const CreatePost = () => {
   } = useForm(validationOptions);
 
   const onSubmit = formData => {
-    fetchData({
-      method : 'POST',
-      data   : {
-        ...formData,
-        content : contentValue
-      }
-    });
+    if (isEdit) {
+      fetchData({
+        entityId : initialValues._id, // eslint-disable-line no-underscore-dangle
+        method   : 'PUT',
+        data     : {
+          ...formData,
+          content : contentValue
+        }
+      });
+    } else {
+      fetchData({
+        method : 'POST',
+        data   : {
+          ...formData,
+          content : contentValue
+        }
+      });
+    }
   };
 
   useEffect(() => {
@@ -57,6 +71,21 @@ const CreatePost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  useEffect(() => {
+    if (isEdit && initialValues) {
+      setValue('title', initialValues.title);
+      setValue('description', initialValues.description);
+      setValue('image', initialValues.image);
+      setValue('category', initialValues.category);
+      setValue('content', initialValues.content);
+      setContentValue(initialValues.content);
+      setSelectedCategory({
+        name  : initialValues.category,
+        value : initialValues.category
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, initialValues]);
 
   return (
     <Loader isLoading={loading}>
@@ -112,6 +141,7 @@ const CreatePost = () => {
           >
             <label className="cursor-pointer text-gray-500 mt-2 mb-1"> Upload post image</label>
             <ImageUpload
+              defaultImage={initialValues?.image}
               setImageToUpload={image => {
                 setValue('image', image, {shouldValidate : true});
               }} {...register('image')}
@@ -151,6 +181,14 @@ const CreatePost = () => {
 };
 
 CreatePost.displayName = 'CreatePost';
-CreatePost.propTypes = {};
+CreatePost.propTypes = {
+  isEdit        : boolean,
+  initialValues : object
+};
+
+CreatePost.defaultProps = {
+  isEdit        : false,
+  initialValues : {}
+};
 
 export default CreatePost;

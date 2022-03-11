@@ -44,7 +44,7 @@ export const useFetch = endpoint => {
       .then(jsonResponse => {
         if (jsonResponse.error) {
           setError(jsonResponse.error);
-          setData({});
+          setData(null);
         } else {
           setData(jsonResponse.data);
         }

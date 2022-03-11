@@ -1,10 +1,17 @@
-import {useState} from 'react';
-import {func} from 'prop-types';
+import {useState, useEffect} from 'react';
+import {func, string} from 'prop-types';
 
 const ImageUpload = ({
-  setImageToUpload
+  setImageToUpload,
+  defaultImage
 }) => {
   const [imageUrl, setImageUrl] = useState('');
+
+  useEffect(() => {
+    if (defaultImage) {
+      setImageUrl(defaultImage);
+    }
+  }, [defaultImage]);
 
   const getBase64Image = (image, callback) => {
     let reader = new FileReader();
@@ -55,7 +62,12 @@ const ImageUpload = ({
 
 ImageUpload.displayName = 'ImageUpload';
 ImageUpload.propTypes = {
-  setImageToUpload : func.isRequired
+  setImageToUpload : func.isRequired,
+  defaultImage     : string
+};
+
+ImageUpload.defaultProps = {
+  defaultImage : ''
 };
 
 export default ImageUpload;

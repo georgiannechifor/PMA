@@ -26,7 +26,9 @@ const postsHandler = authenticated(async (req, res) => {
         });
       } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message : error.message
+          error : {
+            message : error.message
+          }
         });
       }
     }
@@ -44,13 +46,17 @@ const postsHandler = authenticated(async (req, res) => {
         });
       } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
-          error : error.message
+          error : {
+            message : error.message
+          }
         });
       }
     }
     default: {
       return res.status(STATUS_METHOD_NOT_ALLOWED).json({
-        error : 'Method not allowed'
+        error : {
+          message : 'Method not allowed'
+        }
       });
     }
   }

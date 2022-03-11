@@ -5,7 +5,7 @@ import map from 'lodash/map';
 import groupBy from 'lodash/groupBy';
 import classNames from 'classnames';
 import {Transition} from '@headlessui/react';
-import {object, func} from 'prop-types';
+import {object, func, array} from 'prop-types';
 import OtherEvents from './OtherEvents';
 import EventDetails from './EventDetails';
 
@@ -207,7 +207,7 @@ const Calendar = ({
         days.push(getDayContainer(day, monthStart));
       }
       const row = (
-        <div className="table-row w-full select-none align-top">
+        <div className="table-row w-full select-none align-top" key={day.format('DD/MM/yyyy')}>
           {days}
         </div>
       );
@@ -232,7 +232,6 @@ const Calendar = ({
     );
 
     rows.push(row);
-
 
     return rows;
   };
@@ -259,10 +258,13 @@ const Calendar = ({
 };
 
 Calendar.propTypes = {
-  events          : object.isRequired,
+  events          : array,
   selectedDate    : object.isRequired,
   setSelectedDate : func.isRequired
 };
 
+Calendar.defaultProps = {
+  events : []
+};
 Calendar.displayName = 'Calendar';
 export default Calendar;

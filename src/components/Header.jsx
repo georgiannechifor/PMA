@@ -39,37 +39,37 @@ const Header = ({
       <div className="flex gap-x-5">
         {
           router.asPath.includes('/admin-config') ? null : (
-            <>
-              <Link href={PRIVATE_PATHS.HOME_PAGE} passHref>
-                <p
+            <div>
+              <Link href={PRIVATE_PATHS.HOME_PAGE}>
+                <a
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                     {'text-black' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
                   )}
-                > Home </p>
+                > Home </a>
               </Link>
-              <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING} passHref>
-                <p
+              <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
+                <a
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                     {'text-black' : router.asPath.includes(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
                   )}
-                > Knowledge sharing  </p>
+                > Knowledge sharing  </a>
               </Link>
-              <Link href={PRIVATE_PATHS.DEPLOY_TRACKER} passHref>
-                <p
+              <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
+                <a
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
                     {'text-black' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
                   )}
                 > Deploy Tracker
-                </p>
+                </a>
               </Link>
-              { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG} passHref>
-                <p className="text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base"> Admin </p>
+              { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
+                <a className="text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base"> Admin </a>
               </Link>
               }
-            </>
+            </div>
           )
         }
 

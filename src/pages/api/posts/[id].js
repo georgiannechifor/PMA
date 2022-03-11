@@ -25,13 +25,17 @@ const postHandler = authenticated(async (req, res) => {
           });
         } else {
           res.status(STATUS_NOT_FOUND).json({
-            message : 'Project not found'
+            error : {
+              message : 'Post not found'
+            }
           });
         }
         break;
       } catch (error) {
         res.status(STATUS_BAD_REQUEST).json({
-          message : error.message
+          error : {
+            message : error.message
+          }
         });
         break;
       }
@@ -45,7 +49,9 @@ const postHandler = authenticated(async (req, res) => {
 
         if (!post) {
           res.status(STATUS_NOT_FOUND).json({
-            message : 'Project not found'
+            error : {
+              message : 'Post not found'
+            }
           });
           break;
         }
@@ -56,7 +62,9 @@ const postHandler = authenticated(async (req, res) => {
         break;
       } catch (error) {
         res.status(STATUS_BAD_REQUEST).json({
-          message : error.message
+          error : {
+            message : error.message
+          }
         });
         break;
       }
@@ -67,7 +75,9 @@ const postHandler = authenticated(async (req, res) => {
 
         if (!deletedPost) {
           res.status(STATUS_NOT_FOUND).json({
-            message : 'Project not deleted'
+            error : {
+              message : 'Project not deleted'
+            }
           });
           break;
         }
@@ -78,14 +88,18 @@ const postHandler = authenticated(async (req, res) => {
         break;
       } catch (error) {
         res.status(STATUS_OK).json({
-          message : error.message
+          error : {
+            message : error.message
+          }
         });
         break;
       }
     }
     default: {
       res.status(STATUS_BAD_REQUEST).json({
-        message : 'Method not allowed'
+        error : {
+          message : 'Method not allowed'
+        }
       });
       break;
     }
