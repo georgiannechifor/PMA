@@ -44,7 +44,7 @@ const Header = ({
                 <a
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-black' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
+                    {'text-black font-bold' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
                   )}
                 > Home </a>
               </Link>
@@ -52,7 +52,7 @@ const Header = ({
                 <a
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-black' : router.asPath.includes(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
+                    {'text-black font-bold' : router.asPath.includes(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
                   )}
                 > Knowledge sharing  </a>
               </Link>
@@ -60,7 +60,7 @@ const Header = ({
                 <a
                   className={cx(
                     'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-black' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
+                    {'text-black font-bold' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
                   )}
                 > Deploy Tracker
                 </a>
