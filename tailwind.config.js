@@ -1,5 +1,6 @@
 module.exports = {
   important : true,
+  mode      : 'jit',
   content   : [
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/components/**/*.{js,ts,jsx,tsx}'
@@ -28,10 +29,11 @@ module.exports = {
         relative : 'calc(100vh - 6rem)'
       },
       maxHeight : {
-        90 : '23rem'
+        90     : '23rem',
+        '50vh' : '50vh'
       },
-      minHeight: {
-        '440': '440px'
+      minHeight : {
+        440 : '440px'
       },
       fontSize : {
         tiny : '10px'
@@ -42,5 +44,7 @@ module.exports = {
       }
     }
   },
-  plugins : []
+  plugins : [
+    require('@tailwindcss/line-clamp')
+  ]
 };

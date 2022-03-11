@@ -13,9 +13,9 @@ const Select = ({
 }) => (
   <div>
     <Listbox onChange={setSelected} value={selected}>
-      <div className="relative mt-1">
+      <div className="relative mt-1 min-w-min">
         <Listbox.Button
-          className={`relative w-full py-2 pl-3 pr-10 text-left ${disabled ? 'bg-gray-200' : 'bg-white'} rounded-lg
+          className={`relative w-full py-2 pl-3 pr-10 text-left ${disabled ? 'bg-gray-200' : 'bg-white'} rounded
             border border-gray-400 cursor-default sm:text-sm ${errorClassname}`}
         >
           <span className="block truncate">{selected?.name || placeholder}</span>

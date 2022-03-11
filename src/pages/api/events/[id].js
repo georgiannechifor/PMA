@@ -11,7 +11,7 @@ import {
 dbConnect();
 
 // eslint-disable-next-line complexity, max-statements
-const eventsHandler = authenticated(async (req, res) => {
+const eventHandler = authenticated(async (req, res) => {
   const {query : {id}, method} = req;
 
   switch (method) {
@@ -92,4 +92,4 @@ const eventsHandler = authenticated(async (req, res) => {
   }
 });
 
-export default eventsHandler;
+export default eventHandler;

@@ -17,7 +17,7 @@ export async function getPropsFromFetch (url, ctx) {
       return {};
     }
 
-    ctx.res?.writeHead(302, {
+    ctx.res?.writeHead(302, { // eslint-disable-line no-magic-numbers
       Location : '/login'
     });
     ctx.res?.end();

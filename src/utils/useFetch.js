@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {useRouter} from 'next/router';
 import useLocalStorage from './useLocalStorage';
 import {
@@ -44,7 +44,7 @@ export const useFetch = endpoint => {
       .then(jsonResponse => {
         if (jsonResponse.error) {
           setError(jsonResponse.error);
-          setData({});
+          setData(null);
         } else {
           setData(jsonResponse.data);
         }

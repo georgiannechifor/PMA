@@ -34,6 +34,8 @@ import {
   userColumns
 } from './columns';
 
+export * from './postCategory';
+
 const PAGE_SIZE = 10;
 
 export {
