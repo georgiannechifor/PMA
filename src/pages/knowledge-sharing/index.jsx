@@ -1,12 +1,16 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useRouter} from 'next/router';
 import {array} from 'prop-types';
 import map from 'lodash/map';
+import uniqBy from 'lodash/uniqBy';
+import filter from 'lodash/filter';
 import size from 'lodash/size';
 import useSWR from 'swr';
+import {PlusIcon} from '@heroicons/react/outline';
+
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
-import {PostCard, Pagination} from 'components';
-import {PAGE_SIZE, PRIVATE_PATHS} from 'constants';
+import {PostCard, Pagination, Select} from 'components';
+import {PAGE_SIZE, PRIVATE_PATHS, POST_CATEGORY} from 'constants';
 
 const KnowledgeSharing = ({
   initialPosts
@@ -15,26 +19,97 @@ const KnowledgeSharing = ({
     initialData : initialPosts
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState({
+    value : '',
+    name  : 'All Categories'
+  });
+  const [selectedAuthor, setSelectedAuthor] = useState({
+    value : '',
+    name  : 'All Authors'
+  });
+  const [filteredPosts, setFilteredPosts] = useState(initialPosts);
+  const [authors, setAuthors] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    // eslint-disable-next-line no-underscore-dangle
+    setAuthors(map(uniqBy(posts, post => post.author._id), ({author}) => ({
+      value : author._id, // eslint-disable-line no-underscore-dangle
+      name  : `${author.firstName} ${author.lastName}`
+    })));
+
+    setFilteredPosts(posts);
+  }, [posts]);
+
+  useEffect(() => {
+    let filtered = posts;
+
+    if (selectedCategory.value && selectedCategory.value !== '') {
+      filtered = filter(posts, item => item.category === selectedCategory.value);
+      if (selectedAuthor.value && selectedAuthor.value !== 0) {
+        // eslint-disable-next-line no-underscore-dangle
+        filtered = filter(filtered, item => item.author._id === selectedAuthor.value);
+      }
+    }
+    setFilteredPosts(filtered);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, selectedAuthor]);
 
 
   return (
     <div className="w-10/12 mx-auto">
-      <h1 className="text-3xl my-5 mx-10">Knowledge Sharing Title </h1>
+      <h1 className="text-3xl my-5">Knowledge Sharing </h1>
 
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-between items-center gap-x-5 mb-5">
+        <div className="flex gap-x-5">
+          <div className="w-52">
+            <Select
+              options={[
+                {
+                  value : '',
+                  name  : 'All Categories'
+                },
+                ...map(POST_CATEGORY, category => ({
+                  value : category,
+                  name  : category
+                }))]}
+              placeholder="Post Category"
+              selected={selectedCategory}
+              setSelected={event => {
+                setSelectedCategory(event);
+              }}
+            />
+          </div>
+          <div className="w-52">
+            <Select
+              options={[
+                {
+                  value : '',
+                  name  : 'All Authors'
+                },
+                ...authors]}
+              placeholder="Select Author"
+              selected={selectedAuthor}
+              setSelected={event => {
+                setSelectedAuthor(event);
+              }}
+            />
+          </div>
+        </div>
         <button
           className="
-          transition bg-blue-500 text-white rounded py-2 px-10
-          font-medium mr-10 cursor-pointer -mt-3 mb-5 hover:bg-blue-600"
+          transition rounded-full p-2
+          font-medium cursor-pointer flex items-center
+           border border-blue-500 text-blue-500
+           hover:bg-blue-500 hover:text-white hover:border-white"
           onClick={() => router.push(`${PRIVATE_PATHS.KNOWLEDGE_SHARING}/create`)}
-        > Add post
+        > <PlusIcon className="w-5 h-5" />
         </button>
       </div>
 
       <div className="grid grid-cols-3 justify-center items-center mx-auto gap-5 mb-10">
         {
-          map(posts, post => (
+          filteredPosts && filteredPosts.length ? map(filteredPosts, post => (
             <PostCard
               author={`${post.author.firstName} ${post.author.lastName}`}
               date={post.date}
@@ -44,7 +119,7 @@ const KnowledgeSharing = ({
               key={post._id} // eslint-disable-line
               title={post.title}
             />
-          ))
+          )) : <p className="col-span-3 py-2 text-gray-400 bg-gray-200 text-center w-full"> { selectedCategory ? 'No data for current filter' : 'No data'}</p>
         }
       </div>
 
