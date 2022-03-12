@@ -19,7 +19,9 @@ const deploymentsHandler = authenticated(async (req, res) => {
   switch (method) {
     case 'GET': {
       try {
-        const deployments = await Deployment.find({});
+        const deployments = await Deployment.find({})
+          .populate('author', 'firstName lastName')
+          .populate('project', 'name');
 
         return res.status(STATUS_OK).json({
           data : deployments

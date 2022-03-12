@@ -10,7 +10,7 @@ const AdminMenu = () => {
   const [activeTab, setActiveTab] = useState(TABS[router.asPath.split('/')[2]?.toUpperCase()] || TABS.USERS);
 
   return (
-    <div className="h-full flex flex-col items-start justify-center p-2 mt-3">
+    <nav className="h-full flex flex-col items-start justify-center p-2 mt-3">
       <Link href={PRIVATE_PATHS.ADMIN_USERS} passHref>
         <a
           className={cx('px-5 my-1 py-3 text-gray-500 font-medium w-full cursor-pointer hover:text-gray-800 rounded',
@@ -44,15 +44,13 @@ const AdminMenu = () => {
           onClick={() => setActiveTab(TABS.EVENTS)}
         > Events </a>
       </Link>
-
-
       <Link href="/" passHref>
         <a className="mt-auto py-2 px-5 text-white bg-blue-500 w-full rounded mb-5 text-center font-medium cursor-pointer flex items-center justify-between">
           <ArrowLeftIcon className="w-5 h-5" />
           Back to homepage
         </a>
       </Link>
-    </div>
+    </nav>
   );
 };
 
