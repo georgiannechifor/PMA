@@ -98,7 +98,10 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
       <div className="w-11/12 mx-auto flex flex-col">
         <section className="flex items-center justify-between">
           <h1 className="text-xl font-medium py-4"> Company Teams </h1>
-          <button className="px-5 py-2 bg-blue-500 rounded text-white font-medium text-md" onClick={() => setCreateTeamModalOpen(true)}>
+          <button
+            className="px-5 py-2 bg-indigo-600 rounded text-white font-medium text-md hover:bg-indigo-700 transition"
+            onClick={() => setCreateTeamModalOpen(true)}
+          >
             Create Team
           </button>
         </section>

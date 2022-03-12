@@ -33,7 +33,7 @@ const Table = ({
                   {
                     map(columns, column => (
                       <th
-                        className="py-3 px-6 text-xs tracking-wider text-left uppercase text-gray-600"
+                        className="py-3 px-6 text-xs tracking-wider text-left uppercase text-gray-400"
                         key={column.key}
                         scope="col"
                       >
@@ -78,7 +78,7 @@ const Table = ({
                         ))
                       }
                       <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                        <a className="text-blue-600 hover:underline" href="#" onClick={() => onRowClick(item)}>Edit</a>
+                        <a className="text-indigo-600 hover:text-indigo-400 transition" href="#" onClick={() => onRowClick(item)}>Edit</a>
                       </td>
                     </tr>
                   )) || (
