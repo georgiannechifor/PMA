@@ -55,7 +55,7 @@ const Post = () => {
 
   return (
     <Loader isLoading={loading}>
-      <div className="relative w-10/12 mx-auto my-10 bg-white rounded-lg shadow-md">
+      <div className="relative w-11/12 mx-auto my-10 bg-white rounded-lg shadow-md">
         <div className="w-full mb-5 relative">
           { /* eslint-disable-next-line @next/next/no-img-element */}
           <img

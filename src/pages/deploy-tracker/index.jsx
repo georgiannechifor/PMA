@@ -100,8 +100,8 @@ const DeployTracker = ({
 
   return (
     <Loader isLoading={loading} >
-      <div className="w-10/12 mx-auto">
-        <section className="w-5/6 mx-auto flex items-center justify-between">
+      <div className="w-11/12 mx-auto mt-5">
+        <section className="flex items-center justify-between">
           <h1 className="text-3xl py-4"> Deployment Tracker </h1>
           <button
             className="px-5 py-2 bg-blue-500 rounded text-white font-medium text-md hover:bg-blue-600 transition"
@@ -110,21 +110,24 @@ const DeployTracker = ({
           </button>
         </section>
 
-        <Table
-          columns={deploymentColumns}
-          data={paginatedDeployments}
-          onRowClick={item => {
-            setSelectedDeployment(item);
-            Object.entries(item).forEach(([name, value]) => setValue(name, value._id ? value._id : value)); // eslint-disable-line
-            setSelectedProject({
-              value : item.project._id, // eslint-disable-line
-              name  : item.project.name
-            });
+        <div className="">
+          <Table
+            columns={deploymentColumns}
+            data={paginatedDeployments}
+            onRowClick={item => {
+              setSelectedDeployment(item);
+              Object.entries(item).forEach(([name, value]) => setValue(name, value._id ? value._id : value)); // eslint-disable-line
+              setSelectedProject({
+                value : item.project._id, // eslint-disable-line
+                name  : item.project.name
+              });
 
-            displayCreateModal(true);
-          }}
-        />
+              displayCreateModal(true);
+            }}
+          />
 
+
+        </div>
 
         <div className="w-full">
           <Pagination

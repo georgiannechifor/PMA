@@ -57,7 +57,7 @@ const KnowledgeSharing = ({
 
 
   return (
-    <div className="w-10/12 mx-auto">
+    <div className="w-11/12 mx-auto mt-5">
       <h1 className="text-3xl my-5">Knowledge Sharing </h1>
 
       <div className="w-full flex justify-between items-center gap-x-5 mb-5">

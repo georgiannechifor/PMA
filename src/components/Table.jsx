@@ -7,7 +7,8 @@ const Table = ({
   data,
   columns,
   onRowClick,
-  isDisabled
+  isDisabled,
+  conditionForBold
 }) => {
   const getRowColumnValue = (rowItem, key) => {
     const keys = key.split('.');
@@ -22,67 +23,91 @@ const Table = ({
   };
 
   return (
-    <div className="min-h-440">
-      <table className="w-5/6 mx-auto table-auto shadow">
-        <thead>
-          <tr className="bg-gradient-to-r from-indigo-600 to-purple-600">
-            {
-              map(columns, column => (
-                <th className="px-16 py-2 text-left" key={column.key}>
-                  <span className="text-gray-100 font-medium"> { column.title } </span>
-                </th>
-              ))
-            }
-          </tr>
-        </thead>
-        <tbody className="bg-gray-200">
-          {
-            data &&
-            data.length &&
-            map(data, item => (
-              <tr
-                className={classnames(
-                  'bg-white cursor-pointer hover:bg-gray-50',
-                  {'pointer-events-none bg-gray-100 text-gray-400' : isDisabled(item)}
-                )}
-                key={item._id} // eslint-disable-line no-underscore-dangle
-                onClick={() => onRowClick(item)}
-              >
-                {
-                  map(columns, rowColumn => (
-                    // eslint-disable-next-line no-underscore-dangle
-                    <td className="px-16 py-2 text-left truncate max-w-sm" key={`${item._id}-${rowColumn.key}`}>
-                      <span>{ rowColumn.isDate ? moment(getRowColumnValue(item, rowColumn.key))
-                        .format(rowColumn.options) : getRowColumnValue(item, rowColumn.key) ||
-                          <span className="italic"> No value </span>}
-                      </span>
-                    </td>
-                  ))
-                }
-              </tr>
-            )) || (
-              <tr className="bg-white cursor-pointer hover:bg-gray-50 col-span-auto">
-                <td className="text-center text-gray-400 italic" colSpan={columns.length}> <p> No items to be displayed </p> </td>
-              </tr>
-            )
-          }
-        </tbody>
+    <div className="flex flex-col">
+      <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="inline-block py-2 min-w-full sm:px-6 lg:px-8">
+          <div className="overflow-hidden shadow-md sm:rounded-lg">
+            <table className="min-w-full">
+              <thead className="bg-gray-200">
+                <tr>
+                  {
+                    map(columns, column => (
+                      <th
+                        className="py-3 px-6 text-xs tracking-wider text-left uppercase text-gray-600"
+                        key={column.key}
+                        scope="col"
+                      >
+                        <span> { column.title } </span>
+                      </th>
+                    ))
+                  }
+                  <th className="relative py-3 px-6" scope="col">
+                    <span className="sr-only">Edit</span>
+                  </th>
+                </tr>
+              </thead>
 
-      </table>
+              <tbody>
+                {
+                  data &&
+                  data.length &&
+                  map(data, item => (
+                    <tr
+                      className={classnames(
+                        'bg-white border-b  hover:bg-gray-50',
+                        {'pointer-events-none bg-gray-100 text-gray-400' : isDisabled(item)}
+                      )}
+                      key={item._id} // eslint-disable-line no-underscore-dangle
+                    >
+                      {
+                        map(columns, (rowColumn, index) => (
+
+                          <td
+                            className={
+                              classnames('py-4 px-6 text-sm font-medium text-gray-400 whitespace-nowrap', {
+                                'text-gray-900' : conditionForBold(index)
+                              })
+                              // eslint-disable-next-line no-underscore-dangle
+                            } key={`${item._id}-${rowColumn.key}`}
+                          >
+                            <span>{ rowColumn.isDate ? moment(getRowColumnValue(item, rowColumn.key))
+                              .format(rowColumn.options) : getRowColumnValue(item, rowColumn.key) ||
+                                <span className="italic"> No value </span>}
+                            </span>
+                          </td>
+                        ))
+                      }
+                      <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
+                        <a className="text-blue-600 hover:underline" href="#" onClick={() => onRowClick(item)}>Edit</a>
+                      </td>
+                    </tr>
+                  )) || (
+                    <tr className="bg-white cursor-pointer hover:bg-gray-50 col-span-auto">
+                      <td className="text-center text-gray-400 italic" colSpan={columns.length}> <p> No items to be displayed </p> </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 Table.displayName = 'Table';
 Table.propTypes = {
-  onRowClick : func.isRequired,
-  data       : array.isRequired,
-  columns    : array.isRequired,
-  isDisabled : func
+  onRowClick       : func.isRequired,
+  data             : array.isRequired,
+  columns          : array.isRequired,
+  isDisabled       : func,
+  conditionForBold : func
 };
 
 Table.defaultProps = {
-  isDisabled : () => false
+  isDisabled       : () => false,
+  conditionForBold : index => parseInt(index, 10) === 0
 };
 
 export default Table;
