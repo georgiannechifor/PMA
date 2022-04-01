@@ -33,7 +33,7 @@ module.exports = {
         '50vh' : '50vh'
       },
       minHeight : {
-        440 : '440px'
+        440 : '570px'
       },
       fontSize : {
         tiny : '10px'

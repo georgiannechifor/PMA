@@ -99,8 +99,8 @@ const DeployTracker = ({
   };
 
   return (
-    <Loader isLoading={loading} >
-      <div className="w-11/12 mx-auto mt-5">
+    <Loader isLoading={loading}>
+      <div className="w-11/12 mx-auto mt-5 h-full flex flex-col">
         <section className="flex items-center justify-between">
           <h1 className="text-3xl py-4"> Deployment Tracker </h1>
           <button
