@@ -1,7 +1,6 @@
 import {dbConnect} from 'utils/dbConnect';
 import Deployment from 'models/deployment';
 import User from 'models/user';
-import Project from 'models/project';
 import {authenticated} from 'service/index';
 
 import {

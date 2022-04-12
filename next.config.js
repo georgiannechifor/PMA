@@ -1,7 +1,10 @@
 /* eslint-disable max-len */
 module.exports = {
   reactStrictMode : true,
-
+  images          : {
+    loader : 'akamai',
+    path   : ''
+  },
   env : {
     ORIGIN_URL : process.env.ORIGIN_URL
   },
