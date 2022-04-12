@@ -42,8 +42,8 @@ const Pagination = ({onPageChange, totalCount, currentPage, pageSize, siblingCou
 
         return (
           <div
-            className={classNames('select-none cursor-pointer hover:bg-gray-300 w-7 h-7 flex items-center justify-center bg-gray-200 rounded-full mx-2', {
-              'bg-gray-600 text-white' : currentPage === index
+            className={classNames('text-white select-none cursor-pointer hover:bg-indigo-500 w-7 h-7 flex items-center justify-center bg-indigo-400 rounded-full mx-2', {
+              'bg-indigo-700' : currentPage === index
             })}
             key={index.toString()}
             onClick={() => onPageChange(index)}

@@ -31,7 +31,8 @@ import {
   eventsColumns,
   projectsColumns,
   teamsColumns,
-  userColumns
+  userColumns,
+  deploymentColumns
 } from './columns';
 
 export * from './postCategory';
@@ -63,7 +64,8 @@ export {
   eventsColumns,
   projectsColumns,
   teamsColumns,
-  userColumns
+  userColumns,
+  deploymentColumns
 };
 
 export {

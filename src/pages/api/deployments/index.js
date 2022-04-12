@@ -1,6 +1,7 @@
 import {dbConnect} from 'utils/dbConnect';
+import Deployment from 'models/deployment';
+import User from 'models/user';
 import Project from 'models/project';
-import Team from 'models/team';
 import {authenticated} from 'service/index';
 
 import {
@@ -12,45 +13,54 @@ import {
 
 dbConnect();
 
-const projectsHandler = authenticated(async (req, res) => {
+const deploymentsHandler = authenticated(async (req, res) => {
   const {method} = req;
 
   switch (method) {
     case 'GET': {
       try {
-        await Team.find({});
-        const projects = await Project.find({}).populate('team');
+        const deployments = await Deployment.find({})
+          .populate('author', 'firstName lastName')
+          .populate('project', 'name');
 
         return res.status(STATUS_OK).json({
-          data : projects
+          data : deployments
         });
       } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message : error.message
+          error : {
+            message : error.message
+          }
         });
       }
     }
     case 'POST': {
       try {
-        const project = await Project.create({
-          ...req.body
+        const user = await User.findById(req.userIDFromToken);
+        const deployment = await Deployment.create({
+          ...req.body,
+          author: user._id, // eslint-disable-line
         });
 
         return res.status(STATUS_CREATED).json({
-          data : project
+          data : deployment
         });
       } catch (error) {
         return res.status(STATUS_BAD_REQUEST).json({
-          error : error.message
+          error : {
+            message : error.message
+          }
         });
       }
     }
     default: {
       return res.status(STATUS_METHOD_NOT_ALLOWED).json({
-        error : 'Method not allowed'
+        error : {
+          message : 'Method not allowed'
+        }
       });
     }
   }
 });
 
-export default projectsHandler;
+export default deploymentsHandler;

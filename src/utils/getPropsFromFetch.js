@@ -24,7 +24,6 @@ export async function getPropsFromFetch (url, ctx) {
 
     return {};
   }
-
   const data = await response.json();
 
   return data || [];

@@ -110,20 +110,15 @@ const AdminUsers = ({
 
   return (
     <Loader isLoading={loading}>
-      <div className="w-full flex flex-col">
-        <section className="w-5/6 mx-auto flex items-center justify-between">
+      <div className="w-11/12 mx-auto flex flex-col">
+        <section className="flex items-center justify-between">
           <h1 className="text-xl font-medium py-4"> Company Users </h1>
-          <button
-            className="px-5 py-2 bg-gray-500 rounded text-white font-medium text-md cursor-not-allowed"
-            disabled
-            title="Feature in next versions"
-          > Create User
-          </button>
         </section>
 
         <div className="flex-1">
           <Table
             columns={userColumns}
+            conditionForBold={index => parseInt(index, 10) === 0 || parseInt(index, 10) === 1}
             data={paginatedUsers}
             isDisabled={item => item.jobTitle === 'superadmin'}
             onRowClick={item => {
