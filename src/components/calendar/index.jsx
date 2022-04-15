@@ -50,7 +50,6 @@ const Calendar = ({
       </div>
       <span
         className="select-none text-lg font-medium text-gray-600 md:text-xl"
-        key={moment(currentMonth).format(HEADER_DATE_FORMAT)}
       >
         { moment(currentMonth).format(HEADER_DATE_FORMAT) }</span>
       <div
@@ -64,6 +63,7 @@ const Calendar = ({
     </div>
   );
 
+  // Days of the week: MON, TUE, WED etc
   const renderDaysSection = () => {
     let startDate = moment(currentMonth).startOf('week');
     const days = [];
@@ -74,7 +74,10 @@ const Calendar = ({
         .format(DAYS_DATE_FORMAT);
 
       days.push(
-        <div className="uppercase text-left text-sm text-black font-medium select-none table-cell" key={`${temp}-${index}`}>
+        <div
+          className="uppercase text-left text-sm text-black font-medium select-none table-cell"
+          key={temp.toString()}
+        >
           { temp }
         </div>
       );
@@ -102,89 +105,89 @@ const Calendar = ({
 
       {
         getEventsForDay.length > 0 &&
-        <div className="w-full flex flex-col px-1">
-          {
-            map(getEventsForDay(day).slice(0, 2), item => (
-              <span
-                className={
-                  `${item.backgroundColor || 'gray'} transition px-1 py-0.5 my-0.5 rounded
+          <div className="w-full flex flex-col px-1">
+            {
+              map(getEventsForDay(day).slice(0, 2), item => (
+                <span
+                  className={
+                    `${item.backgroundColor || 'gray'} transition px-1 py-0.5 my-0.5 rounded
                    w-full bg-opacity-90 hover:bg-opacity-100
                    cursor-pointer text-white text-xs truncate
                    md:text-sm md:bg-opacity-40`}
-                key={item._id} // eslint-disable-line no-underscore-dangle
-                onClick={() => {
-                  setOtherEventsDetails({...otherEventsDetails,
-                    visible : false});
-                  setEventDetails({
-                    visible : true,
-                    item    : day.format('DD/MM/YYYY'),
-                    details : item
-                  });
-                }}
+                  key={item._id} // eslint-disable-line no-underscore-dangle
+                  onClick={() => {
+                    setOtherEventsDetails({...otherEventsDetails,
+                      visible : false});
+                    setEventDetails({
+                      visible : true,
+                      item    : day.format('DD/MM/YYYY'),
+                      details : item
+                    });
+                  }}
 
-              >
-                { item.title }
-              </span>
-            ))
-          }
-          {
-            getEventsForDay(day).length > 2 && (
-              <span
-                className="text-tiny text-gray-500 font-medium w-full hover:bg-gray-100 transition cursor-pointer md:py-1 md:px-1 md:text-sm"
-                onClick={() => {
-                  setEventDetails({...eventDetails,
-                    visible : false});
-                  setOtherEventsDetails({
-                    visible : true,
-                    item    : day.format('DD/MM/YYYY'),
-                    details : getEventsForDay(day)
-                  });
-                }}
-              >
-                Other { getEventsForDay(day).length - 2 }
-              </span>
-            )
-          }
+                >
+                  { item.title }
+                </span>
+              ))
+            }
+            {
+              getEventsForDay(day).length > 2 && (
+                <span
+                  className="text-tiny text-gray-500 font-medium w-full hover:bg-gray-100 transition cursor-pointer md:py-1 md:px-1 md:text-sm"
+                  onClick={() => {
+                    setEventDetails({...eventDetails,
+                      visible : false});
+                    setOtherEventsDetails({
+                      visible : true,
+                      item    : day.format('DD/MM/YYYY'),
+                      details : getEventsForDay(day)
+                    });
+                  }}
+                >
+                  Other { getEventsForDay(day).length - 2 }
+                </span>
+              )
+            }
 
-          <Transition
-            enter="transition-opacity duration-200"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            show={
-              eventDetails?.visible &&
+            <Transition
+              enter="transition-opacity duration-200"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+              show={
+                eventDetails?.visible &&
               eventDetails?.item === day.format('DD/MM/YYYY')
-            }
-          >
-            <EventDetails
-              eventDetails={eventDetails}
-              selectedDay={day}
-              setEventDetails={setEventDetails}
-            />
-          </Transition>
+              }
+            >
+              <EventDetails
+                eventDetails={eventDetails}
+                selectedDay={day}
+                setEventDetails={setEventDetails}
+              />
+            </Transition>
 
-          <Transition
-            enter="transition-opacity duration-200"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            show={
-              otherEventsDetails?.visible &&
+            <Transition
+              enter="transition-opacity duration-200"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+              show={
+                otherEventsDetails?.visible &&
               otherEventsDetails?.item === day.format('DD/MM/YYYY')
-            }
-          >
-            <OtherEvents
-              eventDetails={otherEventsDetails}
-              selectedDay={day}
-              setEventDetails={setOtherEventsDetails}
-            />
-          </Transition>
+              }
+            >
+              <OtherEvents
+                eventDetails={otherEventsDetails}
+                selectedDay={day}
+                setEventDetails={setOtherEventsDetails}
+              />
+            </Transition>
 
-        </div>
+          </div>
       }
     </div>
   );
@@ -206,8 +209,12 @@ const Calendar = ({
         day = moment(day).add(1, 'days');
         days.push(getDayContainer(day, monthStart));
       }
+
       const row = (
-        <div className="table-row w-full select-none align-top" key={day.format('DD/MM/yyyy')}>
+        <div
+          className="table-row w-full select-none align-top"
+          key={`${day.week()}-${day.year()}`}
+        >
           {days}
         </div>
       );
@@ -226,7 +233,10 @@ const Calendar = ({
       days.push(getDayContainer(day, monthStart));
     }
     const row = (
-      <div className="table-row w-full select-none align-top">
+      <div
+        className="table-row w-full select-none align-top"
+        key={`${day.week()}-${day.year()}`}
+      >
         {days}
       </div>
     );
@@ -249,9 +259,6 @@ const Calendar = ({
         </div>
 
         { renderCellsForDays() }
-
-        <div className="table-row table-fixed md:h-full relative" />
-
       </div>
     </div>
   );

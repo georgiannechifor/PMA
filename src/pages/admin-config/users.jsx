@@ -121,6 +121,10 @@ const AdminUsers = ({
             conditionForBold={index => parseInt(index, 10) === 0 || parseInt(index, 10) === 1}
             data={paginatedUsers}
             isDisabled={item => item.jobTitle === 'superadmin'}
+            onDeleteItem={item => {
+              setSelectedUser(item);
+              setRemoveUserConfirmationModal(true);
+            }}
             onRowClick={item => {
               setSelectedUser(item);
               setIsEditUserModalOpen(true);
@@ -133,13 +137,6 @@ const AdminUsers = ({
           isModalOpen={isEditUserModalOpen}
           modalActions={(
             <div className="flex w-full items-center justify-end gap-2">
-              <button
-                className="pl-2 py-2 font-medium text-sm text-red-400 mr-auto hover:underline transition"
-                onClick={() => {
-                  setIsEditUserModalOpen(false);
-                  setRemoveUserConfirmationModal(true);
-                }}
-              > Delete </button>
               <button
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
                 onClick={() => setIsEditUserModalOpen(false)}
@@ -244,7 +241,6 @@ const AdminUsers = ({
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
                 onClick={() => {
                   setRemoveUserConfirmationModal(false);
-                  setIsEditUserModalOpen(true);
                 }}
               > Cancel </button>
               <button

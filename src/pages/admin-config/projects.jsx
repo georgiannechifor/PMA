@@ -111,6 +111,10 @@ const AdminProjects = ({
           columns={projectsColumns}
           data={paginatedProjects}
           isDisabled={item => item.jobTitle === 'superadmin'}
+          onDeleteItem={item => {
+            setSelectedProject(item);
+            setIsRemovingModalOpen(true);
+          }}
           onRowClick={row => {
             setSelectedProject(row);
             Object.entries(row).forEach(([name, value]) => setValue(name, value));
@@ -129,15 +133,6 @@ const AdminProjects = ({
           isModalOpen={isCreateProjectModalOpen}
           modalActions={(
             <div className="flex w-full items-center justify-end gap-2">
-              <button
-                className="pl-2 py-2 font-medium text-sm text-red-400 mr-auto hover:underline transition"
-                onClick={() => {
-                  setIsRemovingModalOpen(true);
-                  setIsCreateProjectModalOpen(false);
-                }}
-              >
-                Delete
-              </button>
               <button
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
                 onClick={() => setIsCreateProjectModalOpen(false)}
@@ -230,7 +225,6 @@ const AdminProjects = ({
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
                 onClick={() => {
                   setIsRemovingModalOpen(false);
-                  setIsCreateProjectModalOpen(true);
                 }}
               >
                 Cancel

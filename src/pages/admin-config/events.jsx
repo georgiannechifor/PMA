@@ -135,16 +135,20 @@ const AdminEvents = ({initialEvents, users}) => {
         <Table
           columns={eventsColumns}
           data={sortBy(paginatedEvents, item => item.date)}
+          onDeleteItem={item => {
+            setSelectedEvent(item);
+            setRemoveEventConfirmationModal(true);
+          }}
           onRowClick={item => {
             setSelectedColor(item.backgroundColor);
             setSelectedEvent(item);
             setEventModalOpen(true);
             Object.entries(item).forEach(([name, value]) => setValue(name, value));
             setValue('date', moment(item.date, 'YYYY-MM-DD').format('YYYY-MM-DD'));
-            setValue('author', item.author.firstName + ' ' + item.author.lastName);
+            setValue('author', item.author?.firstName + ' ' + item.author?.lastName);
             setSelectedAssignee({
-              value: item.assignee._id, // eslint-disable-line
-              name  : item.assignee.firstName + ' ' + item.assignee.lastName
+              value: item.assignee?._id, // eslint-disable-line
+              name  : item.assignee?.firstName + ' ' + item.assignee?.lastName
             });
             setStartTime({
               name  : item.startTime,
@@ -161,15 +165,6 @@ const AdminEvents = ({initialEvents, users}) => {
           isModalOpen={eventModalOpen}
           modalActions={
             <div className="flex w-full items-center justify-end gap-2">
-              <button
-                className="pl-2 py-2 font-medium text-sm text-red-400 mr-auto hover:underline transition"
-                onClick={() => {
-                  setEventModalOpen(false);
-                  setRemoveEventConfirmationModal(true);
-                }}
-              >
-                Delete
-              </button>
               <button className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition" onClick={() => setEventModalOpen(false)}>
                 Cancel
               </button>
@@ -290,7 +285,6 @@ const AdminEvents = ({initialEvents, users}) => {
                 className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
                 onClick={() => {
                   setRemoveEventConfirmationModal(false);
-                  setEventModalOpen(true);
                 }}
               >
                 Cancel

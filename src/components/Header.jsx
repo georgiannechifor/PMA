@@ -9,6 +9,7 @@ import * as cx from 'classnames';
 import useLocalStorage from 'utils/useLocalStorage';
 import {LOCAL_STORAGE_USER_KEY, USER_ROLES, PRIVATE_PATHS} from 'constants/index';
 import {useFetch} from 'utils/useFetch';
+import logo from 'public/images/logo.png';
 
 import {Modal} from './';
 
@@ -34,7 +35,7 @@ const Header = ({
     }
     >
       <div className="relative justify-self-start mr-auto w-28 h-20 cursor-pointer hidden sm:block" onClick={() => router.push('/')}>
-        <Image alt="ProjectManagementAppLogo" layout="fill" src={'/images/logo.png'} />
+        <Image alt="ProjectManagementAppLogo" layout="fill" src="../images/logo.png" />
       </div>
       <div className="flex gap-x-5">
         {
@@ -65,9 +66,9 @@ const Header = ({
                 > Deploy Tracker
                 </a>
               </Link>
-              { getIsAdmin() && <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
+              { getIsAdmin() ? <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
                 <a className="text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base"> Admin </a>
-              </Link>
+              </Link> : null
               }
             </div>
           )

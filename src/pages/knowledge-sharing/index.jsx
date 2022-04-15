@@ -46,10 +46,10 @@ const KnowledgeSharing = ({
 
     if (selectedCategory.value && selectedCategory.value !== '') {
       filtered = filter(posts, item => item.category === selectedCategory.value);
-      if (selectedAuthor.value && selectedAuthor.value !== 0) {
-        // eslint-disable-next-line no-underscore-dangle
-        filtered = filter(filtered, item => item.author._id === selectedAuthor.value);
-      }
+    }
+    if (selectedAuthor.value && selectedAuthor.value !== 0) {
+      // eslint-disable-next-line no-underscore-dangle
+      filtered = filter(filtered, item => item.author._id === selectedAuthor.value);
     }
     setFilteredPosts(filtered);
     // eslint-disable-next-line react-hooks/exhaustive-deps
