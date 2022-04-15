@@ -6,7 +6,8 @@ import 'react-quill/dist/quill.bubble.css';
 
 import {useFetch} from 'utils/useFetch';
 import {Loader, PostMenu, Modal} from 'components';
-import {PRIVATE_PATHS, USER_ROLES, LOCAL_STORAGE_USER_KEY} from 'constants';
+import {PRIVATE_PATHS, LOCAL_STORAGE_USER_KEY} from 'constants';
+import {USER_ROLES} from 'constants/userRoles';
 import useLocalStorage from 'utils/useLocalStorage';
 
 const ReactQuill = dynamic(() => import('react-quill'), {ssr : false});
