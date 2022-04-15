@@ -108,7 +108,14 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
           <h1 className="text-xl font-medium py-4"> Company Teams </h1>
           <button
             className="px-5 py-2 bg-indigo-600 rounded text-white font-medium text-md hover:bg-indigo-700 transition"
-            onClick={() => setCreateTeamModalOpen(true)}
+            onClick={() => {
+              reset({
+                teamName : null,
+                admin    : null
+              });
+              setSelectedTeamAdmin({});
+              setCreateTeamModalOpen(true);
+            }}
           >
             Create Team
           </button>
