@@ -41,8 +41,6 @@ const KnowledgeSharing = ({
     setFilteredPosts(posts);
   }, [posts]);
 
-  console.log(isValidating);
-
   useEffect(() => {
     let filtered = posts;
 

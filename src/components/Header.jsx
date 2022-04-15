@@ -9,7 +9,6 @@ import * as cx from 'classnames';
 import useLocalStorage from 'utils/useLocalStorage';
 import {LOCAL_STORAGE_USER_KEY, USER_ROLES, PRIVATE_PATHS} from 'constants/index';
 import {useFetch} from 'utils/useFetch';
-import logo from 'public/images/logo.png';
 
 import {Modal} from './';
 
