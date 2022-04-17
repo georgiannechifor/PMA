@@ -14,7 +14,21 @@ import moment from 'moment';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
 import {Modal, Select, Table, Loader, Pagination} from 'components'; // eslint-disable-line no-unused-vars
 import {getTimes} from 'utils/dateTimePickerItems';
-import {eventsColumns, colors, PAGE_SIZE} from 'constants/index';
+import {eventsColumns, PAGE_SIZE} from 'constants/index';
+
+const colors = [
+  'bg-gray-400',
+  'bg-blue-400',
+  'bg-red-400',
+  'bg-green-400',
+  'bg-purple-400',
+  'bg-orange-400',
+  'bg-lime-400',
+  'bg-cyan-400',
+  'bg-violet-400',
+  'bg-pink-400'
+];
+
 
 // eslint-disable-next-line complexity, max-statements
 const AdminEvents = ({initialEvents, users}) => {
@@ -262,7 +276,7 @@ const AdminEvents = ({initialEvents, users}) => {
                 <div className="flex items-center justify-between mx-5">
                   {colors.map(color => (
                     <div
-                      className={classnames(`rounded cursor-pointer hover:opacity-70 transition ${color} w-5 h-5`, {
+                      className={classnames(`${color} rounded cursor-pointer hover:opacity-70 transition w-5 h-5`, {
                         'opacity-70 border border-2 border-gray-600' : selectedColor === color || color.includes(selectedColor)
                       })}
                       key={color}

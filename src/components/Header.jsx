@@ -37,41 +37,41 @@ const Header = ({
         <Image alt="ProjectManagementAppLogo" layout="fill" src="../images/logo.png" />
       </div>
       <div className="flex gap-x-5">
-        {
-          router.asPath.includes('/admin-config') ? null : (
-            <div>
-              <Link href={PRIVATE_PATHS.HOME_PAGE}>
-                <a
-                  className={cx(
-                    'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-black font-bold' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
-                  )}
-                > Home </a>
-              </Link>
-              <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
-                <a
-                  className={cx(
-                    'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-black font-bold' : router.asPath.includes(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
-                  )}
-                > Knowledge sharing  </a>
-              </Link>
-              <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
-                <a
-                  className={cx(
-                    'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                    {'text-black font-bold' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
-                  )}
-                > Deploy Tracker
-                </a>
-              </Link>
-              { getIsAdmin() ? <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
-                <a className="text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base"> Admin </a>
-              </Link> : null
-              }
-            </div>
-          )
-        }
+        <div>
+          <Link href={PRIVATE_PATHS.HOME_PAGE}>
+            <a
+              className={cx(
+                'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
+                {'text-black font-bold' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
+              )}
+            > Home </a>
+          </Link>
+          <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
+            <a
+              className={cx(
+                'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
+                {'text-black font-bold' : router.asPath.includes(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
+              )}
+            > Knowledge sharing  </a>
+          </Link>
+          <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
+            <a
+              className={cx(
+                'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
+                {'text-black font-bold' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
+              )}
+            > Deploy Tracker
+            </a>
+          </Link>
+          { getIsAdmin() ? <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
+            <a className={cx(
+              'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
+              {'text-black font-bold' : router.asPath.includes(PRIVATE_PATHS.ADMIN_CONFIG)}
+            )}
+            > Admin </a>
+          </Link> : null
+          }
+        </div>
 
         <LogoutIcon
           className="w-7 self-center cursor-pointer text-gray-800 hover:text-gray-600 sm:w-6 md:w-5"
