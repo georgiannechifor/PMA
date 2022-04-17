@@ -6,14 +6,16 @@ import 'react-quill/dist/quill.bubble.css';
 
 import {useFetch} from 'utils/useFetch';
 import {Loader, PostMenu, Modal} from 'components';
-import {PRIVATE_PATHS} from 'constants/routes';
-
+import {PRIVATE_PATHS, LOCAL_STORAGE_USER_KEY} from 'constants';
+import {USER_ROLES} from 'constants/userRoles';
+import useLocalStorage from 'utils/useLocalStorage';
 
 const ReactQuill = dynamic(() => import('react-quill'), {ssr : false});
 
 const Post = () => {
   const [activeMenuItem, setActiveMenuItem] = useState({});
   const [deleteModal, displayDeleteModal] = useState(false);
+  const [storedValue] = useLocalStorage(LOCAL_STORAGE_USER_KEY);
 
   const router = useRouter();
   const {
@@ -53,6 +55,23 @@ const Post = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error]);
 
+  const hasUserPrivileges = () => {
+    if (storedValue) {
+      if (
+        storedValue.jobTitle === USER_ROLES.ADMIN ||
+        storedValue.jobTitle === USER_ROLES.SUPER_ADMIN) {
+        return true;
+      }
+      if (storedValue._id === data?.author._id) { // eslint-disable-line no-underscore-dangle
+        return true;
+      }
+
+      return false;
+    }
+
+    return false;
+  };
+
   return (
     <Loader isLoading={loading}>
       <div className="relative w-11/12 mx-auto my-10 bg-white rounded-lg shadow-md">
@@ -76,14 +95,16 @@ const Post = () => {
             > {data?.title} </h1>
           </div>
         </div>
-        <div
-          className={classnames(`
+        {hasUserPrivileges() &&
+          <div
+            className={classnames(`
             absolute top-5 left-5 w-10 h-10 flex bg-white rounded-full
             items-center justify-center cursor-pointer
             opacity-70 hover:opacity-100 transition`)}
-        >
-          <PostMenu setActiveItem={setActiveMenuItem} />
-        </div>
+          >
+            <PostMenu setActiveItem={setActiveMenuItem} />
+          </div>
+        }
 
         <div className="mx-auto w-full text-center -mt-2 text-gray-400 italic">
           <p className="font-medium not-italic text-lg"> { data?.category} </p>
@@ -111,7 +132,10 @@ const Post = () => {
               <button
                 className="px-8 py-2 text-sm font-medium bg-gray-100 rounded-lg focus:border-none
                  focus:outline-none hover:text-gray-400 transition"
-                onClick={() => displayDeleteModal(false)}
+                onClick={() => {
+                  setActiveMenuItem('');
+                  displayDeleteModal(false);
+                }}
               > Cancel </button>
               <button
                 className="px-8 py-2 text-sm text-white font-medium bg-red-500

@@ -14,7 +14,7 @@ import {useFetch} from 'utils/useFetch';
 import useSWR, {useSWRConfig} from 'swr';
 import {teamsColumns, PAGE_SIZE} from 'constants/index';
 
-// eslint-disable-next-line complexity
+// eslint-disable-next-line complexity, max-statements
 const AdminTeams = ({defaultTeams, defaultUsers}) => {
   const {data: teams} = useSWR('/teams', {
     initialData : defaultTeams
@@ -31,6 +31,7 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
   const validationOptions = {resolver : yupResolver(formSchema)};
 
   const [createTeamModalOpen, setCreateTeamModalOpen] = useState(false);
+  const [isRemovingModalOpen, setIsRemovingModalOpen] = useState(false);
   const [editTeamModalOpen, setEditTeamModalOpen] = useState(false);
   const [editTeamItem, setEditTeamItem] = useState({});
   const [selectedTeamAdmin, setSelectedTeamAdmin] = useState({});
@@ -79,6 +80,13 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
     }
   };
 
+  const removeTeam = () => {
+    fetchData({
+      entityId : editTeamItem._id, // eslint-disable-line no-underscore-dangle
+      method   : 'DELETE'
+    });
+  };
+
   useEffect(() => {
     if (data && data.name) {
       setCreateTeamModalOpen(false);
@@ -100,7 +108,14 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
           <h1 className="text-xl font-medium py-4"> Company Teams </h1>
           <button
             className="px-5 py-2 bg-indigo-600 rounded text-white font-medium text-md hover:bg-indigo-700 transition"
-            onClick={() => setCreateTeamModalOpen(true)}
+            onClick={() => {
+              reset({
+                teamName : null,
+                admin    : null
+              });
+              setSelectedTeamAdmin({});
+              setCreateTeamModalOpen(true);
+            }}
           >
             Create Team
           </button>
@@ -113,14 +128,18 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
               ...item,
               admin : {
                 ...item.admin,
-                fullName : item.admin.firstName + ' ' + item.admin.lastName
+                fullName : item.admin?.firstName + ' ' + item.admin?.lastName
               }
             }))}
+            onDeleteItem={item => {
+              setEditTeamItem(item);
+              setIsRemovingModalOpen(true);
+            }}
             onRowClick={item => {
               setEditTeamItem(item);
               setSelectedTeamAdmin({
-                name  : item.admin.fullName,
-                value : item.admin._id // eslint-disable-line no-underscore-dangle
+                name  : item.admin?.fullName,
+                value : item.admin?._id // eslint-disable-line no-underscore-dangle
               });
               // eslint-disable-next-line no-underscore-dangle
               setValue('admin', item.admin._id);
@@ -188,6 +207,28 @@ const AdminTeams = ({defaultTeams, defaultUsers}) => {
           }
           modalTitle="Create Team"
           setIsModalOpen={setCreateTeamModalOpen}
+        />
+
+        <Modal
+          isModalOpen={isRemovingModalOpen}
+          modalActions={
+            <div className="flex w-full items-center justify-end gap-2">
+              <button
+                className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
+                onClick={() => {
+                  setIsRemovingModalOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button className="px-8 py-2 text-sm text-white font-medium bg-red-500 rounded-lg" onClick={() => removeTeam()}>
+                Remove
+              </button>
+            </div>
+          }
+          modalContent={<p> Are you sure you want to remove {editTeamItem?.name} ?</p>}
+          modalTitle="Remove confirmation"
+          setIsModalOpen={setIsRemovingModalOpen}
         />
 
         <div className="w-full">

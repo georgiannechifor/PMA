@@ -11,7 +11,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import map from 'lodash/map';
 
 import {POST_CATEGORY, PRIVATE_PATHS} from 'constants';
-import {ImageUpload, Select, Loader} from 'components';
+import {ImageUpload, Select, Loader, Modal} from 'components';
 import {useFetch} from 'utils/useFetch';
 
 
@@ -26,6 +26,7 @@ const CreatePost = ({
   const [selectedCategory, setSelectedCategory] = useState({});
   const [contentValue, setContentValue] = useState('');
   const {result: {data, loading, error}, fetchData} = useFetch('posts');
+  const [confirmationModal, setConfirmationModal] = useState(false);
 
   const formSchema = Yup.object().shape({
     title       : Yup.string().required('Title is required'),
@@ -87,6 +88,7 @@ const CreatePost = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, initialValues]);
 
+
   return (
     <Loader isLoading={loading}>
       <div className="w-11/12 mx-auto mt-5">
@@ -146,7 +148,7 @@ const CreatePost = ({
                 setValue('image', image, {shouldValidate : true});
               }} {...register('image')}
             />
-            { errors.image ? <p className="text-xs text-red-500 -mt-2 ml-2"> { errors.image.message} </p> : null}
+            { errors.image ? <p className="text-xs text-red-500 mt-2 ml-2"> { errors.image.message} </p> : null}
           </div>
 
           <div className={
@@ -157,10 +159,15 @@ const CreatePost = ({
           >
             <ReactQuill
               onChange={value => {
-                setContentValue(value);
-                setValue('content', value, {
-                  shouldValidate : true
-                });
+                if (value.replace(/<(.|\n)*?>/g, '').trim().length === 0) {
+                  setContentValue(null);
+                  setValue('content', '', {shouldValidate : true});
+                } else {
+                  setContentValue(value);
+                  setValue('content', value, {
+                    shouldValidate : true
+                  });
+                }
               }}
               theme="snow"
               value={contentValue}
@@ -171,10 +178,36 @@ const CreatePost = ({
 
           { error ? <p className="text-sm font-medium text-red-500 -mt-2"> Request error: { error } </p> : null}
           <div className="flex justify-end w-full gap-x-5 mb-10">
-            <button className="bg-red-400 rounded text-white py-2 px-12"> Discard </button>
+            <button className="bg-red-400 rounded text-white py-2 px-12" onClick={() => setConfirmationModal(true)}> Discard </button>
             <button className="bg-blue-400 rounded text-white py-2 px-12" onClick={handleSubmit(onSubmit)}> Submit </button>
           </div>
         </div>
+
+        <Modal
+          isModalOpen={confirmationModal}
+          modalActions={
+            <div className="flex w-full items-center justify-end gap-2">
+              <button
+                className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
+                onClick={() => {
+                  setConfirmationModal(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-8 py-2 text-sm text-white font-medium bg-green-500 rounded-lg" onClick={() => {
+                  setConfirmationModal(false);
+                  router.back();
+                }}
+              >
+                Discard
+              </button>
+            </div>
+          }
+          modalContent={<p> You are about to discard your changes. Are you sure? </p>}
+          modalTitle="Discard confirmation"
+        />
       </div>
     </Loader>
   );

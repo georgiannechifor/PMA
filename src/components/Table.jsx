@@ -7,6 +7,7 @@ const Table = ({
   data,
   columns,
   onRowClick,
+  onDeleteItem,
   isDisabled,
   conditionForBold
 }) => {
@@ -41,8 +42,8 @@ const Table = ({
                       </th>
                     ))
                   }
-                  <th className="relative py-3 px-6" scope="col">
-                    <span className="sr-only">Edit</span>
+                  <th className="py-3 px-6 text-xs tracking-wider text-center uppercase text-gray-400 relative" colSpan={2} scope="col">
+                    <span className="">Actions</span>
                   </th>
                 </tr>
               </thead>
@@ -77,8 +78,11 @@ const Table = ({
                           </td>
                         ))
                       }
-                      <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
+                      <td className="py-4 text-sm font-medium text-right whitespace-nowrap">
                         <a className="text-indigo-600 hover:text-indigo-400 transition" href="#" onClick={() => onRowClick(item)}>Edit</a>
+                      </td>
+                      <td className="py-4 pr-8 text-sm font-medium text-right whitespace-nowrap">
+                        <a className="text-red-600 hover:text-red-400 transition" href="#" onClick={() => onDeleteItem(item)}>Delete</a>
                       </td>
                     </tr>
                   )) || (
@@ -99,6 +103,7 @@ const Table = ({
 Table.displayName = 'Table';
 Table.propTypes = {
   onRowClick       : func.isRequired,
+  onDeleteItem     : func.isRequired,
   data             : array.isRequired,
   columns          : array.isRequired,
   isDisabled       : func,
