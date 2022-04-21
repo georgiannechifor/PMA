@@ -44,18 +44,18 @@ const EventSchema = new mongoose.Schema({
       type : String
     }
   },
-  assignee : {
+  assignee : [{
     type     : mongoose.Schema.Types.ObjectId,
     ref      : 'User',
     required : [function() { // eslint-disable-line
       return this.teamAssigned.length === 0;
     }]
-  },
+  }],
   teamAssigned : [{
     type     : mongoose.Schema.Types.ObjectId,
     ref      : 'Team',
     required : function() {  // eslint-disable-line
-      return typeof this.assignee === 'undefined';
+      return this.assignee.length === 0;
     }
   }]
 });

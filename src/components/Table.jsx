@@ -7,6 +7,7 @@ const Table = ({
   data,
   columns,
   onRowClick,
+  onEdit,
   onDeleteItem,
   isDisabled,
   conditionForBold
@@ -59,6 +60,7 @@ const Table = ({
                         {'pointer-events-none bg-gray-100 text-gray-400' : isDisabled(item)}
                       )}
                       key={item._id} // eslint-disable-line no-underscore-dangle
+                      onClick={() => onRowClick(item)}
                     >
                       {
                         map(columns, (rowColumn, index) => (
@@ -79,7 +81,7 @@ const Table = ({
                         ))
                       }
                       <td className="py-4 text-sm font-medium text-right whitespace-nowrap">
-                        <a className="text-indigo-600 hover:text-indigo-400 transition" href="#" onClick={() => onRowClick(item)}>Edit</a>
+                        <a className="text-indigo-600 hover:text-indigo-400 transition" href="#" onClick={() => onEdit(item)}>Edit</a>
                       </td>
                       <td className="py-4 pr-8 text-sm font-medium text-right whitespace-nowrap">
                         <a className="text-red-600 hover:text-red-400 transition" href="#" onClick={() => onDeleteItem(item)}>Delete</a>
@@ -103,6 +105,7 @@ const Table = ({
 Table.displayName = 'Table';
 Table.propTypes = {
   onRowClick       : func.isRequired,
+  onEdit           : func.isRequired,
   onDeleteItem     : func.isRequired,
   data             : array.isRequired,
   columns          : array.isRequired,

@@ -20,10 +20,6 @@ export const eventsColumns = [
   {
     key   : 'author.firstName',
     title : 'Author'
-  },
-  {
-    key   : 'assignee.firstName',
-    title : 'Assignee'
   }
 ];
 

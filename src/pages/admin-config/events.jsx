@@ -31,22 +31,27 @@ const colors = [
 
 
 // eslint-disable-next-line complexity, max-statements
-const AdminEvents = ({initialEvents, users}) => {
+const AdminEvents = ({initialEvents, users, teams}) => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [selectedEvent, setSelectedEvent] = useState(null); // eslint-disable-line no-unused-vars
-  const [selectedColor, setSelectedColor] = useState(colors[0]);
-  const [startTime, setStartTime] = useState({});
-  const [selectedAssignee, setSelectedAssignee] = useState({});
-  const [endTime, setEndTime] = useState({});
+  const [assignedType, setAssignedType] = useState('');
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedAssignee, setSelectedAssignee] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState([]);
+
   const [eventModalOpen, setEventModalOpen] = useState(false);
   const [removeEventConfirmationModal, setRemoveEventConfirmationModal] = useState(false);
+
   const {mutate} = useSWRConfig();
   const formSchema = Yup.object().shape({
-    title     : Yup.string().required('Title is required'),
-    date      : Yup.string().required('Date is required'),
-    startTime : Yup.string().required('Start time is required'),
-    endTime   : Yup.string().required('End time is required')
+    id              : Yup.string().nullable(),
+    title           : Yup.string().required('Title is required'),
+    date            : Yup.string().required('Date is required'),
+    startTime       : Yup.string().required('Start time is required'),
+    endTime         : Yup.string().required('End time is required'),
+    backgroundColor : Yup.string().default(colors[0]),
+    assignee        : Yup.array().of(Yup.string()),
+    teamAssigned    : Yup.array().of(Yup.string())
   });
   const validationOptions = {resolver : yupResolver(formSchema)};
   const {
@@ -54,6 +59,7 @@ const AdminEvents = ({initialEvents, users}) => {
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: {errors}
   } = useForm(validationOptions);
   const {
@@ -74,16 +80,15 @@ const AdminEvents = ({initialEvents, users}) => {
   }, [currentPage, events]);
 
   const onSubmit = formData => {
-    if (selectedEvent) {
+    if (formData._id) { // eslint-disable-line no-underscore-dangle
       delete formData.author;
       fetchData({
         entityId : formData._id, // eslint-disable-line no-underscore-dangle
         method   : 'PUT',
         data     : {
           ...formData,
-          assignee  : selectedAssignee.value,
-          startTime : startTime.value,
-          endTime   : endTime.value
+          assignee     : map(selectedAssignee, assignee => assignee.value) || [],
+          teamAssigned : map(selectedTeam, team => team.value) || []
         }
       });
     } else {
@@ -91,7 +96,8 @@ const AdminEvents = ({initialEvents, users}) => {
         method : 'POST',
         data   : {
           ...formData,
-          backgroundColor : selectedColor
+          assignee     : map(selectedAssignee, assignee => assignee.value) || [],
+          teamAssigned : map(selectedTeam, team => team.value) || []
         }
       });
     }
@@ -110,10 +116,13 @@ const AdminEvents = ({initialEvents, users}) => {
       setEventModalOpen(false);
       setRemoveEventConfirmationModal(false);
       reset({
-        title     : '',
-        date      : '',
-        startTime : '',
-        endTime   : ''
+        title           : '',
+        date            : '',
+        startTime       : '',
+        endTime         : '',
+        backgroundColor : '',
+        assignee        : [],
+        teamAssigned    : []
       });
 
       mutate('/events');
@@ -130,15 +139,16 @@ const AdminEvents = ({initialEvents, users}) => {
             className="px-5 py-2 bg-indigo-600 rounded text-white font-medium text-md hover:bg-indigo-700 transition"
             onClick={() => {
               setSelectedEvent(null);
-              setSelectedAssignee({});
-              setStartTime({});
-              setEndTime({});
+              setSelectedAssignee(null);
+              setAssignedType('');
               reset({
-                title     : '',
-                date      : '',
-                startTime : '',
-                endTime   : '',
-                assignee  : null
+                title           : '',
+                date            : '',
+                startTime       : '',
+                endTime         : '',
+                backgroundColor : '',
+                teamAssigned    : [],
+                assignee        : []
               });
               setEventModalOpen(true);
             }}
@@ -153,26 +163,24 @@ const AdminEvents = ({initialEvents, users}) => {
             setSelectedEvent(item);
             setRemoveEventConfirmationModal(true);
           }}
-          onRowClick={item => {
-            setSelectedColor(item.backgroundColor);
-            setSelectedEvent(item);
-            setEventModalOpen(true);
-            Object.entries(item).forEach(([name, value]) => setValue(name, value));
+          onEdit={item => {
+            Object.entries(item).forEach(([name, value]) => setValue(name, value, {
+              shouldValidate : true
+            }));
             setValue('date', moment(item.date, 'YYYY-MM-DD').format('YYYY-MM-DD'));
             setValue('author', item.author?.firstName + ' ' + item.author?.lastName);
-            setSelectedAssignee({
-              value: item.assignee?._id, // eslint-disable-line
-              name  : item.assignee?.firstName + ' ' + item.assignee?.lastName
-            });
-            setStartTime({
-              name  : item.startTime,
-              value : item.startTime
-            });
-            setEndTime({
-              name  : item.endTime,
-              value : item.endTime
-            });
+            setSelectedAssignee(map(item.assignee, assignee => ({
+              value: assignee._id, // eslint-disable-line
+              label : assignee.firstName + ' ' + assignee?.lastName
+            })));
+            setSelectedTeam(map(item.teamAssigned, team => ({
+              value : team._id, // eslint-disable-line
+              label : team.name
+            })));
+
+            setEventModalOpen(true);
           }}
+          onRowClick={item => setSelectedEvent(item)}
         />
 
         <Modal
@@ -219,12 +227,14 @@ const AdminEvents = ({initialEvents, users}) => {
                     errorClassname={errors.startTime ? 'border-1 border-red-400' : ''}
                     options={map(getTimes(), time => ({
                       value : time,
-                      name  : time
+                      label : time
                     }))}
                     placeholder="Start Time"
-                    selected={startTime}
+                    selected={watch('startTime') && {
+                      value : watch('startTime'),
+                      label : watch('startTime')
+                    }}
                     setSelected={event => {
-                      setStartTime(event);
                       setValue('startTime', event.value, {
                         shouldValidate : true
                       });
@@ -239,12 +249,14 @@ const AdminEvents = ({initialEvents, users}) => {
                     errorClassname={errors.endTime ? 'border-1 border-red-400' : ''}
                     options={map(getTimes(), time => ({
                       value : time,
-                      name  : time
+                      label : time
                     }))}
                     placeholder="End Time"
-                    selected={endTime}
+                    selected={watch('endTime') && {
+                      value : watch('endTime'),
+                      label : watch('endTime')
+                    }}
                     setSelected={event => {
-                      setEndTime(event);
                       setValue('endTime', event.value, {
                         shouldValidate : true
                       });
@@ -254,33 +266,88 @@ const AdminEvents = ({initialEvents, users}) => {
                 </div>
               </div>
 
+
               <div>
                 <Select
-                  errorClassname={errors.endTime ? 'border-1 border-red-400' : ''}
-                  options={map(users, user => ({
-                    value: user._id, // eslint-disable-line
-                    name  : user.firstName + ' ' + user.lastName
-                  }))}
-                  placeholder="Assignee"
-                  selected={selectedAssignee}
+                  options={[{
+                    value : 'user',
+                    label : 'Users'
+                  }, {
+                    value : 'teams',
+                    label : 'Teams'
+                  }]}
+                  placeholder="Select an assignation type"
+                  selected={assignedType}
                   setSelected={event => {
-                    setSelectedAssignee(event);
-                    setValue('assignee', event.value, {
-                      shouldValidate : true
-                    });
+                    setAssignedType(event);
                   }}
                 />
-                {errors?.assignee && <p className="text-red-500 text-xs font-medium"> {errors.assignee.message} </p>}
+                {
+                  assignedType && (!selectedTeam || !selectedAssignee) &&
+                  <p className="text-red-500 text-xs font-medium">
+                    Please select an assignee or a team
+                  </p>
+                }
+
               </div>
+
+              {
+                assignedType?.value === 'user' && (
+                  <div>
+                    <Select
+                      errorClassname={errors.assignee ? 'border-1 border-red-400' : ''}
+                      multiple
+                      options={map(users, user => ({
+                        value: user._id, // eslint-disable-line
+                        label : user.firstName + ' ' + user.lastName
+                      }))}
+                      placeholder="Assignee"
+                      selected={!selectedAssignee || selectedAssignee.length === 0 ? null : selectedAssignee}
+                      setSelected={event => {
+                        setSelectedAssignee(event);
+                        setValue('assignee', map(event, item => item.value), {
+                          shouldValidate : true
+                        });
+                      }}
+                    />
+                    {errors?.assignee && <p className="text-red-500 text-xs font-medium"> {errors.assignee.message} </p>}
+                  </div>
+                )
+              }
+              {
+                assignedType?.value === 'teams' && (
+                  <div>
+                    <Select
+                      errorClassname={errors.teamAssigned ? 'border-1 border-red-400' : ''}
+                      multiple
+                      options={map(teams, team => ({
+                      value: team._id, // eslint-disable-line
+                        label : team.name
+                      }))}
+                      placeholder="Team Assigned"
+                      selected={!selectedTeam || selectedTeam.length === 0 ? null : selectedTeam}
+                      setSelected={event => {
+                        setSelectedTeam(event);
+                        setValue('team', map(event, item => item.value), {
+                          shouldValidate : true
+                        });
+                      }}
+                    />
+                    {errors?.teamAssigned && <p className="text-red-500 text-xs font-medium"> {errors.teamAssigned.message} </p>}
+                  </div>
+                )
+              }
+
+
               <div>
                 <div className="flex items-center justify-between mx-5">
                   {colors.map(color => (
                     <div
                       className={classnames(`${color} rounded cursor-pointer hover:opacity-70 transition w-5 h-5`, {
-                        'opacity-70 border border-2 border-gray-600' : selectedColor === color || color.includes(selectedColor)
+                        'opacity-70 border border-2 border-gray-600' : watch('backgroundColor') === color || color.includes(watch('backgroundColor'))
                       })}
                       key={color}
-                      onClick={() => setSelectedColor(color)}
+                      onClick={() => setValue('backgroundColor', color)}
                     />
                   ))}
                 </div>
@@ -328,10 +395,12 @@ AdminEvents.getInitialProps = async ctx => {
   try {
     const {data} = await getPropsFromFetch('/events', ctx);
     const {data: users} = await getPropsFromFetch('/users', ctx);
+    const {data: teams} = await getPropsFromFetch('/teams', ctx);
 
     return {
       initialEvents : data,
-      users
+      users,
+      teams
     };
   } catch {
     return {};
@@ -340,7 +409,8 @@ AdminEvents.getInitialProps = async ctx => {
 AdminEvents.displayName = 'AdminEvents';
 AdminEvents.propTypes = {
   initialEvents : array.isRequired,
-  users         : array.isRequired
+  users         : array.isRequired,
+  teams         : array.isRequired
 };
 
 export default AdminEvents;
