@@ -13,7 +13,6 @@ const CustomSelect = ({
   <Select
     className={errorClassname}
     classNamePrefix="select"
-    closeMenuOnSelect={!multiple}
     isDisabled={disabled}
     isMulti={multiple}
     onChange={setSelected}
