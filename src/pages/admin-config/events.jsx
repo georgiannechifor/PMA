@@ -92,6 +92,7 @@ const AdminEvents = ({initialEvents, users, teams}) => {
         <CreateEditEvent
           mutate={mutate}
           selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
           setVisible={setEventModalOpen}
           teams={teams}
           users={users}

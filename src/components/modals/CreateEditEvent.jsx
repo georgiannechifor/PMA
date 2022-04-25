@@ -26,6 +26,7 @@ const colors = [
 // eslint-disable-next-line complexity
 const CreateEditEvent = ({
   selectedEvent,
+  setSelectedEvent,
   visible,
   setVisible,
   users,
@@ -43,14 +44,19 @@ const CreateEditEvent = ({
     startTime       : yup.string().required('Start time is required'),
     endTime         : yup.string().required('End time is required'),
     backgroundColor : yup.string().default(colors[0]),
-    assignee        : yup.array().of(yup.string()),
-    teamAssigned    : yup.array().of(yup.string())
+    assignee        : yup.array().of(yup.string())
       .ensure()
-      .when('assignee', {
-        is   : assignee => !assignee || assignee.length === 0,
+      .when('id', {
+        is   : () => assignedType.value === 'user',
         then : yup.array().of(yup.string())
-          .min(1, 'Select a team'),
-        otherwise : yup.array().of(yup.string())
+          .min(1, 'Select an assignee')
+      }),
+    teamAssigned : yup.array().of(yup.string())
+      .ensure()
+      .when('id', {
+        is   : () => assignedType.value === 'team',
+        then : yup.array().of(yup.string())
+          .min(1, 'Select a team')
       })
   }, [['assignee', 'teamAssigned']]);
 
@@ -111,25 +117,27 @@ const CreateEditEvent = ({
   };
 
   useEffect(() => {
-    if (selectedEvent) {
+    if (selectedEvent && selectedEvent._id) { // eslint-disable-line
       Object.entries(selectedEvent).forEach(([name, value]) => setValue(name, value, {
         shouldValidate : true
       }));
-      if (selectedEvent.assignee.length > 0) {
+      if (selectedEvent?.assignee?.length > 0) {
         setAssignedType({
           value : 'user',
           label : 'Users'
         });
+
         const extra = map(selectedEvent.assignee, assignee => ({
           value : assignee._id, // eslint-disable-line
           label : assignee.firstName + ' ' + assignee.lastName
         }));
 
         setSelectedAssignee(extra);
+        setSelectedTeam([]);
         setValue('assignee', extra.map(item => item.value), {
           shouldValidate : true
         });
-      } else {
+      } else if (selectedEvent?.teamAssigned?.length) {
         setAssignedType({
           value : 'team',
           label : 'Teams'
@@ -140,6 +148,7 @@ const CreateEditEvent = ({
           label : team.name
         }));
 
+        setSelectedAssignee([]);
         setSelectedTeam(extra);
         setValue('teamAssigned', extra.map(item => item.value), {
           shouldValidate : true
@@ -155,6 +164,8 @@ const CreateEditEvent = ({
         assignee        : [],
         teamAssigned    : []
       });
+      setSelectedAssignee([]);
+      setSelectedTeam([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEvent]);
@@ -162,8 +173,7 @@ const CreateEditEvent = ({
   useEffect(() => {
     if (data && data._id) { // eslint-disable-line no-underscore-dangle
       setVisible(false);
-      setSelectedAssignee([]);
-      setSelectedTeam([]);
+      setSelectedEvent({});
       mutate('/events');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,7 +186,10 @@ const CreateEditEvent = ({
         <div className="flex w-full items-center justify-end gap-2">
           <button
             className="px-4 py-2 text-sm font-medium focus:border-none focus:outline-none hover:text-gray-400 transition"
-            onClick={() => setVisible(false)}
+            onClick={() => {
+              setVisible(false);
+              setSelectedEvent({});
+            }}
           >
             Cancel
           </button>
@@ -273,7 +286,7 @@ const CreateEditEvent = ({
               }}
             />
             {
-              (errors?.assignee || errors?.teamAssigned) &&
+              !assignedType && (errors?.assignee || errors?.teamAssigned) &&
               <p className="text-red-500 text-xs font-medium">
                 Please select an assignee or a team
               </p>
@@ -300,6 +313,7 @@ const CreateEditEvent = ({
                     });
                   }}
                 />
+                {errors?.assignee && <p className="text-red-500 text-xs font-medium"> {errors.assignee.message}  </p>}
               </div>
             )
           }
@@ -322,6 +336,8 @@ const CreateEditEvent = ({
                     });
                   }}
                 />
+                {errors?.teamAssigned && <p className="text-red-500 text-xs font-medium"> {errors.teamAssigned.message}  </p>}
+
               </div>
             )
           }
@@ -350,12 +366,13 @@ const CreateEditEvent = ({
 
 CreateEditEvent.displayName = 'CreateEditEvent';
 CreateEditEvent.propTypes = {
-  selectedEvent : object,
-  visible       : bool.isRequired,
-  setVisible    : func.isRequired,
-  mutate        : func.isRequired,
-  users         : array.isRequired,
-  teams         : array.isRequired
+  selectedEvent    : object,
+  visible          : bool.isRequired,
+  teams            : array.isRequired,
+  users            : array.isRequired,
+  setVisible       : func.isRequired,
+  mutate           : func.isRequired,
+  setSelectedEvent : func.isRequired
 };
 
 CreateEditEvent.defaultProps = {
