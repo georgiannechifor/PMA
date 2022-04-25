@@ -4,10 +4,10 @@ import * as cx from 'classnames';
 import {useRouter} from 'next/router';
 import {
   ArrowLeftIcon,
-  UsersIcon,
+  UserIcon,
   CalendarIcon,
-  UserGroupIcon,
-  PresentationChartBarIcon
+  PresentationChartBarIcon,
+  UserGroupIcon
 } from '@heroicons/react/outline';
 import {PRIVATE_PATHS, TABS} from 'constants/index';
 
@@ -23,7 +23,7 @@ const AdminMenu = () => {
             {'text-gray-800 bg-gray-200' : activeTab === TABS.USERS},
             {'hover:bg-gray-100' : activeTab !== TABS.USERS})}
           onClick={() => setActiveTab(TABS.USERS)}
-        > <UsersIcon className="w-5 h-5" /> Users
+        > <UserIcon className="w-5 h-5" /> Users
         </a>
       </Link>
       <Link href={PRIVATE_PATHS.ADMIN_TEAMS} passHref>
@@ -32,7 +32,7 @@ const AdminMenu = () => {
             {'text-gray-800 bg-gray-200' : activeTab === TABS.TEAMS},
             {'hover:bg-gray-100' : activeTab !== TABS.TEAMS})}
           onClick={() => setActiveTab(TABS.TEAMS)}
-        > <CalendarIcon className="w-5 h-5" /> Teams </a>
+        > <UserGroupIcon className="w-5 h-5" /> Teams </a>
       </Link>
       <Link href={PRIVATE_PATHS.ADMIN_PROJECTS} passHref>
         <a
