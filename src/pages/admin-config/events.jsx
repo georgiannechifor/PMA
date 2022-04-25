@@ -1,15 +1,12 @@
 import {useState, useEffect, useMemo} from 'react';
-import map from 'lodash/map';
 import size from 'lodash/size';
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
 import {array} from 'prop-types';
 import {useFetch} from 'utils/useFetch';
 import useSWR, {useSWRConfig} from 'swr';
-import classnames from 'classnames';
-import moment from 'moment';
 import {getPropsFromFetch} from 'utils/getPropsFromFetch';
-import {Modal, Select, Table, Loader, Pagination} from 'components'; // eslint-disable-line no-unused-vars
+import {Modal, Table, Loader, Pagination} from 'components'; // eslint-disable-line no-unused-vars
 import {eventsColumns, PAGE_SIZE} from 'constants/index';
 import {CreateEditEvent} from 'components/modals';
 
