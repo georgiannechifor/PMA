@@ -84,7 +84,7 @@ const Header = ({
               {'text-black font-bold bg-gray-100' : router.asPath.includes(PRIVATE_PATHS.ADMIN_CONFIG)}
             )}
             > <CogIcon className={
-                cx('w-7 text-gray-400 sm:w-6 md:w-5', {'text-black' : router.asPath === PRIVATE_PATHS.ADMIN_CONFIG})
+                cx('w-7 text-gray-400 sm:w-6 md:w-5', {'text-black' : router.asPath.includes(PRIVATE_PATHS.ADMIN_CONFIG)})
               }
               /> Admin </a>
           </Link> : null

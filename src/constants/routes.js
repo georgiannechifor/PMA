@@ -1,6 +1,6 @@
 export const PRIVATE_PATHS = {
   HOME_PAGE         : '/',
-  ADMIN_CONFIG      : '/admin-config/users',
+  ADMIN_CONFIG      : '/admin-config',
   ADMIN_USERS       : '/admin-config/users',
   ADMIN_TEAMS       : '/admin-config/teams',
   ADMIN_PROJECTS    : '/admin-config/projects',
