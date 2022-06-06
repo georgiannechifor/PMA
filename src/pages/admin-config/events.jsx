@@ -23,7 +23,7 @@ const AdminEvents = ({initialEvents, users, teams}) => {
   const {
     result: {data, loading},
     fetchData
-  } = useFetch('events'); // eslint-disable-line no-unused-vars
+  } = useFetch('events');
   const {data: events} = useSWR('/events', {
     initialData : initialEvents
   });
@@ -40,7 +40,7 @@ const AdminEvents = ({initialEvents, users, teams}) => {
 
   const removeEvent = () => {
     fetchData({
-      entityId : selectedEvent._id, // eslint-disable-line no-underscore-dangle
+      entityId : selectedEvent._id,
       method   : 'DELETE'
     });
   };

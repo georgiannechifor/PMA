@@ -236,7 +236,7 @@ const CreateEditEvent = ({
                 selected={watch('startTime') && {
                   value : watch('startTime'),
                   label : watch('startTime')
-                }}
+                } || null}
                 setSelected={event => {
                   setValue('startTime', event.value, {
                     shouldValidate : true

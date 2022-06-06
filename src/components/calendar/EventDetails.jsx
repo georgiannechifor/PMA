@@ -4,6 +4,7 @@ import classname from 'classnames';
 import moment from 'moment';
 import {func, object} from 'prop-types';
 import {useOnClickOutside} from 'utils/useOnClickOutside';
+import {map} from 'lodash';
 
 const CALENDAR_MIDDLE_DAY = 4;
 
@@ -19,6 +20,41 @@ const EventDetails = ({
     ...eventDetails,
     visible : !eventDetails.visible
   }));
+
+  const getAssignee = () => {
+    const {assignee} = eventDetails.details;
+
+    if (assignee && assignee.length > 0) {
+      return map(assignee, item => item && (
+        <p className="text-gray-500"> {item.firstName} {item.lastName}</p>
+      ));
+    }
+
+    return null;
+  };
+
+  const getTeam = () => {
+    const {teamAssigned} = eventDetails.details;
+
+    if (teamAssigned && teamAssigned.length > 0) {
+      return map(teamAssigned, item => (
+        <p className="text-gray-500"> {item.name} </p>
+      ));
+    }
+
+    return null;
+  };
+
+  const getAuthor = () => {
+    const {author} = eventDetails.details;
+
+    if (author) {
+      return `${author.firstName} ${author.lastName}`;
+    }
+
+    return 'Not defined';
+  };
+
 
   return (
     <div
@@ -52,36 +88,34 @@ const EventDetails = ({
         </div>
 
         <div className="flex flex-col mt-5">
-          <div className="flex text-sm items-center ">
+          <div className="flex text-sm items-center border-b border-b-gray-200 pb-2">
             <p className="w-20 text-gray-400"> Author </p>
             <p className="text-gray-500">
-              { `${eventDetails.details.author.firstName} - ${eventDetails.details.author.email}` }
+              {getAuthor()}
             </p>
           </div>
 
-          {
-            eventDetails &&
-            eventDetails.details.assignee && (
-              <div className="flex text-sm items-center ">
-                <p className="w-20 text-gray-400 "> Assignee </p>
-                <p className="text-gray-500">
-                  { `${eventDetails.details.assignee.firstName} - ${eventDetails.details.assignee.email}` }
-                </p>
-              </div>
-            )
-          }
+          <div className="flex text-sm items-center pt-2">
+            {
+              getAssignee() ? (
+                <>
+                  <p className="w-20 text-gray-400 "> Assignee/s </p>
+                  <div className="flex flex-col">
+                    {getAssignee()}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="w-20 text-gray-400 "> Team/s </p>
+                  <div className="flex flex-col">
+                    { getTeam() }
+                  </div>
+                </>
+              )
+            }
+          </div>
 
-          {
-            eventDetails?.details?.teamAssigned.length > 0 && (
-              <div className="flex items-center ">
-                <p className="text-sm font-weight w-20 text-gray-400 "> Teams </p>
-                <p className="text-sm text-gray-500 truancate">
-                  { `${eventDetails.details.teamAssigned.map(team => team.name + ', ').toString()
-                    .slice(0, -2)}` } {/* eslint-disable-line no-magic-numbers */}
-                </p>
-              </div>
-            )
-          }
+
         </div>
       </div>
     </div>

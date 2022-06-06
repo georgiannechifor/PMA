@@ -1,5 +1,5 @@
 import {object, elementType, string} from 'prop-types';
-import {useRouter, Router} from 'next/router';
+import {useRouter} from 'next/router';
 
 import '../styles/globals.scss';
 import {Layout, AdminLayout, Loader} from 'components';

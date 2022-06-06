@@ -21,11 +21,11 @@ const KnowledgeSharing = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState({
     value : '',
-    name  : 'All Categories'
+    label : 'All Categories'
   });
   const [selectedAuthor, setSelectedAuthor] = useState({
     value : '',
-    name  : 'All Authors'
+    label : 'All Authors'
   });
   const [filteredPosts, setFilteredPosts] = useState(initialPosts);
   const [authors, setAuthors] = useState([]);
@@ -35,7 +35,7 @@ const KnowledgeSharing = ({
     // eslint-disable-next-line no-underscore-dangle
     setAuthors(map(uniqBy(posts, post => post.author._id), ({author}) => ({
       value : author._id, // eslint-disable-line no-underscore-dangle
-      name  : `${author.firstName} ${author.lastName}`
+      label : `${author.firstName} ${author.lastName}`
     })));
 
     setFilteredPosts(posts);
@@ -55,24 +55,24 @@ const KnowledgeSharing = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, selectedAuthor]);
 
-
   return (
     <Loader isLoading={isValidating}>
       <div className="w-11/12 mx-auto mt-5">
-        <h1 className="text-3xl my-5">Knowledge Sharing </h1>
+        <h1 className="text-3xl my-5">Knowledge Sharing</h1>
 
         <div className="w-full flex justify-between items-center gap-x-5 mb-5">
           <div className="flex gap-x-5">
             <div className="w-52">
               <Select
+                className="text-black"
                 options={[
                   {
                     value : '',
-                    name  : 'All Categories'
+                    label : 'All Categories'
                   },
                   ...map(POST_CATEGORY, category => ({
                     value : category,
-                    name  : category
+                    label : category
                   }))]}
                 placeholder="Post Category"
                 selected={selectedCategory}
@@ -86,7 +86,7 @@ const KnowledgeSharing = ({
                 options={[
                   {
                     value : '',
-                    name  : 'All Authors'
+                    label : 'All Authors'
                   },
                   ...authors]}
                 placeholder="Select Author"

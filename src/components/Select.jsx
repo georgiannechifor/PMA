@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import {array, func, object, string, boolean} from 'prop-types';
+import {array, func, object, string, bool, oneOfType} from 'prop-types';
 
 const CustomSelect = ({
   errorClassname,
@@ -24,20 +24,22 @@ const CustomSelect = ({
 
 CustomSelect.displayName = 'Select';
 CustomSelect.propTypes = {
-  options        : array.isRequired,
-  selected       : object.isRequired,
+  options        : array,
+  selected       : oneOfType([object, string]),
   setSelected    : func.isRequired,
   errorClassname : string,
   placeholder    : string,
-  multiple       : boolean,
-  disabled       : boolean
+  multiple       : bool, // eslint-disable-line
+  disabled       : bool // eslint-disable-line
 };
 
 CustomSelect.defaultProps = {
+  options        : [],
   errorClassname : '',
   placeholder    : '',
   disabled       : false,
-  multiple       : false
+  multiple       : false,
+  selected       : null
 };
 
 export default CustomSelect;
