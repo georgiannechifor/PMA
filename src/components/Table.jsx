@@ -59,7 +59,7 @@ const Table = ({
                         'bg-white border-b  hover:bg-gray-50',
                         {'pointer-events-none bg-gray-100 text-gray-400' : isDisabled(item)}
                       )}
-                      key={item._id} // eslint-disable-line no-underscore-dangle
+                      key={item._id}
                       onClick={() => onRowClick(item)}
                     >
                       {
@@ -70,7 +70,6 @@ const Table = ({
                               classnames('py-4 px-6 text-sm font-medium text-gray-400 whitespace-nowrap', {
                                 'text-gray-900' : conditionForBold(index)
                               })
-                              // eslint-disable-next-line no-underscore-dangle
                             } key={`${item._id}-${rowColumn.key}`}
                           >
                             <span>{ rowColumn.isDate ? moment(getRowColumnValue(item, rowColumn.key))
