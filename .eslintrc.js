@@ -371,9 +371,6 @@ module.exports = {
     'react/default-props-match-prop-types' : ['error', {
       allowRequiredDefaults : true
     }],
-    'react/display-name' : ['error', {
-      ignoreTranspilerName : true
-    }],
     'react/forbid-component-props'               : 'off',
     'react/forbid-elements'                      : 'off',
     'react/forbid-prop-types'                    : 'off',
