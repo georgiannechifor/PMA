@@ -23,7 +23,7 @@ const CreatePost = ({
   initialValues
 }) => {
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [contentValue, setContentValue] = useState('');
   const {result: {data, loading, error}, fetchData} = useFetch('posts');
   const [confirmationModal, setConfirmationModal] = useState(false);
@@ -102,7 +102,7 @@ const CreatePost = ({
             errorClassname={errors.category ? 'border border-red-400' : ''}
             options={map(POST_CATEGORY, category => ({
               value : category,
-              name  : category
+              label : category
             }))}
             placeholder="Post Category"
             selected={selectedCategory}
@@ -178,8 +178,8 @@ const CreatePost = ({
 
           { error ? <p className="text-sm font-medium text-red-500 -mt-2"> Request error: { error } </p> : null}
           <div className="flex justify-end w-full gap-x-5 mb-10">
-            <button className="bg-red-400 rounded text-white py-2 px-12" onClick={() => setConfirmationModal(true)}> Discard </button>
-            <button className="bg-blue-400 rounded text-white py-2 px-12" onClick={handleSubmit(onSubmit)}> Submit </button>
+            <button className="bg-gray-400 rounded text-white py-2 px-12" onClick={() => setConfirmationModal(true)}> Discard </button>
+            <button className="bg-blue-500 rounded text-white py-2 px-12" onClick={handleSubmit(onSubmit)}> Submit </button>
           </div>
         </div>
 
@@ -196,7 +196,7 @@ const CreatePost = ({
                 Cancel
               </button>
               <button
-                className="px-8 py-2 text-sm text-white font-medium bg-green-500 rounded-lg" onClick={() => {
+                className="px-8 py-2 text-sm text-white font-medium bg-gray-400 rounded-lg" onClick={() => {
                   setConfirmationModal(false);
                   router.back();
                 }}

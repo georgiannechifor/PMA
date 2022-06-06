@@ -16,16 +16,22 @@ const ImageUpload = ({
   const getBase64Image = (image, callback) => {
     let reader = new FileReader();
 
-    reader.readAsDataURL(image);
-    reader.onload = () => {
-      callback(reader.result);
-    };
+    if (image) {
+      reader.readAsDataURL(image);
+      reader.onload = () => {
+        callback(reader.result);
+      };
 
-    return reader.result;
+      return reader.result;
+    }
+
+    return null;
   };
   const uploadFile = image => {
-    getBase64Image(image, setImageToUpload);
-    setImageUrl(URL.createObjectURL(image));
+    if (image) {
+      getBase64Image(image, setImageToUpload);
+      setImageUrl(URL.createObjectURL(image));
+    }
   };
 
   return (

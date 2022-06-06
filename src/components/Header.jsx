@@ -1,7 +1,13 @@
 import {useState} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {LogoutIcon} from '@heroicons/react/solid';
+import {
+  LogoutIcon,
+  HomeIcon,
+  ShareIcon,
+  DocumentReportIcon,
+  CogIcon
+} from '@heroicons/react/outline';
 import {string} from 'prop-types';
 import {useRouter} from 'next/router';
 import * as cx from 'classnames';
@@ -26,57 +32,72 @@ const Header = ({
 
   return (
     <div className={`${className}
-      self-start bg-white w-full h-24 shadow-md
-      flex justify-center items-center
-      px-10
-      sm:justify-end
+      self-start bg-white w-full h-32 shadow
+      w-full
+      flex items-center
+      px-14
       `
     }
     >
-      <div className="relative justify-self-start mr-auto w-28 h-20 cursor-pointer hidden sm:block" onClick={() => router.push('/')}>
+      <div className="relative w-28 h-20 cursor-pointer hidden sm:block" onClick={() => router.push('/')}>
         <Image alt="ProjectManagementAppLogo" layout="fill" src="../images/logo.png" />
       </div>
-      <div className="flex gap-x-5">
-        <div>
+      <div className="ml-14 flex-1 flex items-center">
+        <div className="flex gap-5">
           <Link href={PRIVATE_PATHS.HOME_PAGE}>
             <a
               className={cx(
-                'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                {'text-black font-bold' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
+                'flex items-center gap-2 text-xs font-medium rounded-lg p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:px-4 md:text-base',
+                {'text-black font-bold bg-gray-100' : router.asPath === PRIVATE_PATHS.HOME_PAGE}
               )}
-            > Home </a>
+            > <HomeIcon className={
+                cx('w-7 text-gray-400 sm:w-6 md:w-5', {'text-black' : router.asPath === PRIVATE_PATHS.HOME_PAGE})
+              }
+              /> Home </a>
           </Link>
           <Link href={PRIVATE_PATHS.KNOWLEDGE_SHARING}>
             <a
               className={cx(
-                'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                {'text-black font-bold' : router.asPath.includes(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
+                'flex items-center gap-2 text-xs font-medium rounded-lg p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:px-4 md:text-base',
+                {'text-black font-bold bg-gray-100' : router.asPath.includes(PRIVATE_PATHS.KNOWLEDGE_SHARING)}
               )}
-            > Knowledge sharing  </a>
+            > <ShareIcon className={
+                cx('w-7 text-gray-400 sm:w-6 md:w-5', {'text-black' : router.asPath === PRIVATE_PATHS.KNOWLEDGE_SHARING})
+              }
+              /> Knowledge sharing  </a>
           </Link>
           <Link href={PRIVATE_PATHS.DEPLOY_TRACKER}>
             <a
               className={cx(
-                'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-                {'text-black font-bold' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
+                'flex items-center gap-2 text-xs font-medium rounded-lg p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:px-4 md:text-base',
+                {'text-black font-bold bg-gray-100' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER}
               )}
-            > Deploy Tracker
+            > <DocumentReportIcon className={
+                cx('w-7 text-gray-400 sm:w-6 md:w-5', {'text-black' : router.asPath === PRIVATE_PATHS.DEPLOY_TRACKER})
+              }
+              /> Deploy Tracker
             </a>
           </Link>
           { getIsAdmin() ? <Link href={PRIVATE_PATHS.ADMIN_CONFIG}>
             <a className={cx(
-              'text-xs font-medium p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:p-4 md:text-base',
-              {'text-black font-bold' : router.asPath.includes(PRIVATE_PATHS.ADMIN_CONFIG)}
+              'flex items-center gap-2 text-xs font-medium rounded-lg p-2 cursor-pointer text-gray-400 hover:text-gray-800 md:px-4 md:text-base',
+              {'text-black font-bold bg-gray-100' : router.asPath.includes(PRIVATE_PATHS.ADMIN_CONFIG)}
             )}
-            > Admin </a>
+            > <CogIcon className={
+                cx('w-7 text-gray-400 sm:w-6 md:w-5', {'text-black' : router.asPath.includes(PRIVATE_PATHS.ADMIN_CONFIG)})
+              }
+              /> Admin </a>
           </Link> : null
           }
         </div>
 
-        <LogoutIcon
-          className="w-7 self-center cursor-pointer text-gray-800 hover:text-gray-600 sm:w-6 md:w-5"
+        <div
+          className="flex gap-3 bg-gray-200 py-2 px-5 rounded-lg ml-auto cursor-pointer hover:bg-gray-300 transition"
           onClick={() => setIsSignOutModalOpen(true)}
-        />
+        >
+          <LogoutIcon className="w-7 text-gray-800 sm:w-6 md:w-5" />
+          Sign out
+        </div>
       </div>
 
       <Modal

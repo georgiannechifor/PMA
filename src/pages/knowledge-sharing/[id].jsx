@@ -100,7 +100,7 @@ const Post = () => {
             className={classnames(`
             absolute top-5 left-5 w-10 h-10 flex bg-white rounded-full
             items-center justify-center cursor-pointer
-            opacity-70 hover:opacity-100 transition`)}
+            opacity-90 hover:opacity-100 transition`)}
           >
             <PostMenu setActiveItem={setActiveMenuItem} />
           </div>
