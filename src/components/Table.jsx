@@ -104,7 +104,7 @@ const Table = ({
 
 Table.displayName = 'Table';
 Table.propTypes = {
-  onRowClick       : func.isRequired,
+  onRowClick       : func,
   onEdit           : func.isRequired,
   onDeleteItem     : func.isRequired,
   data             : array.isRequired,
@@ -114,6 +114,7 @@ Table.propTypes = {
 };
 
 Table.defaultProps = {
+  onRowClick       : () => null,
   isDisabled       : () => false,
   conditionForBold : index => parseInt(index, 10) === 0
 };
